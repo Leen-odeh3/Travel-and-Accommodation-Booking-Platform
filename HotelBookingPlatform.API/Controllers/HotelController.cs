@@ -1,6 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
+using HotelBookingPlatform.Domain.Bases;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -8,30 +9,60 @@ namespace HotelBookingPlatform.API.Controllers;
 public class HotelController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
+    public Response response;
 
     public HotelController(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
+        response = new Response();
     }
 
     // GET: api/Hotel
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+    public async Task<ActionResult<Response>> GetHotels()
     {
         var hotels = await _unitOfWork.HotelRepository.GetAllAsync();
-        return Ok(hotels);
+        var check = hotels.Any();
+        if (check)
+        {
+           response.StatusCode=System.Net.HttpStatusCode.OK;
+           response.Succeeded=check;
+           response.Data = hotels;
+            return response;
+        }
+        else
+        {
+            response.ErrorMessage = "Not Hotels Found";
+            response.StatusCode = System.Net.HttpStatusCode.OK;
+            response.Succeeded = check;
+            return response;
+        }
     }
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Hotel>> GetHotel(int id)
+    public async Task<ActionResult<Response>> GetHotel(int id)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel is null)
         {
-            return NotFound();
+            response.StatusCode = System.Net.HttpStatusCode.NotFound;
+            response.Succeeded = false;
+            response.ErrorMessage = "Hotel not found";
+            return new ObjectResult(response)
+            {
+                StatusCode = (int)response.StatusCode
+            };
         }
-        return Ok(hotel);
+
+        response.StatusCode = System.Net.HttpStatusCode.OK;
+        response.Succeeded = true;
+        response.Data = hotel;
+
+        return new ObjectResult(response)
+        {
+            StatusCode = (int)response.StatusCode
+        };
     }
 
     // POST: api/Hotel
