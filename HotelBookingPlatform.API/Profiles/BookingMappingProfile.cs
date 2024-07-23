@@ -9,5 +9,8 @@ public class BookingMappingProfile :Profile
     {
         CreateMap<Booking, BookingDto>()
             .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name));
+
+        CreateMap<BookingCreateRequest, Booking>();
+
     }
 }

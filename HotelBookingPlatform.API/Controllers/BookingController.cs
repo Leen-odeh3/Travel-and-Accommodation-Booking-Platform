@@ -1,4 +1,5 @@
-﻿using HotelBookingPlatform.Domain;
+﻿using AutoMapper;
+using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.DTOs.Booking;
 using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,13 @@ namespace HotelBookingPlatform.API.Controllers;
 public class BookingController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public BookingController(IUnitOfWork unitOfWork)
+
+    public BookingController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     // GET: api/Booking
@@ -37,12 +41,17 @@ public class BookingController : ControllerBase
 
     // POST: api/Booking
     [HttpPost]
-    public async Task<ActionResult<Booking>> CreateBooking(Booking booking)
+    public async Task<ActionResult<BookingDto>> CreateBooking([FromBody] BookingCreateRequest request)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var booking = _mapper.Map<Booking>(request);
         await _unitOfWork.BookingRepository.CreateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingID }, booking);
+        var bookingDto = _mapper.Map<BookingDto>(booking);
+        return CreatedAtAction(nameof(GetBooking), bookingDto);
     }
 
     // PUT: api/Booking/5
