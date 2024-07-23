@@ -1,12 +1,11 @@
-﻿using HotelBookingPlatform.Domain.Enums;
-namespace HotelBookingPlatform.Domain.Entities;
-public class Booking
+﻿using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.Enums;
+
+namespace HotelBookingPlatform.Domain.DTOs;
+public class BookingDto
 {
-    public int BookingID { get; set; }
     public int UserID { get; set; }
-    public User User { get; set; }
-    public int HotelId { get; set; }
-    public Hotel? Hotel { get; set; }
+    public string Hotel { get; set; }
     public decimal TotalPrice { get; set; }
     public DateTime CheckInDateUtc { get; set; }
     public DateTime CheckOutDateUtc { get; set; }

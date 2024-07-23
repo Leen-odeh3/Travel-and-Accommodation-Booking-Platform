@@ -12,8 +12,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddApplicationDependencies()
-                    .AddInfrastructureDependencies().AddServiceRegisteration();
+        builder.Services.AddApplicationDependencies().AddPresentationDependencies()
+                        .AddInfrastructureDependencies().AddServiceRegisteration();
 
         var app = builder.Build();
 
