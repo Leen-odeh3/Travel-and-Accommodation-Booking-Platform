@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.DTOs;
 using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.API.Controllers;
@@ -16,7 +17,7 @@ public class BookingController : ControllerBase
 
     // GET: api/Booking
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
+    public async Task<ActionResult<IEnumerable<BookingDto>>> GetBookings()
     {
         var bookings = await _unitOfWork.BookingRepository.GetAllAsync();
         return Ok(bookings);
@@ -24,7 +25,7 @@ public class BookingController : ControllerBase
 
     // GET: api/Booking/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Booking>> GetBooking(int id)
+    public async Task<ActionResult<BookingDto>> GetBooking(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
         if (booking == null)

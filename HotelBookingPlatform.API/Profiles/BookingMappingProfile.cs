@@ -8,6 +8,6 @@ public class BookingMappingProfile :Profile
     public BookingMappingProfile()
     {
         CreateMap<Booking, BookingDto>()
-            .ForMember(dest => dest.Hotel, opt => opt.MapFrom(src => src.Hotel.Name));
+            .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name));
     }
 }

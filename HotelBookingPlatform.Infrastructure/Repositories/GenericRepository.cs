@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly AppDbContext _appDbContext;
+    protected readonly AppDbContext _appDbContext;
 
     public GenericRepository(AppDbContext appDbContext)
     {
