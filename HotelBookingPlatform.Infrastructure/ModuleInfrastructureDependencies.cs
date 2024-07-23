@@ -1,8 +1,10 @@
-﻿using HotelBookingPlatform.Infrastructure.Data;
+﻿using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.IRepositories;
+using HotelBookingPlatform.Infrastructure.Data;
+using HotelBookingPlatform.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace HotelBookingPlatform.Infrastructure;
 public static class ModuleInfrastructureDependencies
@@ -15,6 +17,9 @@ public static class ModuleInfrastructureDependencies
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
         );
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         return services;
     }
 }
