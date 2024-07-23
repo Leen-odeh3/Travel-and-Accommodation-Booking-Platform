@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs;
+using HotelBookingPlatform.Domain.DTOs.Booking;
 using HotelBookingPlatform.Domain.Entities;
 
 namespace HotelBookingPlatform.API.Profiles;

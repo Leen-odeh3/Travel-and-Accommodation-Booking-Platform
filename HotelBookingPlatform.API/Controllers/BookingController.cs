@@ -1,5 +1,5 @@
 ﻿using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.DTOs;
+using HotelBookingPlatform.Domain.DTOs.Booking;
 using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.API.Controllers;

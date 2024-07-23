@@ -1,7 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Enums;
 
-namespace HotelBookingPlatform.Domain.DTOs;
+namespace HotelBookingPlatform.Domain.DTOs.Booking;
 public class BookingDto
 {
     public int UserID { get; set; }
