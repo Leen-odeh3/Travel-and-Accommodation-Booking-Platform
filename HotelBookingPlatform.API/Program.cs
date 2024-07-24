@@ -1,5 +1,7 @@
 using HotelBookingPlatform.Application;
 using HotelBookingPlatform.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 namespace HotelBookingPlatform.API;
 public class Program
 {
@@ -8,7 +10,15 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.CacheProfiles.Add("DefaultCache", new CacheProfile
+            {
+                Duration = 30,
+                Location = ResponseCacheLocation.Any
+            });
+        });
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
