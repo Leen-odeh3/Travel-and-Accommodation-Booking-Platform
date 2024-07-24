@@ -1,4 +1,5 @@
-﻿namespace HotelBookingPlatform.Domain.DTOs.LocalUser;
+﻿
+namespace HotelBookingPlatform.Domain.DTOs.LocalUser;
 public class LocalUserDto
 {
     public string UserName { get; set;}
