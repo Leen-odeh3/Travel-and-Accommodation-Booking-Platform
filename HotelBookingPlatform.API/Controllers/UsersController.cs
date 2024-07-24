@@ -15,17 +15,15 @@ public class UsersController : ControllerBase
     private readonly UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRepository _userRepository;
-    private readonly IMapper _mapper;
 
-    public UsersController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository, IMapper mapper)
+    public UsersController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userRepository = userRepository;
-        _mapper = mapper;
     }
 
-    [HttpPost]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
         if (registerRequestDto is null)
@@ -50,8 +48,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            var registerDto = _mapper.Map<RegisterDto>(registerRequestDto);
-            var userDto = await _userRepository.Register(registerDto);
+            var userDto = await _userRepository.Register(registerRequestDto);
 
             return Ok(new Response(
                 StatusCodes.Status200OK,

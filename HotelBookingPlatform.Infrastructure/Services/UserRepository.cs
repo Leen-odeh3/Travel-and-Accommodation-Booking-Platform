@@ -33,7 +33,7 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<LocalUserDto> Register(RegisterDto registerDto)
+    public async Task<LocalUserDto> Register(RegisterRequestDto registerDto)
     {
         var user = new LocalUser
         {
@@ -53,10 +53,6 @@ public class UserRepository : IUserRepository
             }
 
             var defaultRole = "User";
-            if (!await _roleManager.RoleExistsAsync(defaultRole))
-            {
-                throw new Exception($"Role '{defaultRole}' does not exist.");
-            }
 
             await _userManager.AddToRoleAsync(user, defaultRole);
 

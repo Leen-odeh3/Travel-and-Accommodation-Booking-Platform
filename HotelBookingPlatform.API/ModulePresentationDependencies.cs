@@ -10,7 +10,6 @@ public static class ModulePresentationDependencies
     {
         services.AddAutoMapper(typeof(BookingMappingProfile));
         services.AddAutoMapper(typeof(HotelMappingProfile));
-        services.AddAutoMapper(typeof(UserMappingProfile));
 
 
         services.AddIdentity<LocalUser, IdentityRole>()
