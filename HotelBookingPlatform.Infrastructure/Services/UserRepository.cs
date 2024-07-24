@@ -13,12 +13,16 @@ public class UserRepository : IUserRepository
     private readonly AppDbContext _context;
     private UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager)
+    private readonly SignInManager<LocalUser> _signInManager;
+    private readonly ITokenService _tokenService;
+
+    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<LocalUser> signInManager, ITokenService tokenService)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-
+        _signInManager = signInManager;
+        _tokenService = tokenService;
     }
     public async Task<bool> IsUniqueUser(string email)
     {
@@ -27,9 +31,33 @@ public class UserRepository : IUserRepository
     }
 
 
-    public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+    public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
-        throw new NotImplementedException();
+        var result = await _signInManager.PasswordSignInAsync(
+            loginRequestDto.Email,
+            loginRequestDto.password,
+            isPersistent: false,
+            lockoutOnFailure: false
+        );
+
+        if (!result.Succeeded)
+        {
+            throw new UnauthorizedAccessException("Invalid login attempt.");
+        }
+
+        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("Invalid login attempt.");
+        }
+
+        var token = await _tokenService.CreateTokenAsync(user);
+
+        return new LoginResponseDto
+        {
+            token = token,
+            User = user
+        };
     }
 
 

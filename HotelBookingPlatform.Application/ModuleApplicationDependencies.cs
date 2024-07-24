@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
+using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
-using HotelBookingPlatform.Domain.DTOs.Register;
+using HotelBookingPlatform.Domain.IServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelBookingPlatform.Application;
@@ -13,6 +14,7 @@ public static class ModuleApplicationDependencies
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
 
+        services.AddScoped<ITokenService, TokenService>();
         return services;
     }
 }

@@ -24,23 +24,27 @@ public class TokenService : ITokenService
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, localUser.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, localUser.UserName),
-            new Claim(ClaimTypes.Email, localUser.Email)
+        new Claim(JwtRegisteredClaimNames.Sub, localUser.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Name, localUser.UserName),
+        new Claim(ClaimTypes.Email, localUser.Email),
+        new Claim(ClaimTypes.GivenName, localUser.FirstName),
+        new Claim(ClaimTypes.Surname, localUser.LastName),
+        new Claim("CustomClaim", "CustomValue")
+    };
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddHours(1),
+            SigningCredentials = credentials
         };
 
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:Issuer"],
-            audience: _configuration["JWT:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1), 
-            signingCredentials: credentials
-        );
-
         var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = tokenHandler.WriteToken(token);
 
         return Task.FromResult(tokenString);
     }
+
 }

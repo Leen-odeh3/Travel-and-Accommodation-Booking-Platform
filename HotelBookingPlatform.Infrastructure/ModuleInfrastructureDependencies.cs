@@ -26,7 +26,6 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped<IUserRepository, UserRepository>();
 
 
-    
 
         return services;
     }

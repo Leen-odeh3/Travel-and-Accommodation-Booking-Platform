@@ -4,6 +4,7 @@ using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Register;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.IServices;
+using HotelBookingPlatform.Domain.DTOs.Login;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -63,6 +64,50 @@ public class UsersController : ControllerBase
                 null,
                 false,
                 $"An error occurred during registration: {ex.Message}"
+            ));
+        }
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+    {
+        if (loginRequestDto is null)
+        {
+            return BadRequest(new Response(
+                StatusCodes.Status400BadRequest,
+                null,
+                false,
+                "Invalid login request."
+            ));
+        }
+
+        try
+        {
+            var loginResponse = await _userRepository.Login(loginRequestDto);
+
+            return Ok(new Response(
+                StatusCodes.Status200OK,
+                loginResponse,
+                true,
+                "Login successful."
+            ));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new Response(
+                StatusCodes.Status401Unauthorized,
+                null,
+                false,
+                ex.Message
+            ));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response(
+                StatusCodes.Status500InternalServerError,
+                null,
+                false,
+                $"An error occurred during login: {ex.Message}"
             ));
         }
     }
