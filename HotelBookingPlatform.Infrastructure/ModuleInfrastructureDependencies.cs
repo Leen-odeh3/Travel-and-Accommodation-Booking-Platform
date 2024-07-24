@@ -1,7 +1,11 @@
 ﻿using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.IRepositories;
+using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
+using HotelBookingPlatform.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +23,10 @@ public static class ModuleInfrastructureDependencies
         );
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserRepository, UserRepository>();
+
+
+    
 
         return services;
     }

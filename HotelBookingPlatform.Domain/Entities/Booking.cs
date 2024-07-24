@@ -4,7 +4,7 @@ public class Booking
 {
     public int BookingID { get; set; }
     public int UserID { get; set; }
-    public User User { get; set; }
+    public LocalUser LocalUser { get; set; }
     public int HotelId { get; set; }
     public Hotel? Hotel { get; set; }
     public decimal TotalPrice { get; set; }
