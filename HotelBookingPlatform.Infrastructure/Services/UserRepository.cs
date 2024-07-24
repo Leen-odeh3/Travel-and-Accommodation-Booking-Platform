@@ -20,9 +20,9 @@ public class UserRepository : IUserRepository
         _roleManager = roleManager;
 
     }
-    public bool IsUniqueUser(string username)
+    public bool IsUniqueUser(string email)
     {
-        var result = _context.LocalUsers.FirstOrDefault(x => x.UserName == username);
+        var result = _context.LocalUsers.FirstOrDefault(x => x.Email == email);
         return result is null;
     }
 
@@ -35,9 +35,8 @@ public class UserRepository : IUserRepository
     {
         var user = new LocalUser
         {
-            UserName = registerRequestDto.UserName,
+            UserName = registerRequestDto.Email.Split('@')[0],
             Email = registerRequestDto.Email,
-            NormalizedEmail = registerRequestDto.Email.ToUpper(),
             FirstName = registerRequestDto.FirstName,
             LastName = registerRequestDto.LastName,
         };
