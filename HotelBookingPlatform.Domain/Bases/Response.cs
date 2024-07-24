@@ -1,32 +1,33 @@
 ﻿using System.Net;
-
 namespace HotelBookingPlatform.Domain.Bases;
-public class Response
+public class Response<T>
 {
-    public int StatusCode { get; set; }
-    public object Data { get; set; }
+    public Response()
+    {
+
+    }
+    public Response(T data, string message)
+    {
+        Succeeded = true;
+        Message = message;
+        Data = data;
+    }
+    public Response(string message)
+    {
+        Succeeded = false;
+        Message = message;
+    }
+    public Response(string message, bool succeeded)
+    {
+        Succeeded = succeeded;
+        Message = message;
+    }
+
+    public HttpStatusCode StatusCode { get; set; }
+    public object Meta { get; set; }
     public bool Succeeded { get; set; }
     public string Message { get; set; }
-
-    public Response(int statusCode, object data, bool succeeded, string message = null)
-    {
-        StatusCode = statusCode;
-        Data = data;
-        Succeeded = statusCode>=200 && statusCode<=300;
-        Message = message ?? GetMessageForStatusCode(statusCode);
-    }
-
-    private string GetMessageForStatusCode(int statusCode)
-    {
-        return statusCode switch
-        {
-            (int)HttpStatusCode.OK => "Operation successful",
-            (int)HttpStatusCode.BadRequest => "Bad request",
-            (int)HttpStatusCode.Unauthorized => "Unauthorized",
-            (int)HttpStatusCode.Forbidden => "Forbidden",
-            (int)HttpStatusCode.NotFound => "Not found",
-            (int)HttpStatusCode.InternalServerError => "Internal server error",
-            _ => "An error occurred"
-        };
-    }
+    public List<string> Errors { get; set; }
+    public T Data { get; set; }
 }
+
