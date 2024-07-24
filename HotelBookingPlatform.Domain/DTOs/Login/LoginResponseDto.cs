@@ -4,7 +4,7 @@ using HotelBookingPlatform.Domain.Entities;
 namespace HotelBookingPlatform.Domain.DTOs.Login;
 public class LoginResponseDto
 {
-    public string token { get; set; }
+    public string Token { get; set; }
     public LocalUserDto User { get; set; }
-    public string Role { get; set; }
+
 }

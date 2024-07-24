@@ -6,35 +6,27 @@ using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelBookingPlatform.Infrastructure.Services;
 public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
-    private UserManager<LocalUser> _userManager;
+    private readonly UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IConfiguration _configuration;
+    private readonly ITokenService _tokenService;
 
-    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-        _configuration = configuration;
+        _tokenService = tokenService;
     }
 
     public async Task<bool> IsUniqueUser(string email)
     {
         var result = await _context.LocalUsers.FirstOrDefaultAsync(x => x.Email == email);
-        return result is null;
+        return result == null;
     }
 
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
@@ -42,34 +34,19 @@ public class UserRepository : IUserRepository
         var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
         {
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new UnauthorizedAccessException("Invalid email or password.");
         }
 
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:Issuer"],
-            audience: _configuration["JWT:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddHours(1),
-            signingCredentials: creds
-        );
-
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        var token = await _tokenService.CreateTokenAsync(user);
 
         return new LoginResponseDto
         {
-            token = tokenString,
-            User = user
+            Token = token,
+            User = new LocalUserDto
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+            }
         };
     }
 

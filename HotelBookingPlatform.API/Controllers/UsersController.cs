@@ -71,20 +71,9 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
-        if (loginRequestDto is null)
-        {
-            return BadRequest(new Response(
-                StatusCodes.Status400BadRequest,
-                null,
-                false,
-                "Invalid login request."
-            ));
-        }
-
         try
         {
             var loginResponse = await _userRepository.Login(loginRequestDto);
-
             return Ok(new Response(
                 StatusCodes.Status200OK,
                 loginResponse,
@@ -111,5 +100,7 @@ public class UsersController : ControllerBase
             ));
         }
     }
+
+
 
 }
