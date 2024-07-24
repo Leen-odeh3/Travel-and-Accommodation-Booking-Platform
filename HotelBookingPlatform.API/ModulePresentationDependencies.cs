@@ -5,6 +5,7 @@ using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace HotelBookingPlatform.API;
@@ -42,6 +43,7 @@ public static class ModulePresentationDependencies
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
             };
         });
+
         return services;
     }
 }

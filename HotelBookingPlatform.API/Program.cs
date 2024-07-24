@@ -2,13 +2,15 @@ using HotelBookingPlatform.Application;
 using HotelBookingPlatform.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+
 namespace HotelBookingPlatform.API;
+
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
 
         builder.Services.AddControllers(options =>
         {
@@ -20,10 +22,45 @@ public class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Hotel Booking Platform API",
+                Version = "v1"
+            });
+
+            // ÊÚÑíÝ ÇáÊæËíÞ ÈÇÓÊÎÏÇã Bearer Token
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+
+            // ÝÑÖ ãÊØáÈÇÊ ÇáÃãÇä áÌãíÚ ÇáØáÈÇÊ
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });
 
         builder.Services.AddApplicationDependencies()
-                        .AddPresentationDependencies(builder.Configuration) 
+                        .AddPresentationDependencies(builder.Configuration)
                         .AddInfrastructureDependencies()
                         .AddServiceRegisteration();
 
@@ -32,7 +69,11 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Booking Platform API v1");
+                c.RoutePrefix = string.Empty; 
+            });  
         }
 
         app.UseHttpsRedirection();
