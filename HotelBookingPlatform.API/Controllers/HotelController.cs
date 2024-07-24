@@ -24,7 +24,9 @@ public class HotelController : ControllerBase
 
 
     // GET: api/Hotel
+
     [HttpGet]
+    [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
     public async Task<ActionResult<Response>> GetHotels([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0)
@@ -144,7 +146,6 @@ public class HotelController : ControllerBase
         [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
-        // التحقق من صحة القيم المدخلة
         if (pageSize <= 0)
         {
             _response.ErrorMessage = "Page size must be greater than zero.";
