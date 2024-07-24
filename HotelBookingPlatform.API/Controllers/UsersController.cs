@@ -16,12 +16,14 @@ public class UsersController : ControllerBase
     private readonly UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRepository _userRepository;
+    private readonly ResponseHandler _responseHandler;
 
-    public UsersController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository)
+    public UsersController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository, ResponseHandler responseHandler)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userRepository = userRepository;
+        _responseHandler = responseHandler;
     }
 
     [HttpPost("Register")]
@@ -29,43 +31,22 @@ public class UsersController : ControllerBase
     {
         if (registerRequestDto is null)
         {
-            return BadRequest(new Response(
-                StatusCodes.Status400BadRequest,
-                null,
-                false,
-                "Invalid registration request."
-            ));
+            return BadRequest(_responseHandler.BadRequest<object>("Invalid registration request."));
         }
 
         if (!await _userRepository.IsUniqueUser(registerRequestDto.Email))
         {
-            return BadRequest(new Response(
-                StatusCodes.Status400BadRequest,
-                null,
-                false,
-                "User with this email already exists."
-            ));
+            return BadRequest(_responseHandler.BadRequest<object>("User with this email already exists."));
         }
 
         try
         {
             var userDto = await _userRepository.Register(registerRequestDto);
-
-            return Ok(new Response(
-                StatusCodes.Status200OK,
-                userDto,
-                true,
-                "User registered successfully."
-            ));
+            return Ok(_responseHandler.Success(userDto));
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response(
-                StatusCodes.Status500InternalServerError,
-                null,
-                false,
-                $"An error occurred during registration: {ex.Message}"
-            ));
+            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>($"An error occurred during registration: {ex.Message}"));
         }
     }
 
@@ -75,30 +56,15 @@ public class UsersController : ControllerBase
         try
         {
             var loginResponse = await _userRepository.Login(loginRequestDto);
-            return Ok(new Response(
-                StatusCodes.Status200OK,
-                loginResponse,
-                true,
-                "Login successful."
-            ));
+            return Ok(_responseHandler.Success(loginResponse));
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new Response(
-                StatusCodes.Status401Unauthorized,
-                null,
-                false,
-                ex.Message
-            ));
+            return Unauthorized(_responseHandler.Unauthorized<object>(ex.Message));
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response(
-                StatusCodes.Status500InternalServerError,
-                null,
-                false,
-                $"An error occurred during login: {ex.Message}"
-            ));
+            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>($"An error occurred during login: {ex.Message}"));
         }
     }
 
@@ -108,56 +74,29 @@ public class UsersController : ControllerBase
     {
         if (request == null || string.IsNullOrEmpty(request.Email))
         {
-            return BadRequest(new Response(
-                StatusCodes.Status400BadRequest,
-                null,
-                false,
-                "Invalid request."
-            ));
+            return BadRequest(_responseHandler.BadRequest<object>("Invalid request."));
         }
 
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
+        if (user is null)
         {
-            return NotFound(new Response(
-                StatusCodes.Status404NotFound,
-                null,
-                false,
-                "User not found."
-            ));
+            return NotFound(_responseHandler.NotFound<object>("User not found."));
         }
 
         var roleExists = await _roleManager.RoleExistsAsync("Admin");
         if (!roleExists)
         {
-            return BadRequest(new Response(
-                StatusCodes.Status400BadRequest,
-                null,
-                false,
-                "Admin role does not exist."
-            ));
+            return BadRequest(_responseHandler.BadRequest<object>("Admin role does not exist."));
         }
 
         var result = await _userManager.AddToRoleAsync(user, "Admin");
         if (result.Succeeded)
         {
-            return Ok(new Response(
-                StatusCodes.Status200OK,
-                null,
-                true,
-                "User assigned as Admin successfully."
-            ));
+            return Ok(_responseHandler.Success<object>(null));
         }
         else
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response(
-                StatusCodes.Status500InternalServerError,
-                null,
-                false,
-                "An error occurred while assigning Admin role."
-            ));
+            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>("An error occurred while assigning Admin role."));
         }
     }
-
-
 }

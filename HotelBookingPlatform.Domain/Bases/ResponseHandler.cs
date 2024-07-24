@@ -1,8 +1,10 @@
 ﻿using System.Net;
-namespace HotelBookingPlatform.Domain.Bases;
-public class ResponseHandler
+
+namespace HotelBookingPlatform.Domain.Bases
+{
+    public class ResponseHandler
     {
-        public Response<T> Deleted<T>(string message )
+        public Response<T> Deleted<T>(string message)
         {
             return new Response<T>
             {
@@ -12,7 +14,7 @@ public class ResponseHandler
             };
         }
 
-        public Response<T> Success<T>(T entity, object meta )
+        public Response<T> Success<T>(T entity)
         {
             return new Response<T>
             {
@@ -20,7 +22,6 @@ public class ResponseHandler
                 StatusCode = HttpStatusCode.OK,
                 Succeeded = true,
                 Message = "Operation succeeded.",
-                Meta = meta
             };
         }
 
@@ -64,7 +65,7 @@ public class ResponseHandler
             };
         }
 
-        public Response<T> Created<T>(T entity, object meta)
+        public Response<T> Created<T>(T entity)
         {
             return new Response<T>
             {
@@ -72,8 +73,7 @@ public class ResponseHandler
                 StatusCode = HttpStatusCode.Created,
                 Succeeded = true,
                 Message = "Resource created successfully.",
-                Meta = meta
             };
         }
     }
-
+}

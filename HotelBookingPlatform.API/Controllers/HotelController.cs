@@ -1,10 +1,9 @@
-﻿using System.Net;
-using AutoMapper;
+﻿using AutoMapper;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Bases;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain;
 
 namespace HotelBookingPlatform.API.Controllers;
@@ -15,16 +14,13 @@ public class HotelController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ResponseHandler _responseHandler;
 
-    public HotelController(IUnitOfWork unitOfWork, IMapper mapper)
+    public HotelController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-    }
-
-    private Response<T> CreateResponse<T>(HttpStatusCode statusCode, T data = default, bool succeeded = true, string message = null)
-    {
-        return new Response<T>((int)statusCode, data, succeeded, message);
+        _responseHandler = responseHandler;
     }
 
     // GET: api/Hotel
@@ -34,16 +30,16 @@ public class HotelController : ControllerBase
     {
         if (pageSize <= 0 || pageNumber <= 0)
         {
-            return BadRequest(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.BadRequest, null, false, "Page size and page number must be greater than zero."));
+            return BadRequest(_responseHandler.BadRequest<IEnumerable<HotelResponseDto>>("Page size and page number must be greater than zero."));
         }
 
         var hotels = await _unitOfWork.HotelRepository.GetAllAsync(pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (hotelDtos.Any())
-            return Ok(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.OK, hotelDtos));
+            return Ok(_responseHandler.Success(hotelDtos));
         else
-            return NotFound(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.NotFound, null, false, "No Hotels Found"));
+            return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("No Hotels Found"));
     }
 
     // GET: api/Hotel/5
@@ -53,10 +49,10 @@ public class HotelController : ControllerBase
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
 
         if (hotel == null)
-            return NotFound(CreateResponse<HotelResponseDto>(HttpStatusCode.NotFound, null, false, "Hotel not found"));
+            return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found"));
 
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
-        return Ok(CreateResponse<HotelResponseDto>(HttpStatusCode.OK, hotelDto));
+        return Ok(_responseHandler.Success(hotelDto));
     }
 
     // POST: api/Hotel
@@ -69,7 +65,7 @@ public class HotelController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
 
         var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
-        return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, CreateResponse<HotelResponseDto>(HttpStatusCode.Created, createdHotelDto));
+        return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, _responseHandler.Created(createdHotelDto));
     }
 
     // PUT: api/Hotel/5
@@ -79,7 +75,7 @@ public class HotelController : ControllerBase
     {
         var existingHotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (existingHotel == null)
-            return NotFound(CreateResponse<HotelResponseDto>(HttpStatusCode.NotFound, null, false, "Hotel not found"));
+            return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found"));
 
         var hotel = _mapper.Map<Hotel>(request);
         await _unitOfWork.HotelRepository.UpdateAsync(id, hotel);
@@ -95,7 +91,7 @@ public class HotelController : ControllerBase
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel == null)
-            return NotFound(CreateResponse<HotelResponseDto>(HttpStatusCode.NotFound, null, false, "Hotel not found"));
+            return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found"));
 
         await _unitOfWork.HotelRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
@@ -113,15 +109,15 @@ public class HotelController : ControllerBase
     {
         if (pageSize <= 0 || pageNumber <= 0)
         {
-            return BadRequest(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.BadRequest, null, false, "Page size and page number must be greater than zero."));
+            return BadRequest(_responseHandler.BadRequest<IEnumerable<HotelResponseDto>>("Page size and page number must be greater than zero."));
         }
 
         var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (hotelDtos.Any())
-            return Ok(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.OK, hotelDtos));
+            return Ok(_responseHandler.Success(hotelDtos));
         else
-            return NotFound(CreateResponse<IEnumerable<HotelResponseDto>>(HttpStatusCode.NotFound, null, false, "No Hotels Found"));
+            return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("No Hotels Found"));
     }
 }
