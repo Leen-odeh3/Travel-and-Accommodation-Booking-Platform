@@ -5,7 +5,6 @@ using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.Bases;
 
-
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -23,6 +22,7 @@ public class HotelController : ControllerBase
         _response = new Response();
     }
 
+  
     // GET: api/Hotel
     [HttpGet]
     public async Task<ActionResult<Response>> GetHotels()
@@ -45,7 +45,7 @@ public class HotelController : ControllerBase
             return NotFound(_response);
         }
     }
-
+   
     // GET: api/Hotel/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Response>> GetHotel(int id)
@@ -65,7 +65,7 @@ public class HotelController : ControllerBase
         _response.Data = hotelDto;
         return Ok(_response);
     }
-
+  
     // POST: api/Hotel
     [HttpPost]
     public async Task<ActionResult<Response>> CreateHotel(HotelCreateRequest request)
@@ -81,7 +81,7 @@ public class HotelController : ControllerBase
 
         return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, _response);
     }
-
+  
     // PUT: api/Hotel/5
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateHotel(int id, HotelResponseDto request)
@@ -103,7 +103,7 @@ public class HotelController : ControllerBase
 
         return NoContent();
     }
-
+   
     // DELETE: api/Hotel/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteHotel(int id)
@@ -119,5 +119,30 @@ public class HotelController : ControllerBase
 
         return NoContent();
     }
+  
+    [HttpGet("search")]
+    public async Task<ActionResult<Response>> SearchHotels([FromQuery] string name, [FromQuery] string desc)
+    {
+        var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc);
+        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
+
+        if (hotelDtos.Any())
+        {
+            _response.StatusCode = System.Net.HttpStatusCode.OK;
+            _response.Succeeded = true;
+            _response.Data = hotelDtos;
+            return Ok(_response);
+        }
+        else
+        {
+            _response.ErrorMessage = "No Hotels Found";
+            _response.StatusCode = System.Net.HttpStatusCode.NotFound;
+            _response.Succeeded = false;
+            return NotFound(_response);
+        }
+    }
+
+
+
 }
 
