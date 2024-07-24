@@ -22,12 +22,27 @@ public class HotelController : ControllerBase
         _response = new Response();
     }
 
-  
+
     // GET: api/Hotel
     [HttpGet]
-    public async Task<ActionResult<Response>> GetHotels()
+    public async Task<ActionResult<Response>> GetHotels([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
-        var hotels = await _unitOfWork.HotelRepository.GetAllAsync();
+        if (pageSize <= 0)
+        {
+            _response.ErrorMessage = "Page size must be greater than zero.";
+            _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            _response.Succeeded = false;
+            return BadRequest(_response);
+        }
+
+        if (pageNumber <= 0)
+        {
+            _response.ErrorMessage = "Page number must be greater than zero.";
+            _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            _response.Succeeded = false;
+            return BadRequest(_response);
+        }
+        var hotels = await _unitOfWork.HotelRepository.GetAllAsync(pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (hotelDtos.Any())
@@ -45,7 +60,8 @@ public class HotelController : ControllerBase
             return NotFound(_response);
         }
     }
-   
+
+
     // GET: api/Hotel/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Response>> GetHotel(int id)
@@ -119,11 +135,34 @@ public class HotelController : ControllerBase
 
         return NoContent();
     }
-  
+
+    // GET: api/Hotel/search
     [HttpGet("search")]
-    public async Task<ActionResult<Response>> SearchHotels([FromQuery] string name, [FromQuery] string desc)
+    public async Task<ActionResult<Response>> SearchHotel(
+        [FromQuery] string name = "",
+        [FromQuery] string desc = "",
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc);
+        // التحقق من صحة القيم المدخلة
+        if (pageSize <= 0)
+        {
+            _response.ErrorMessage = "Page size must be greater than zero.";
+            _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            _response.Succeeded = false;
+            return BadRequest(_response);
+        }
+
+        if (pageNumber <= 0)
+        {
+            _response.ErrorMessage = "Page number must be greater than zero.";
+            _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            _response.Succeeded = false;
+            return BadRequest(_response);
+        }
+
+        // استدعاء الدالة للبحث والتصفح
+        var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (hotelDtos.Any())
@@ -141,7 +180,6 @@ public class HotelController : ControllerBase
             return NotFound(_response);
         }
     }
-
 
 
 }

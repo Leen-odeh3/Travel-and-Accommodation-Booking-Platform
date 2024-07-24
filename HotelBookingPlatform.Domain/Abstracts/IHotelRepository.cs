@@ -4,6 +4,6 @@ using HotelBookingPlatform.Domain.IRepositories;
 namespace HotelBookingPlatform.Domain.Abstracts;
 public interface IHotelRepository :IGenericRepository<Hotel>
 {
-    Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc);
+    Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1);
 
 }
