@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Register;
