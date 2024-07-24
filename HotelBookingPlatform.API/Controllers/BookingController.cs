@@ -64,7 +64,7 @@ public class BookingController : ControllerBase
         }
 
         var existingBooking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (existingBooking == null)
+        if (existingBooking is null)
         {
             return NotFound();
         }
@@ -80,7 +80,7 @@ public class BookingController : ControllerBase
     public async Task<IActionResult> DeleteBooking(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking == null)
+        if (booking is null)
         {
             return NotFound();
         }

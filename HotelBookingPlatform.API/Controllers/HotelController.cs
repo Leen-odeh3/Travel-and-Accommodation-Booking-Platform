@@ -1,7 +1,11 @@
-﻿using HotelBookingPlatform.Domain.Entities;
+﻿using AutoMapper;
+using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.Bases;
+
+
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -9,12 +13,14 @@ namespace HotelBookingPlatform.API.Controllers;
 public class HotelController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
-    public Response response;
+    private readonly IMapper _mapper;
+    private Response _response;
 
-    public HotelController(IUnitOfWork unitOfWork)
+    public HotelController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        response = new Response();
+        _mapper = mapper;
+        _response = new Response();
     }
 
     // GET: api/Hotel
@@ -22,20 +28,21 @@ public class HotelController : ControllerBase
     public async Task<ActionResult<Response>> GetHotels()
     {
         var hotels = await _unitOfWork.HotelRepository.GetAllAsync();
-        var check = hotels.Any();
-        if (check)
+        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
+
+        if (hotelDtos.Any())
         {
-           response.StatusCode=System.Net.HttpStatusCode.OK;
-           response.Succeeded=check;
-           response.Data = hotels;
-            return response;
+            _response.StatusCode = System.Net.HttpStatusCode.OK;
+            _response.Succeeded = true;
+            _response.Data = hotelDtos;
+            return Ok(_response);
         }
         else
         {
-            response.ErrorMessage = "Not Hotels Found";
-            response.StatusCode = System.Net.HttpStatusCode.OK;
-            response.Succeeded = check;
-            return response;
+            _response.ErrorMessage = "No Hotels Found";
+            _response.StatusCode = System.Net.HttpStatusCode.NotFound;
+            _response.Succeeded = false;
+            return NotFound(_response);
         }
     }
 
@@ -46,40 +53,40 @@ public class HotelController : ControllerBase
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel is null)
         {
-            response.StatusCode = System.Net.HttpStatusCode.NotFound;
-            response.Succeeded = false;
-            response.ErrorMessage = "Hotel not found";
-            return new ObjectResult(response)
-            {
-                StatusCode = (int)response.StatusCode
-            };
+            _response.StatusCode = System.Net.HttpStatusCode.NotFound;
+            _response.Succeeded = false;
+            _response.ErrorMessage = "Hotel not found";
+            return NotFound(_response);
         }
 
-        response.StatusCode = System.Net.HttpStatusCode.OK;
-        response.Succeeded = true;
-        response.Data = hotel;
-
-        return new ObjectResult(response)
-        {
-            StatusCode = (int)response.StatusCode
-        };
+        var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
+        _response.StatusCode = System.Net.HttpStatusCode.OK;
+        _response.Succeeded = true;
+        _response.Data = hotelDto;
+        return Ok(_response);
     }
 
     // POST: api/Hotel
     [HttpPost]
-    public async Task<ActionResult<Hotel>> CreateHotel(Hotel hotel)
+    public async Task<ActionResult<Response>> CreateHotel(HotelCreateRequest request)
     {
+        var hotel = _mapper.Map<Hotel>(request);
         await _unitOfWork.HotelRepository.CreateAsync(hotel);
         await _unitOfWork.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, hotel);
+        var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
+        _response.StatusCode = System.Net.HttpStatusCode.Created;
+        _response.Succeeded = true;
+        _response.Data = createdHotelDto;
+
+        return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, _response);
     }
 
     // PUT: api/Hotel/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateHotel(int id, Hotel hotel)
+    public async Task<IActionResult> UpdateHotel(int id, HotelResponseDto request)
     {
-        if (id != hotel.HotelId)
+        if (id != request.HotelId)
         {
             return BadRequest();
         }
@@ -90,6 +97,7 @@ public class HotelController : ControllerBase
             return NotFound();
         }
 
+        var hotel = _mapper.Map<Hotel>(request);
         await _unitOfWork.HotelRepository.UpdateAsync(id, hotel);
         await _unitOfWork.SaveChangesAsync();
 
@@ -112,3 +120,4 @@ public class HotelController : ControllerBase
         return NoContent();
     }
 }
+
