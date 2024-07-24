@@ -20,30 +20,32 @@ public class UserRepository : IUserRepository
         _roleManager = roleManager;
 
     }
-    public bool IsUniqueUser(string email)
+    public async Task<bool> IsUniqueUser(string email)
     {
-        var result = _context.LocalUsers.FirstOrDefault(x => x.Email == email);
+        var result = await _context.LocalUsers.FirstOrDefaultAsync(x => x.Email == email);
         return result is null;
     }
+
 
     public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<LocalUserDto> Register(RegisterRequestDto registerRequestDto)
+
+    public async Task<LocalUserDto> Register(RegisterDto registerDto)
     {
         var user = new LocalUser
         {
-            UserName = registerRequestDto.Email.Split('@')[0],
-            Email = registerRequestDto.Email,
-            FirstName = registerRequestDto.FirstName,
-            LastName = registerRequestDto.LastName,
+            UserName = registerDto.Email.Split('@')[0],
+            Email = registerDto.Email,
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
         };
 
         try
         {
-            var result = await _userManager.CreateAsync(user, registerRequestDto.Password);
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (!result.Succeeded)
             {
@@ -57,15 +59,7 @@ public class UserRepository : IUserRepository
             }
 
             await _userManager.AddToRoleAsync(user, defaultRole);
-            if (!string.IsNullOrEmpty(registerRequestDto.Role))
-            {
-                if (!await _roleManager.RoleExistsAsync(registerRequestDto.Role))
-                {
-                    throw new Exception($"Role '{registerRequestDto.Role}' does not exist.");
-                }
 
-                await _userManager.AddToRoleAsync(user, registerRequestDto.Role);
-            }
             return new LocalUserDto
             {
                 UserName = user.UserName,
@@ -77,4 +71,5 @@ public class UserRepository : IUserRepository
             throw new Exception("An error occurred during registration: " + ex.Message);
         }
     }
+
 }

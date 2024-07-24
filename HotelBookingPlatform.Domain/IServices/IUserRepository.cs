@@ -5,6 +5,6 @@ namespace HotelBookingPlatform.Domain.IServices;
 public interface IUserRepository
 {
     Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
-    Task<LocalUserDto> Register(RegisterRequestDto registerRequestDto);
-    bool IsUniqueUser(string username);
+    Task<LocalUserDto> Register(RegisterDto registerRequestDto);
+    Task<bool> IsUniqueUser(string email);
 }
