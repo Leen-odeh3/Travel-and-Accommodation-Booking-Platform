@@ -4,6 +4,7 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Bases;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -35,6 +36,7 @@ public class HotelController : ControllerBase
     // GET: api/Hotel
     [HttpGet]
     [ResponseCache(CacheProfileName = "DefaultCache")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetHotels([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0 || pageNumber <= 0)
