@@ -12,7 +12,7 @@ public class Response
     {
         StatusCode = statusCode;
         Data = data;
-        Succeeded = succeeded;
+        Succeeded = statusCode>=200 && statusCode<=300;
         Message = message ?? GetMessageForStatusCode(statusCode);
     }
 
