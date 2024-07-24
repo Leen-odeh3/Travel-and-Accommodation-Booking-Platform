@@ -7,7 +7,7 @@ public class HotelMappingProfile : Profile
 {
     public HotelMappingProfile()
     {
-        CreateMap<Hotel, HotelResponseDto>();
-        CreateMap<Hotel, HotelCreateRequest>();
+        CreateMap<Hotel, HotelResponseDto>(); 
+        CreateMap<HotelCreateRequest, Hotel>();
     }
 }
