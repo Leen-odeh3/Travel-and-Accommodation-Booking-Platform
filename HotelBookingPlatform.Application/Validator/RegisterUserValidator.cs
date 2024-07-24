@@ -17,8 +17,12 @@ public class RegisterUserValidator : AbstractValidator<RegisterRequestDto>
     public void ApplyValidationRoles()
     {
         RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("Username is required")
-            .Matches("^[a-zA-Z]").WithMessage("Name can only contain letters");
+            .NotEmpty().WithMessage("FirstName is required")
+            .Matches("^[a-zA-Z]").WithMessage("FirstName can only contain letters");
+
+        RuleFor(x => x.LastName)
+           .NotEmpty().WithMessage("LastName is required")
+           .Matches("^[a-zA-Z]").WithMessage("LastName can only contain letters");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required")
