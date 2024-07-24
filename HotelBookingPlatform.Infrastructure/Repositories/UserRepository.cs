@@ -2,12 +2,13 @@
 using HotelBookingPlatform.Domain.DTOs.Login;
 using HotelBookingPlatform.Domain.DTOs.Register;
 using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelBookingPlatform.Infrastructure.Services;
+namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
