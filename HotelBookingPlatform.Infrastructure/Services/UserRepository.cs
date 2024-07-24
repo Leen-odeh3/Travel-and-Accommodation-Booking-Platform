@@ -6,6 +6,14 @@ using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HotelBookingPlatform.Infrastructure.Services;
 public class UserRepository : IUserRepository
@@ -13,53 +21,57 @@ public class UserRepository : IUserRepository
     private readonly AppDbContext _context;
     private UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly SignInManager<LocalUser> _signInManager;
-    private readonly ITokenService _tokenService;
+    private readonly IConfiguration _configuration;
 
-    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<LocalUser> signInManager, ITokenService tokenService)
+    public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-        _signInManager = signInManager;
-        _tokenService = tokenService;
+        _configuration = configuration;
     }
+
     public async Task<bool> IsUniqueUser(string email)
     {
         var result = await _context.LocalUsers.FirstOrDefaultAsync(x => x.Email == email);
         return result is null;
     }
 
-
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
-        var result = await _signInManager.PasswordSignInAsync(
-            loginRequestDto.Email,
-            loginRequestDto.password,
-            isPersistent: false,
-            lockoutOnFailure: false
+        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
+        if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
+        {
+            throw new UnauthorizedAccessException("Invalid credentials.");
+        }
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["JWT:Issuer"],
+            audience: _configuration["JWT:Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddHours(1),
+            signingCredentials: creds
         );
 
-        if (!result.Succeeded)
-        {
-            throw new UnauthorizedAccessException("Invalid login attempt.");
-        }
-
-        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
-        if (user == null)
-        {
-            throw new UnauthorizedAccessException("Invalid login attempt.");
-        }
-
-        var token = await _tokenService.CreateTokenAsync(user);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
         return new LoginResponseDto
         {
-            token = token,
+            token = tokenString,
             User = user
         };
     }
-
 
     public async Task<LocalUserDto> Register(RegisterRequestDto registerDto)
     {
@@ -95,5 +107,4 @@ public class UserRepository : IUserRepository
             throw new Exception("An error occurred during registration: " + ex.Message);
         }
     }
-
 }

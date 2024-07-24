@@ -1,5 +1,6 @@
 ﻿using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
@@ -24,8 +25,6 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
-
-
 
         return services;
     }
