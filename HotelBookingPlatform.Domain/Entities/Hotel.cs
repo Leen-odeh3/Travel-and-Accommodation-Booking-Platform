@@ -9,6 +9,8 @@ public class Hotel
     public string PhoneNumber { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+    public int CityID { get; set; }
+    public City City { get; set; }
     public ICollection<Booking> Bookings { get; set;}
     public ICollection<RoomClass> RoomClasses { get; set;}
 }

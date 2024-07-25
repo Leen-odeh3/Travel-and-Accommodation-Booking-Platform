@@ -7,7 +7,10 @@ public class HotelMappingProfile : Profile
 {
     public HotelMappingProfile()
     {
-        CreateMap<Hotel, HotelResponseDto>(); 
+        CreateMap<Hotel, HotelResponseDto>()
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Name));
         CreateMap<HotelCreateRequest, Hotel>();
-    }
+
+
+}
 }

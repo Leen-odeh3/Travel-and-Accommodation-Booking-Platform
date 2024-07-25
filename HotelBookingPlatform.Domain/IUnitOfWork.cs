@@ -7,5 +7,6 @@ public interface IUnitOfWork
     IBookingRepository BookingRepository { get; }
     IRoomClasseRepository RoomClasseRepository { get; }
     IRoomRepository RoomRepository { get; }
+    ICityRepository CityRepository { get; }
     Task<int> SaveChangesAsync();
 }

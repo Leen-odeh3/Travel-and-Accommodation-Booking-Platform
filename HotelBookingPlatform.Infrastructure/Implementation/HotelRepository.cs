@@ -4,25 +4,46 @@ using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelBookingPlatform.Infrastructure.Implementation;
-public class HotelRepository : GenericRepository<Hotel> , IHotelRepository
+namespace HotelBookingPlatform.Infrastructure.Implementation
 {
-    public HotelRepository(AppDbContext context) : base(context)
+    public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
     {
-       
-    }
-    public async Task<IEnumerable<Hotel>> SearchCriteria(
-      string name,
-      string desc,
-      int pageSize = 10,
-      int pageNumber = 1)
-    {
-        return await _appDbContext.Set<Hotel>()
-            .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
-                        (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-    }
+        private readonly AppDbContext _context;
 
+        public HotelRepository(AppDbContext context) : base(context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Hotel>> SearchCriteria(
+            string name,
+            string desc,
+            int pageSize = 10,
+            int pageNumber = 1)
+        {
+            return await _context.Hotels
+                .Include(h => h.City)
+                .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
+                            (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
+        {
+            return await _context.Hotels
+                .Include(h => h.City)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<Hotel> GetByIdAsync(int id)
+        {
+            return await _context.Hotels
+                .Include(h => h.City)
+                .FirstOrDefaultAsync(h => h.HotelId == id);
+        }
+    }
 }
