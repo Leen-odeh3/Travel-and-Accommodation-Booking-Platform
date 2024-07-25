@@ -14,6 +14,7 @@ namespace HotelBookingPlatform.Infrastructure;
         HotelRepository = new HotelRepository(_context);
         BookingRepository = new BookingRepository(_context);
         RoomClasseRepository = new RoomClassRepository(_context);
+        RoomRepository = new RoomRepository(_context);
     }
 
     public IHotelRepository HotelRepository { get; }
@@ -21,6 +22,8 @@ namespace HotelBookingPlatform.Infrastructure;
     public IBookingRepository BookingRepository { get; }
 
     public IRoomClasseRepository RoomClasseRepository { get; }
+
+    public IRoomRepository RoomRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {

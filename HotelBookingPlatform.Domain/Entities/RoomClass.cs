@@ -14,4 +14,5 @@ public class RoomClass
     public DateTime? ModifiedAtUtc { get; set; }
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
+    public ICollection<Room> Rooms { get;}
 }

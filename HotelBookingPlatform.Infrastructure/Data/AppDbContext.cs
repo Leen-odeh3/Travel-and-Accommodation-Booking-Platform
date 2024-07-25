@@ -15,12 +15,13 @@ public class AppDbContext : IdentityDbContext<LocalUser>
 
         modelBuilder.ApplyConfiguration(new HotelConfiguration());
         modelBuilder.ApplyConfiguration(new RoomClassConfiguration());
+        modelBuilder.ApplyConfiguration(new RoomConfiguration());
 
     }
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<LocalUser> LocalUsers { get; set; }
     public DbSet<RoomClass> RoomClasses { get; set; }
-   //public DbSet<IdentityUser> Users { get; set; }
-  // public DbSet<IdentityRole> Roles { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+ 
 }
