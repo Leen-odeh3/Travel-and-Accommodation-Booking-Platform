@@ -43,6 +43,7 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Response<HotelResponseDto>>> GetHotel(int id)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
