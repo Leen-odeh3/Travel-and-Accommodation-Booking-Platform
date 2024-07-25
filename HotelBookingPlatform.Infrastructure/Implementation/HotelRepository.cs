@@ -22,7 +22,7 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
             int pageNumber = 1)
         {
             return await _context.Hotels
-                .Include(h => h.City)
+                .Include(h => h.City).Include(h => h.Owner)
                 .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
                             (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
                 .Skip((pageNumber - 1) * pageSize)

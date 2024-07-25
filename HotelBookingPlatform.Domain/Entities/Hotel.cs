@@ -11,6 +11,8 @@ public class Hotel
     public DateTime? ModifiedAtUtc { get; set; }
     public int CityID { get; set; }
     public City City { get; set; }
+    public int OwnerID { get; set; }
+    public Owner Owner { get; set; }
     public ICollection<Booking> Bookings { get; set;}
     public ICollection<RoomClass> RoomClasses { get; set;}
 }

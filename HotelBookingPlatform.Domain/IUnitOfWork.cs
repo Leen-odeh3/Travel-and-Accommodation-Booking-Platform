@@ -8,5 +8,6 @@ public interface IUnitOfWork
     IRoomClasseRepository RoomClasseRepository { get; }
     IRoomRepository RoomRepository { get; }
     ICityRepository CityRepository { get; }
+    IOwnerRepository OwnerRepository { get; }
     Task<int> SaveChangesAsync();
 }
