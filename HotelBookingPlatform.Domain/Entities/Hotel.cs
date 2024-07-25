@@ -10,4 +10,5 @@ public class Hotel
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
     public ICollection<Booking> Bookings { get; set;}
+    public ICollection<RoomClass> classes { get; set;}
 }
