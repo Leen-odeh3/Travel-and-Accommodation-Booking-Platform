@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.API.Profiles;
+using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Infrastructure.Data;
@@ -43,6 +44,8 @@ public static class ModulePresentationDependencies
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
             };
         });
+        services.AddScoped<ResponseHandler>();
+
 
         return services;
     }
