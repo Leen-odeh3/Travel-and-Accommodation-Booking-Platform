@@ -25,7 +25,6 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel
     [HttpGet]
-    [ResponseCache(CacheProfileName = "DefaultCache")]
     public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetHotels([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0 || pageNumber <= 0)

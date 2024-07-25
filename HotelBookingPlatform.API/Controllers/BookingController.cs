@@ -9,6 +9,7 @@ namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[ResponseCache(CacheProfileName = "DefaultCache")]
 public class BookingController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

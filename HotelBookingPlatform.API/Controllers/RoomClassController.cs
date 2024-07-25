@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain;
-using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+using HotelBookingPlatform.Domain.DTOs.RoomClass;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -10,7 +12,6 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class RoomClassController : ControllerBase
 {
-
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
@@ -18,63 +19,74 @@ public class RoomClassController : ControllerBase
     public RoomClassController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper ;
+        _mapper = mapper;
         _responseHandler = responseHandler;
     }
 
-
     [HttpGet]
-    public async Task<ActionResult<Response<IEnumerable<RoomClass>>>> GetRoomClass(int pageSize = 10, int pageNumber = 1)
+    public async Task<ActionResult<Response<IEnumerable<RoomClassDto>>>> GetRoomClass(int pageSize = 10, int pageNumber = 1)
     {
+        var roomClasses = await _unitOfWork.RoomClasseRepository.GetAllAsync(pageSize, pageNumber);
 
-        var types = await _unitOfWork.RoomClasseRepository.GetAllAsync(pageSize, pageNumber);
-
-        if (types.Any())
-            return Ok(_responseHandler.Success(types));
+        if (roomClasses.Any())
+        {
+            var roomClassDtos = _mapper.Map<IEnumerable<RoomClassDto>>(roomClasses);
+            return Ok(_responseHandler.Success(roomClassDtos));
+        }
         else
-            return NotFound(_responseHandler.NotFound<RoomClass>("No Room class Found"));
+        {
+            return NotFound(_responseHandler.NotFound<RoomClassDto>("No Room class Found"));
+        }
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<RoomClass>>> CreateRoomClass(RoomClass roomclass)
+    [Authorize(Roles = "Admin")]
+
+    public async Task<ActionResult<Response<RoomClassDto>>> CreateRoomClass(RoomClassCreateDto roomClassCreateDto)
     {
-        var createdRoomClass = await _unitOfWork.RoomClasseRepository.CreateAsync(roomclass);
+        var roomClass = _mapper.Map<RoomClass>(roomClassCreateDto);
+        var createdRoomClass = await _unitOfWork.RoomClasseRepository.CreateAsync(roomClass);
         await _unitOfWork.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetRoomClass), new { id = createdRoomClass.RoomClassID }, createdRoomClass);
+        var roomClassDto = _mapper.Map<RoomClassDto>(createdRoomClass);
+        return CreatedAtAction(nameof(GetRoomClass), new { id = roomClassDto.RoomClassID }, _responseHandler.Success(roomClassDto));
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Response<RoomClass>>> UpdateRoomClass(int id, RoomClass roomClassDto)
+    [Authorize(Roles = "Admin")]
+
+    public async Task<ActionResult<Response<RoomClassDto>>> UpdateRoomClass(int id, RoomClassCreateDto roomClassUpdateDto)
     {
         var existingRoomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
 
         if (existingRoomClass is null)
         {
-            return _responseHandler.NotFound<RoomClass>($"Room class with id {id} not found");
+            return NotFound(_responseHandler.NotFound<RoomClassDto>($"Room class with id {id} not found"));
         }
 
-        await _unitOfWork.RoomClasseRepository.UpdateAsync(id, roomClassDto); // Updated to use roomClassDto
+        _mapper.Map(roomClassUpdateDto, existingRoomClass);
+        await _unitOfWork.RoomClasseRepository.UpdateAsync(id, existingRoomClass);
         await _unitOfWork.SaveChangesAsync();
 
-        return _responseHandler.Success(roomClassDto); // Return updated DTO
+        var updatedRoomClassDto = _mapper.Map<RoomClassDto>(existingRoomClass);
+        return Ok(_responseHandler.Success(updatedRoomClassDto));
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+
     public async Task<ActionResult> DeleteRoomClass(int id)
     {
         var roomClassToDelete = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
 
         if (roomClassToDelete == null)
         {
-            return NotFound(_responseHandler.NotFound<RoomClass>("RoomClass not found"));
+            return NotFound(_responseHandler.NotFound<RoomClassDto>("RoomClass not found"));
         }
 
-        await _unitOfWork.RoomClasseRepository.DeleteAsync(id); // Use id directly
+        await _unitOfWork.RoomClasseRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
 
-        return Ok();
+        return Ok(_responseHandler.Deleted<RoomClassDto>("Deleted Done"));
     }
-
-
 }
