@@ -2,12 +2,47 @@
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace HotelBookingPlatform.Infrastructure.Implementation;
-public class RoomClassRepository :GenericRepository<RoomClass> , IRoomClasseRepository
+namespace HotelBookingPlatform.Infrastructure.Implementation
 {
-    public RoomClassRepository(AppDbContext context) : base(context)
+    public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepository
     {
+        private readonly AppDbContext _context;
 
+        public RoomClassRepository(AppDbContext context) : base(context)
+        {
+            _context = context;
+        }
+        public async Task<IEnumerable<RoomClass>> SearchCriteria(
+            string name,
+            string desc,
+            int pageSize = 10,
+            int pageNumber = 1)
+        {
+            return await _context.RoomClasses
+                .Include(rc => rc.Discounts) 
+                .Where(rc => (string.IsNullOrEmpty(name) || rc.Name.Contains(name)) &&
+                             (string.IsNullOrEmpty(desc) || rc.Description.Contains(desc)))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<RoomClass>> GetAllAsync()
+        {
+            return await _context.RoomClasses
+                .Include(rc => rc.Discounts) 
+                .ToListAsync();
+        }
+        public async Task<RoomClass> GetByIdAsync(int id)
+        {
+            return await _context.RoomClasses
+                .Include(rc => rc.Discounts) 
+                .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
+        }
     }
 }

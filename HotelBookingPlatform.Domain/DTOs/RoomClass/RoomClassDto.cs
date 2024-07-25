@@ -8,4 +8,5 @@ public class RoomClassDto
     public int AdultsCapacity { get; set; }
     public int ChildrenCapacity { get; set; }
     public decimal PricePerNight { get; set; }
+    public decimal? DiscountPercentage { get; set; }
 }
