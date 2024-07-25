@@ -4,8 +4,8 @@ using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -26,6 +26,8 @@ public class CityController : ControllerBase
 
     // GET: api/City
     [HttpGet]
+    [SwaggerOperation(Summary = "Get detailed information about a city by its unique identifier.")]
+
     public async Task<ActionResult<Response<IEnumerable<CityResponseDto>>>> GetCities([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0 || pageNumber <= 0)
@@ -44,6 +46,8 @@ public class CityController : ControllerBase
 
     // GET: api/City/5
     [HttpGet("{id}")]
+    [SwaggerOperation(Summary = "Retrieve a list of hotels in a specific city.")]
+
     public async Task<ActionResult<Response<CityResponseDto>>> GetCity(int id)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
@@ -58,6 +62,8 @@ public class CityController : ControllerBase
     // POST: api/City
     [HttpPost]
     [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Create a new city.")]
+
     public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromBody] CityCreateRequest request)
     {
         var city = _mapper.Map<City>(request);
@@ -71,6 +77,7 @@ public class CityController : ControllerBase
     // PUT: api/City/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Update detailed information about a city by its unique identifier.")]
     public async Task<IActionResult> UpdateCity(int id, [FromBody] CityCreateRequest request)
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);

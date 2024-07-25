@@ -1,7 +1,6 @@
 using HotelBookingPlatform.Application;
 using HotelBookingPlatform.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace HotelBookingPlatform.API;
@@ -30,8 +29,8 @@ public class Program
                 Title = "Hotel Booking Platform API",
                 Version = "v1"
             });
+            c.EnableAnnotations(); 
 
-            //  ⁄—Ì› «· ÊÀÌﬁ »«” Œœ«„ Bearer Token
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",
@@ -42,7 +41,6 @@ public class Program
                 Description = "JWT Authorization header using the Bearer scheme."
             });
 
-            // ›—÷ „ ÿ·»«  «·√„«‰ ·Ã„Ì⁄ «·ÿ·»« 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
