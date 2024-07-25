@@ -15,6 +15,7 @@ public class RoomClassController : ControllerBase
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
+
     public RoomClassController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
@@ -23,14 +24,15 @@ public class RoomClassController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult<Response<IEnumerable<RoomClass>>>> GetAll(int pageSize = 10, int pageNumber = 1)
     {
-        var types = await _unitOfWork.RoomClasseRepository.GetAllAsync();
+
+        var types = await _unitOfWork.RoomClasseRepository.GetAllAsync(pageSize, pageNumber);
 
         if (types.Any())
             return Ok(_responseHandler.Success(types));
         else
-            return NotFound(_responseHandler.NotFound<IEnumerable<RoomClass>>("No Room class Found"));
+            return NotFound(_responseHandler.NotFound<RoomClass>("No Room class Found"));
     }
 
     [HttpPost]
