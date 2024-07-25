@@ -4,6 +4,7 @@ using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725211009_CreateOwnerTable")]
+    partial class CreateOwnerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
                     b.HasKey("CityID");
 
-                    b.ToTable("cities");
+                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Hotel", b =>
@@ -242,7 +244,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
                     b.HasKey("OwnerID");
 
-                    b.ToTable("owners");
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Room", b =>
