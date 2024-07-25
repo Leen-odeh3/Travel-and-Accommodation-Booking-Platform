@@ -2,7 +2,6 @@
 using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 
 namespace HotelBookingPlatform.API.Controllers;
@@ -19,12 +18,13 @@ public class RoomClassController : ControllerBase
     public RoomClassController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        _mapper = mapper ;
         _responseHandler = responseHandler;
     }
 
+
     [HttpGet]
-    public async Task<ActionResult<Response<IEnumerable<RoomClass>>>> GetAll(int pageSize = 10, int pageNumber = 1)
+    public async Task<ActionResult<Response<IEnumerable<RoomClass>>>> GetRoomClass(int pageSize = 10, int pageNumber = 1)
     {
 
         var types = await _unitOfWork.RoomClasseRepository.GetAllAsync(pageSize, pageNumber);
@@ -38,21 +38,10 @@ public class RoomClassController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Response<RoomClass>>> CreateRoomClass(RoomClass roomclass)
     {
-        _unitOfWork.RoomClasseRepository.CreateAsync(roomclass);
+        var createdRoomClass = await _unitOfWork.RoomClasseRepository.CreateAsync(roomclass);
         await _unitOfWork.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetRoomClass), new { id = roomclass.RoomClassID }, roomclass);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Response<RoomClass>>> GetRoomClass(int id)
-    {
-        var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
-
-        if (roomClass is null)
-            return NotFound(_responseHandler.NotFound<RoomClass>($"Room class with id {id} not found"));
-
-        return Ok(_responseHandler.Success(roomClass));
+        return CreatedAtAction(nameof(GetRoomClass), new { id = createdRoomClass.RoomClassID }, createdRoomClass);
     }
 
     [HttpPut("{id}")]
@@ -65,10 +54,10 @@ public class RoomClassController : ControllerBase
             return _responseHandler.NotFound<RoomClass>($"Room class with id {id} not found");
         }
 
-        await _unitOfWork.RoomClasseRepository.UpdateAsync(id, existingRoomClass);
+        await _unitOfWork.RoomClasseRepository.UpdateAsync(id, roomClassDto); // Updated to use roomClassDto
         await _unitOfWork.SaveChangesAsync();
 
-        return _responseHandler.Success(existingRoomClass);
+        return _responseHandler.Success(roomClassDto); // Return updated DTO
     }
 
     [HttpDelete("{id}")]
@@ -81,12 +70,11 @@ public class RoomClassController : ControllerBase
             return NotFound(_responseHandler.NotFound<RoomClass>("RoomClass not found"));
         }
 
-        await _unitOfWork.RoomClasseRepository.DeleteAsync(roomClassToDelete.RoomClassID);
+        await _unitOfWork.RoomClasseRepository.DeleteAsync(id); // Use id directly
         await _unitOfWork.SaveChangesAsync();
 
         return Ok();
     }
-
 
 
 }

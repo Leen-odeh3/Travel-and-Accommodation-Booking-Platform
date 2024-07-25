@@ -13,6 +13,7 @@ namespace HotelBookingPlatform.Infrastructure;
         _context = context;
         HotelRepository = new HotelRepository(_context);
         BookingRepository = new BookingRepository(_context);
+        RoomClasseRepository = new RoomClassRepository(_context);
     }
 
     public IHotelRepository HotelRepository { get; }
