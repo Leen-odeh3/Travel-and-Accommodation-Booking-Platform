@@ -48,7 +48,7 @@ public class HotelController : ControllerBase
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
 
-        if (hotel == null)
+        if (hotel is null)
             return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found"));
 
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
@@ -90,13 +90,13 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> DeleteHotel(int id)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
-        if (hotel == null)
+        if (hotel is null)
             return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found"));
 
         await _unitOfWork.HotelRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
 
-        return NoContent();
+        return Ok();
     }
 
     // GET: api/Hotel/search

@@ -19,6 +19,8 @@ namespace HotelBookingPlatform.Infrastructure;
 
     public IBookingRepository BookingRepository { get; }
 
+    public IRoomClasseRepository RoomClasseRepository { get; }
+
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();
