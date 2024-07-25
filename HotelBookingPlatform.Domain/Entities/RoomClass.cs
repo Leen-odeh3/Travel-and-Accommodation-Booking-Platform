@@ -15,4 +15,6 @@ public class RoomClass
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
     public ICollection<Room> Rooms { get;}
+    public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
+
 }

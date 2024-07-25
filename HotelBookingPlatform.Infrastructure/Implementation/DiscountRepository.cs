@@ -3,9 +3,11 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
 namespace HotelBookingPlatform.Infrastructure.Implementation;
-public class OwnerRepository :GenericRepository<Owner> ,IOwnerRepository
+public class DiscountRepository : GenericRepository<Discount> ,IDiscountRepository
 {
-    public OwnerRepository(AppDbContext context) : base(context)
+
+    public DiscountRepository(AppDbContext context) : base(context)
     {
     }
+
 }

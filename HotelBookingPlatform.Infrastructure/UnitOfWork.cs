@@ -17,6 +17,7 @@ namespace HotelBookingPlatform.Infrastructure;
         RoomRepository = new RoomRepository(_context);
         CityRepository= new CityRepository(_context);
         OwnerRepository = new OwnerRepository(_context);
+        DiscountRepository = new DiscountRepository(_context);
 
     }
 
@@ -31,6 +32,7 @@ namespace HotelBookingPlatform.Infrastructure;
     public ICityRepository CityRepository { get; }
 
     public IOwnerRepository OwnerRepository { get; }
+    public IDiscountRepository DiscountRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {
