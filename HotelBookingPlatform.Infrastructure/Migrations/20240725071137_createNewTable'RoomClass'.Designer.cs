@@ -4,6 +4,7 @@ using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725071137_createNewTable'RoomClass'")]
+    partial class createNewTableRoomClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,21 +77,18 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ReviewsRating")
                         .HasColumnType("float");
@@ -193,8 +192,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
@@ -204,8 +202,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(18,2)");
@@ -373,7 +370,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.RoomClass", b =>
                 {
                     b.HasOne("HotelBookingPlatform.Domain.Entities.Hotel", "Hotel")
-                        .WithMany("RoomClasses")
+                        .WithMany("classes")
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -436,7 +433,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                 {
                     b.Navigation("Bookings");
 
-                    b.Navigation("RoomClasses");
+                    b.Navigation("classes");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.LocalUser", b =>
