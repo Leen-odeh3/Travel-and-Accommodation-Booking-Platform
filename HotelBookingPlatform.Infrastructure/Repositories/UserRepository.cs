@@ -15,7 +15,6 @@ public class UserRepository : IUserRepository
     private readonly UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ITokenService _tokenService;
-
     public UserRepository(AppDbContext context, UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
     {
         _context = context;

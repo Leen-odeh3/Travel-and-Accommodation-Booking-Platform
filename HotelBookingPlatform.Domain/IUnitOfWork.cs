@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
-
 namespace HotelBookingPlatform.Domain;
 public interface IUnitOfWork 
 {
