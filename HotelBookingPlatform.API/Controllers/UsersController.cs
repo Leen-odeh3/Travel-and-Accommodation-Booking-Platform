@@ -6,6 +6,8 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.DTOs.Login;
 using HotelBookingPlatform.Domain.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using HotelBookingPlatform.Domain.Enums;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -27,6 +29,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("Register")]
+    [SwaggerOperation(Summary = "Create New Account")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
 
@@ -68,12 +71,13 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AssignAdmin([FromBody] AdminAssignmentRequestDto request)
     {
+        var MainRole = Role.Admin.ToString();
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
             return NotFound(_responseHandler.NotFound<object>("User not found."));
         }
-        var result = await _userManager.AddToRoleAsync(user, "Admin");
+        var result = await _userManager.AddToRoleAsync(user, MainRole);
         if (result.Succeeded)
             return Ok(_responseHandler.Success<object>("The User Currently is Admin."));
         else
