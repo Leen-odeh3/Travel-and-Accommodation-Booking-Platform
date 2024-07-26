@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.Domain.DTOs.Hotel;
+﻿using HotelBookingPlatform.Domain.DTOs.Review;
+
+namespace HotelBookingPlatform.Domain.DTOs.Hotel;
 public class HotelResponseDto
 {
     public int HotelId { get; set; }
@@ -11,4 +13,6 @@ public class HotelResponseDto
     public string PhoneNumber { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+    public ICollection<ReviewResponseDto> Reviews { get; set; } = new List<ReviewResponseDto>();
+
 }

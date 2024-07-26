@@ -22,7 +22,7 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
             int pageNumber = 1)
         {
             return await _context.Hotels
-                .Include(h => h.City).Include(h => h.Owner)
+                .Include(h => h.City).Include(h => h.Owner).Include(h => h.Reviews)
                 .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
                             (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
                 .Skip((pageNumber - 1) * pageSize)
@@ -33,7 +33,7 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
         public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
         {
             return await _context.Hotels
-                .Include(h => h.City)
+                .Include(h => h.City).Include(h => h.Owner)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -42,7 +42,7 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
         public async Task<Hotel> GetByIdAsync(int id)
         {
             return await _context.Hotels
-                .Include(h => h.City)
+                .Include(h => h.City).Include(h => h.Reviews).Include(h => h.Owner)
                 .FirstOrDefaultAsync(h => h.HotelId == id);
         }
     }

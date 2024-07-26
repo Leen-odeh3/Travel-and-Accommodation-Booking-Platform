@@ -10,5 +10,6 @@ public interface IUnitOfWork
     ICityRepository CityRepository { get; }
     IOwnerRepository OwnerRepository { get; }
     IDiscountRepository DiscountRepository { get; }
+    IReviewRepository ReviewRepository { get; }
     Task<int> SaveChangesAsync();
 }
