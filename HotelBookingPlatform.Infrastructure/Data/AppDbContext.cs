@@ -18,6 +18,7 @@ public class AppDbContext : IdentityDbContext<LocalUser>
         modelBuilder.ApplyConfiguration(new RoomConfiguration());
         modelBuilder.ApplyConfiguration(new BookingConfiguration());
         modelBuilder.ApplyConfiguration(new DiscountConfiguration());
+       // modelBuilder.ApplyConfiguration(new ReviewConfiguration());
     }
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Owner> owners { get; set; }
