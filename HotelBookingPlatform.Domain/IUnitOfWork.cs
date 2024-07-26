@@ -11,5 +11,6 @@ public interface IUnitOfWork
     IOwnerRepository OwnerRepository { get; }
     IDiscountRepository DiscountRepository { get; }
     IReviewRepository ReviewRepository { get; }
+    IInvoiceRecordRepository InvoiceRecordRepository { get; }
     Task<int> SaveChangesAsync();
 }
