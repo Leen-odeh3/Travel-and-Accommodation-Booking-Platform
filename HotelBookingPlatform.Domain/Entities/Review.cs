@@ -8,4 +8,6 @@ public class Review
     public int Rating { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+    public string UserId { get; set; } 
+    public LocalUser User { get; set; }
 }
