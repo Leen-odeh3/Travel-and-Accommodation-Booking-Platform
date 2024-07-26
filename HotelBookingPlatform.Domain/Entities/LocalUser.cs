@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-
 namespace HotelBookingPlatform.Domain.Entities;
 public class LocalUser : IdentityUser
 {

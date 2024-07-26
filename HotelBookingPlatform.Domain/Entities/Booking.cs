@@ -1,9 +1,10 @@
 ﻿using HotelBookingPlatform.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace HotelBookingPlatform.Domain.Entities;
 public class Booking
 {
     public int BookingID { get; set; }
-    public int UserID { get; set; }
+    public string LocalUserId { get; set; }
     public LocalUser LocalUser { get; set; }
     public int HotelId { get; set; }
     public Hotel? Hotel { get; set; }
