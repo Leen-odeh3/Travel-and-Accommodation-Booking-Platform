@@ -15,4 +15,6 @@ public class Hotel
     public Owner Owner { get; set; }
     public ICollection<Booking> Bookings { get; set;}
     public ICollection<RoomClass> RoomClasses { get; set;}
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
 }

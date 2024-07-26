@@ -26,5 +26,7 @@ public class AppDbContext : IdentityDbContext<LocalUser>
     public DbSet<RoomClass> RoomClasses { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Discount> Discounts { get; set; }
- 
+    public DbSet<Review> Reviews { get; set; }
+
+
 }
