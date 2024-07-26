@@ -4,6 +4,7 @@ using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240726123829_UpdateColumnASPNETUser0")]
+    partial class UpdateColumnASPNETUser0
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("DECIMAL(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -106,7 +108,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Percentage")
-                        .HasColumnType("DECIMAL(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RoomClassID")
                         .HasColumnType("int");
