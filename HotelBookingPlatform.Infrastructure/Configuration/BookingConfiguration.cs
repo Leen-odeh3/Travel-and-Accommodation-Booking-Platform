@@ -9,8 +9,9 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(b => b.TotalPrice)
             .HasColumnType("DECIMAL(18,2)");
 
-        builder.HasOne(b => b.LocalUser)
-             .WithMany(u => u.Bookings)
-             .HasForeignKey(b => b.LocalUserId);
+        builder.HasOne(r => r.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
     }
 }

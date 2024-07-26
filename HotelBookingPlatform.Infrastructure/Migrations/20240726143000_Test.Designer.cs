@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240726121707_Update-FK")]
-    partial class UpdateFK
+    [Migration("20240726143000_Test")]
+    partial class Test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,23 +44,15 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LocalUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.HasKey("BookingID");
 
                     b.HasIndex("HotelId");
-
-                    b.HasIndex("LocalUserId");
 
                     b.ToTable("Bookings");
                 });
@@ -111,7 +103,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Percentage")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<int>("RoomClassID")
                         .HasColumnType("int");
@@ -279,8 +271,11 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Review", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReviewID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewID"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -298,14 +293,11 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReviewID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ReviewID");
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Room", b =>
@@ -523,13 +515,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "LocalUser")
-                        .WithMany("Bookings")
-                        .HasForeignKey("LocalUserId");
-
                     b.Navigation("Hotel");
-
-                    b.Navigation("LocalUser");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Discount", b =>
@@ -570,15 +556,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Hotel");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Room", b =>
@@ -666,13 +644,6 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("RoomClasses");
-                });
-
-            modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.LocalUser", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Owner", b =>

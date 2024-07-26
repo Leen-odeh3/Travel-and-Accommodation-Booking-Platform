@@ -291,10 +291,6 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LocalUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ModifiedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -303,13 +299,13 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ReviewID");
 
                     b.HasIndex("HotelId");
 
-                    b.HasIndex("LocalUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -529,7 +525,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "LocalUser")
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,7 +533,7 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
                     b.Navigation("Hotel");
 
-                    b.Navigation("LocalUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Discount", b =>
@@ -578,15 +574,15 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "LocalUser")
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("LocalUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hotel");
 
-                    b.Navigation("LocalUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Room", b =>
