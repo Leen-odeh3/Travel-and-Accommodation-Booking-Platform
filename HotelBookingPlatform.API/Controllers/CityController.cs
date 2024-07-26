@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
+using HotelBookingPlatform.Domain.DTOs.Hotel;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -63,24 +64,40 @@ public class CityController : ControllerBase
             return NotFound(_responseHandler.NotFound<IEnumerable<CityResponseDto>>("No Cities Found"));
     }
 
-    // GET: api/City/5
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Retrieve a list of hotels in a specific city.")]
-
-    public async Task<ActionResult<Response<CityResponseDto>>> GetCity(int id)
+    [SwaggerOperation(Summary = "Retrieve a city by its unique identifier.The detailed city information including hotels if requested.")]
+    public async Task<ActionResult<Response<CityResponseDto>>> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
 
         if (city is null)
             return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
 
-        var cityDto = _mapper.Map<CityResponseDto>(city);
-        return Ok(_responseHandler.Success(cityDto));
-    }
+        if (includeHotels)
+        {
+            var cityWithHotelsDto = new CityWithHotelsResponseDto
+            {
+                CityID = city.CityID,
+                Name = city.Name,
+                Country = city.Country,
+                PostOffice = city.PostOffice,
+                CreatedAtUtc = city.CreatedAtUtc,
+                ModifiedAtUtc = city.ModifiedAtUtc,
+                Description = city.Description,
+                Hotels = _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
+            };
 
-    // POST: api/City
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
+            return Ok(_responseHandler.Success(cityWithHotelsDto));
+        }
+        else
+        {
+            var cityDto = _mapper.Map<CityResponseDto>(city);
+            return Ok(_responseHandler.Success(cityDto));
+        }
+    }
+        // POST: api/City
+        [HttpPost]
+   [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new city.")]
 
     public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromBody] CityCreateRequest request)

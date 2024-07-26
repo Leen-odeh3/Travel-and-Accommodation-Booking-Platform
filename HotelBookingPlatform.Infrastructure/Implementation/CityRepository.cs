@@ -12,4 +12,15 @@ public class CityRepository :GenericRepository<City> , ICityRepository
     {
 
     }
+    public async Task<City> GetCityByIdAsync(int cityId, bool includeHotels = false)
+    {
+        IQueryable<City> query = _context.cities.AsQueryable();
+
+        if (includeHotels)
+        {
+            query = query.Include(c => c.Hotels);
+        }
+
+        return await query.FirstOrDefaultAsync(c => c.CityID == cityId);
+    }
 }
