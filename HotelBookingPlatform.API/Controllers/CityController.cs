@@ -97,7 +97,7 @@ public class CityController : ControllerBase
     }
         // POST: api/City
         [HttpPost]
-   [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new city.")]
 
     public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromBody] CityCreateRequest request)
@@ -131,6 +131,7 @@ public class CityController : ControllerBase
     // DELETE: api/City/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
+
     public async Task<IActionResult> DeleteCity(int id)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
@@ -141,5 +142,19 @@ public class CityController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
 
         return Ok(_responseHandler.Deleted<CityResponseDto>("City deleted successfully"));
+    }
+    [HttpGet("{id}/Hotels")]
+    [SwaggerOperation(Summary = "Retrieve hotels in a specific city by its unique identifier.")]
+    public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetCityHotels(int id)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
+
+        if (city is null)
+            return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("City not found"));
+
+        var hotels = city.Hotels; 
+
+        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
+        return Ok(_responseHandler.Success(hotelDtos));
     }
 }
