@@ -4,9 +4,9 @@ using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Implementation;
 
 namespace HotelBookingPlatform.Infrastructure;
-    public class UnitOfWork : IUnitOfWork
-    {
-        private readonly AppDbContext _context;
+public class UnitOfWork : IUnitOfWork
+{
+    private readonly AppDbContext _context;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -15,10 +15,11 @@ namespace HotelBookingPlatform.Infrastructure;
         BookingRepository = new BookingRepository(_context);
         RoomClasseRepository = new RoomClassRepository(_context);
         RoomRepository = new RoomRepository(_context);
-        CityRepository= new CityRepository(_context);
+        CityRepository = new CityRepository(_context);
         OwnerRepository = new OwnerRepository(_context);
         DiscountRepository = new DiscountRepository(_context);
-        ReviewRepository= new ReviewRepository(_context);
+        ReviewRepository = new ReviewRepository(_context);
+        InvoiceRecordRepository =new InvoiceRecordRepository(_context);
     }
 
     public IHotelRepository HotelRepository { get; }
@@ -34,6 +35,8 @@ namespace HotelBookingPlatform.Infrastructure;
     public IOwnerRepository OwnerRepository { get; }
     public IDiscountRepository DiscountRepository { get; }
     public IReviewRepository ReviewRepository { get; }
+
+    public IInvoiceRecordRepository InvoiceRecordRepository {get;}
 
     public async Task<int> SaveChangesAsync()
     {

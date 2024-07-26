@@ -13,4 +13,5 @@ public class Booking
     public DateTime CheckOutDateUtc { get; set; }
     public DateTime BookingDateUtc { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
+    public ICollection<InvoiceRecord> Invoice { get; set; } = new List<InvoiceRecord>();
 }
