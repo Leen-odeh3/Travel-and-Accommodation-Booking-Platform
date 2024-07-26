@@ -14,7 +14,7 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
     public async Task<IEnumerable<Booking>> GetBookingsWithDetailsAsync()
     {
         return await _appDbContext.Set<Booking>()
-            .Include(b => b.LocalUser)
+            .Include(b => b.User)
             .Include(b => b.Hotel)
             .ToListAsync();
     }
@@ -22,7 +22,7 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
     public async Task<Booking> GetBookingWithDetailsAsync(int id)
     {
         return await _appDbContext.Set<Booking>()
-            .Include(b => b.LocalUser)
+            .Include(b => b.User)
             .Include(b => b.Hotel)
             .FirstOrDefaultAsync(b => b.BookingID == id);
     }

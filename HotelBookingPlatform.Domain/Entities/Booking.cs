@@ -4,8 +4,8 @@ namespace HotelBookingPlatform.Domain.Entities;
 public class Booking
 {
     public int BookingID { get; set; }
-    public string LocalUserId { get; set; }
-    public LocalUser LocalUser { get; set; }
+    public string UserId { get; set; }
+    public LocalUser User { get; set; }
     public int HotelId { get; set; }
     public Hotel? Hotel { get; set; }
     public decimal TotalPrice { get; set; }
