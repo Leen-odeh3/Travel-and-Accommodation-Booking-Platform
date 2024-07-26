@@ -23,7 +23,7 @@ public class BookingController : ControllerBase
         _responseHandler = responseHandler;
     }
 
-    // GET: api/Booking
+  /*  // GET: api/Booking
     [HttpGet]
     public async Task<IActionResult> GetBookings()
     {
@@ -32,7 +32,7 @@ public class BookingController : ControllerBase
 
         return Ok(_responseHandler.Success(bookingDtos));
     }
-
+  */
     // GET: api/Booking/5
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBooking(int id)

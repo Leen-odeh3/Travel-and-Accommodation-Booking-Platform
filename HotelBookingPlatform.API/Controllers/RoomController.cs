@@ -23,7 +23,7 @@ namespace HotelBookingPlatform.API.Controllers
             _responseHandler = responseHandler;
         }
 
-        // GET: api/Room
+      /*  // GET: api/Room
         [HttpGet]
         public async Task<ActionResult<Response<IEnumerable<RoomResponseDto>>>> GetRooms([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
         {
@@ -40,7 +40,7 @@ namespace HotelBookingPlatform.API.Controllers
             else
                 return NotFound(_responseHandler.NotFound<IEnumerable<RoomResponseDto>>("No Rooms Found"));
         }
-
+      */
         // GET: api/Room/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Response<RoomResponseDto>>> GetRoom(int id)

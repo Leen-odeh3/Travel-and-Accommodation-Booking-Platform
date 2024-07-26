@@ -6,6 +6,7 @@ using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Linq.Expressions;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -26,16 +27,34 @@ public class CityController : ControllerBase
 
     // GET: api/City
     [HttpGet]
-    [SwaggerOperation(Summary = "Get detailed information about a city by its unique identifier.")]
-
-    public async Task<ActionResult<Response<IEnumerable<CityResponseDto>>>> GetCities([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
+    [SwaggerOperation(Summary = "Retrieve cities with optional filtering by name and description.")]
+    public async Task<ActionResult<Response<IEnumerable<CityResponseDto>>>> GetCities(
+        [FromQuery] string CityName,
+        [FromQuery] string Description,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0 || pageNumber <= 0)
         {
             return BadRequest(_responseHandler.BadRequest<IEnumerable<CityResponseDto>>("Page size and page number must be greater than zero."));
         }
-
-        var cities = await _unitOfWork.CityRepository.GetAllAsync(pageSize, pageNumber);
+        Expression<Func<City, bool>> filter = null;
+        if (!string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(Description))
+        {
+            if (!string.IsNullOrEmpty(CityName) && !string.IsNullOrEmpty(Description))
+            {
+                filter = c => c.Name.Contains(CityName) && c.Description.Contains(Description);
+            }
+            else if (!string.IsNullOrEmpty(CityName))
+            {
+                filter = c => c.Name.Contains(CityName);
+            }
+            else if (!string.IsNullOrEmpty(Description))
+            {
+                filter = c => c.Description.Contains(Description);
+            }
+        }
+        var cities = await _unitOfWork.CityRepository.GetAllAsync(filter, pageSize, pageNumber);
         var cityDtos = _mapper.Map<IEnumerable<CityResponseDto>>(cities);
 
         if (cityDtos.Any())
@@ -81,15 +100,15 @@ public class CityController : ControllerBase
     public async Task<IActionResult> UpdateCity(int id, [FromBody] CityCreateRequest request)
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
-        if (existingCity == null)
+        if (existingCity is null)
             return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
 
         var city = _mapper.Map<City>(request);
-        city.CityID = id; // Ensure the same ID
+        city.CityID = id;
         await _unitOfWork.CityRepository.UpdateAsync(id, city);
         await _unitOfWork.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(_responseHandler.Success(city));
     }
 
     // DELETE: api/City/5
