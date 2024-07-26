@@ -24,7 +24,7 @@ public class DiscountController : ControllerBase
         _responseHandler = responseHandler;
     }
 
-    // GET: api/Discount
+   /* // GET: api/Discount
     [HttpGet]
     [SwaggerOperation(Summary = "Retrieve a list of discounts.")]
     public async Task<IActionResult> GetDiscounts()
@@ -33,7 +33,7 @@ public class DiscountController : ControllerBase
         var discountDtos = _mapper.Map<IEnumerable<DiscountDto>>(discounts);
 
         return Ok(_responseHandler.Success(discountDtos));
-    }
+    }*/
 
     // GET: api/Discount/5
     [HttpGet("{id}")]

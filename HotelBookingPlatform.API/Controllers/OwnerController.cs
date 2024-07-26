@@ -23,7 +23,7 @@ public class OwnerController : ControllerBase
     }
 
     // GET: api/Owner
-    [HttpGet]
+  /*  [HttpGet]
     [SwaggerOperation(Summary = "Retrieve a list of owners.")]
     public async Task<IActionResult> GetOwners()
     {
@@ -32,7 +32,7 @@ public class OwnerController : ControllerBase
 
         return Ok(_responseHandler.Success(ownerDtos));
     }
-
+  */
     // GET: api/Owner/5
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Get detailed information about an owner by its unique identifier.")]

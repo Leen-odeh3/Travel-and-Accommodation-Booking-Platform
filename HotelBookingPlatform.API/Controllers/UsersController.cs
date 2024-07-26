@@ -6,6 +6,8 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.DTOs.Login;
 using HotelBookingPlatform.Domain.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using HotelBookingPlatform.Domain.Enums;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -27,12 +29,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("Register")]
+    [SwaggerOperation(Summary = "Create New Account")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
-        if (registerRequestDto is null)
-        {
-            return BadRequest(_responseHandler.BadRequest<object>("Invalid registration request."));
-        }
 
         if (!await _userRepository.IsUniqueUser(registerRequestDto.Email))
         {
@@ -72,28 +71,15 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AssignAdmin([FromBody] AdminAssignmentRequestDto request)
     {
-        if (request == null || string.IsNullOrEmpty(request.Email))
-        {
-            return BadRequest(_responseHandler.BadRequest<object>("Invalid request."));
-        }
-
+        var MainRole = Role.Admin.ToString();
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
             return NotFound(_responseHandler.NotFound<object>("User not found."));
         }
-
-        var roleExists = await _roleManager.RoleExistsAsync("Admin");
-        if (!roleExists)
-        {
-            return BadRequest(_responseHandler.BadRequest<object>("Admin role does not exist."));
-        }
-
-        var result = await _userManager.AddToRoleAsync(user, "Admin");
+        var result = await _userManager.AddToRoleAsync(user, MainRole);
         if (result.Succeeded)
-        {
-            return Ok(_responseHandler.Success<object>(null));
-        }
+            return Ok(_responseHandler.Success<object>("The User Currently is Admin."));
         else
         {
             return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>("An error occurred while assigning Admin role."));

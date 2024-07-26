@@ -5,6 +5,7 @@ using HotelBookingPlatform.Domain.Bases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain;
+using System.Linq.Expressions;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -25,14 +26,36 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel
     [HttpGet]
-    public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetHotels([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
+    public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetHotels(
+        [FromQuery] string hotelName,
+        [FromQuery] string description,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         if (pageSize <= 0 || pageNumber <= 0)
         {
             return BadRequest(_responseHandler.BadRequest<IEnumerable<HotelResponseDto>>("Page size and page number must be greater than zero."));
         }
 
-        var hotels = await _unitOfWork.HotelRepository.GetAllAsync(pageSize, pageNumber);
+        Expression<Func<Hotel, bool>> filter = null;
+
+        if (!string.IsNullOrEmpty(hotelName) || !string.IsNullOrEmpty(description))
+        {
+            if (!string.IsNullOrEmpty(hotelName) && !string.IsNullOrEmpty(description))
+            {
+                filter = h => h.Name.Contains(hotelName) && h.Description.Contains(description);
+            }
+            else if (!string.IsNullOrEmpty(hotelName))
+            {
+                filter = h => h.Name.Contains(hotelName);
+            }
+            else if (!string.IsNullOrEmpty(description))
+            {
+                filter = h => h.Description.Contains(description);
+            }
+        }
+
+        var hotels = await _unitOfWork.HotelRepository.GetAllAsync(filter, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (hotelDtos.Any())
@@ -40,6 +63,7 @@ public class HotelController : ControllerBase
         else
             return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("No Hotels Found"));
     }
+
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]

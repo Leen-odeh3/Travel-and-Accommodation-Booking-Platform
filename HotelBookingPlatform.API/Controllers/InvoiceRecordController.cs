@@ -25,7 +25,7 @@ public class InvoiceRecordController : ControllerBase
     }
 
     // GET: api/InvoiceRecord
-    [HttpGet]
+    /*[HttpGet]
     public async Task<ActionResult<Response<IEnumerable<InvoiceRecordDto>>>> GetAllAsync()
     {
         var invoiceRecords = await _unitOfWork.InvoiceRecordRepository.GetAllAsync();
@@ -35,7 +35,7 @@ public class InvoiceRecordController : ControllerBase
             return Ok(_responseHandler.Success(invoiceRecordDtos));
         else
             return NotFound(_responseHandler.NotFound<IEnumerable<InvoiceRecordDto>>("No invoice records found"));
-    }
+    }*/
 
     // GET: api/InvoiceRecord/5
     [HttpGet("{id}")]

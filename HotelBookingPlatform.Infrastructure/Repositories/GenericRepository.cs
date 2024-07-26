@@ -1,7 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Linq.Expressions;
 namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
@@ -28,13 +28,17 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             await _appDbContext.SaveChangesAsync();
         }
     }
-
-    public async Task<IEnumerable<T>> GetAllAsync(int pageSize = 10, int pageNumber = 1)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T,bool>> filter=null,int pageSize = 10, int pageNumber = 1)
     {
         if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
         if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
 
         IQueryable<T> query = _appDbContext.Set<T>();
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
 
         query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         return await query.ToListAsync();

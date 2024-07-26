@@ -5,6 +5,7 @@ using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq.Expressions;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -24,20 +25,36 @@ public class RoomClassController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<Response<IEnumerable<RoomClassDto>>>> GetRoomClass(int pageSize = 10, int pageNumber = 1)
+    public async Task<ActionResult<Response<IEnumerable<RoomClassDto>>>> GetRoomClass(
+     [FromQuery] int? adultsCapacity = null,
+     [FromQuery] int pageSize = 10,
+     [FromQuery] int pageNumber = 1)
     {
-        var roomClasses = await _unitOfWork.RoomClasseRepository.GetAllAsync(pageSize, pageNumber);
-
-        if (roomClasses.Any())
+        if (pageSize <= 0 || pageNumber <= 0)
         {
-            var roomClassDtos = _mapper.Map<IEnumerable<RoomClassDto>>(roomClasses);
+            return BadRequest(_responseHandler.BadRequest<IEnumerable<RoomClassDto>>("Page size and page number must be greater than zero."));
+        }
+
+        Expression<Func<RoomClass, bool>> filter = null;
+
+        if (adultsCapacity.HasValue)
+        {
+            filter = rc => rc.AdultsCapacity >= adultsCapacity;
+        }
+
+        var roomClasses = await _unitOfWork.RoomClasseRepository.GetAllAsync(filter, pageSize, pageNumber);
+        var roomClassDtos = _mapper.Map<IEnumerable<RoomClassDto>>(roomClasses);
+
+        if (roomClassDtos.Any())
+        {
             return Ok(_responseHandler.Success(roomClassDtos));
         }
         else
         {
-            return NotFound(_responseHandler.NotFound<RoomClassDto>("No Room class Found"));
+            return NotFound(_responseHandler.NotFound<IEnumerable<RoomClassDto>>("No Room class Found"));
         }
     }
+
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
