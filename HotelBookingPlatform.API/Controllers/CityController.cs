@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Infrastructure;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -157,4 +158,26 @@ public class CityController : ControllerBase
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
         return Ok(_responseHandler.Success(hotelDtos));
     }
+
+[HttpDelete("{cityId}/Hotel/{hotelId}")]
+[Authorize(Roles = "Admin")]
+[SwaggerOperation(Summary = "Delete a hotel in a specific city by city and hotel IDs.")]
+public async Task<IActionResult> DeleteCityHotel(int cityId, int hotelId)
+{
+    var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+
+    if (city is null)
+        return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
+
+    var hotelToRemove = city.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
+
+    if (hotelToRemove is null)
+        return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found in the city"));
+
+    await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
+    await _unitOfWork.SaveChangesAsync();
+
+    return Ok(_responseHandler.Deleted<HotelResponseDto>("Hotel deleted successfully"));
+}
+
 }
