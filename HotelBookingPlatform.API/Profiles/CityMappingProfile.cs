@@ -9,6 +9,6 @@ public class CityProfile : Profile
     {
         CreateMap<City, CityResponseDto>();
         CreateMap<CityCreateRequest, City>();
-   
+
     }
 }
