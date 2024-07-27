@@ -1,6 +1,7 @@
 using HotelBookingPlatform.Application;
 using HotelBookingPlatform.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 namespace HotelBookingPlatform.API;
@@ -73,6 +74,11 @@ public class Program
                 c.RoutePrefix = string.Empty; 
             });  
         }
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+            RequestPath = "/StaticFiles"
+        });
 
         app.UseHttpsRedirection();
         app.UseAuthentication();

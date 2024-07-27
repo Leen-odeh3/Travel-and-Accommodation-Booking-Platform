@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.IServices;
+using HotelBookingPlatform.Application.Services;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -18,12 +20,15 @@ public class CityController : ControllerBase
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
+    private readonly IFileService _fileService;
 
-    public CityController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+
+    public CityController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _responseHandler = responseHandler;
+        _fileService = fileService;
     }
 
     // GET: api/City
@@ -95,18 +100,31 @@ public class CityController : ControllerBase
             return Ok(_responseHandler.Success(cityDto));
         }
     }
-        // POST: api/City
-        [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new city.")]
 
-    public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromBody] CityCreateRequest request)
+
+    // POST: api/City
+    [HttpPost]
+   // [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Create a new city.")]
+    public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromForm] CityCreateRequest request)
     {
+        if (request.CityImage is null || request.CityImage.Length == 0)
+        {
+            return BadRequest("City image is required.");
+        }
+        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        var savedFileName = await _fileService.SaveFileAsync(request.CityImage, allowedExtensions);
+
         var city = _mapper.Map<City>(request);
+        city.CityImage = savedFileName;
+        city.CreatedAtUtc = DateTime.UtcNow;
+
         await _unitOfWork.CityRepository.CreateAsync(city);
         await _unitOfWork.SaveChangesAsync();
 
         var createdCityDto = _mapper.Map<CityResponseDto>(city);
+        createdCityDto.CityImage = $"{Request.Scheme}://{Request.Host}/StaticFiles/Cities/{savedFileName}";
+
         return CreatedAtAction(nameof(GetCity), new { id = city.CityID }, _responseHandler.Created(createdCityDto));
     }
 
@@ -152,31 +170,31 @@ public class CityController : ControllerBase
         if (city is null)
             return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("City not found"));
 
-        var hotels = city.Hotels; 
+        var hotels = city.Hotels;
 
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
         return Ok(_responseHandler.Success(hotelDtos));
     }
 
-[HttpDelete("{cityId}/Hotel/{hotelId}")]
-[Authorize(Roles = "Admin")]
-[SwaggerOperation(Summary = "Delete a hotel in a specific city by city and hotel IDs.")]
-public async Task<IActionResult> DeleteCityHotel(int cityId, int hotelId)
-{
-    var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+    [HttpDelete("{cityId}/Hotel/{hotelId}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Delete a hotel in a specific city by city and hotel IDs.")]
+    public async Task<IActionResult> DeleteCityHotel(int cityId, int hotelId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
 
-    if (city is null)
-        return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
+        if (city is null)
+            return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
 
-    var hotelToRemove = city.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
+        var hotelToRemove = city.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
 
-    if (hotelToRemove is null)
-        return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found in the city"));
+        if (hotelToRemove is null)
+            return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found in the city"));
 
-    await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
-    await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
+        await _unitOfWork.SaveChangesAsync();
 
-    return Ok(_responseHandler.Deleted<HotelResponseDto>("Hotel deleted successfully"));
-}
+        return Ok(_responseHandler.Deleted<HotelResponseDto>("Hotel deleted successfully"));
+    }
 
 }
