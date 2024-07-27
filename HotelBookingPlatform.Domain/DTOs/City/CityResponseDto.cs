@@ -10,5 +10,5 @@ public class CityResponseDto
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
     public string Description { get; set; }
-    public IFormFile CityImage { get; set; }
+    public string CityImage { get; set; }
 }

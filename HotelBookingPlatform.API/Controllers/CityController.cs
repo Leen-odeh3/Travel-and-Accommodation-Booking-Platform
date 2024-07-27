@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.IServices;
+using HotelBookingPlatform.Application.Services;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -21,7 +22,8 @@ public class CityController : ControllerBase
     private readonly ResponseHandler _responseHandler;
     private readonly IFileService _fileService;
 
-    public CityController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler,IFileService fileService)
+
+    public CityController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -98,18 +100,31 @@ public class CityController : ControllerBase
             return Ok(_responseHandler.Success(cityDto));
         }
     }
+
+
     // POST: api/City
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new city.")]
-
-    public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromBody] CityCreateRequest request)
+    public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromForm] CityCreateRequest request)
     {
+        if (request.CityImage is null || request.CityImage.Length == 0)
+        {
+            return BadRequest("City image is required.");
+        }
+        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        var savedFileName = await _fileService.SaveFileAsync(request.CityImage, allowedExtensions);
+
         var city = _mapper.Map<City>(request);
+        city.CityImage = savedFileName;
+        city.CreatedAtUtc = DateTime.UtcNow;
+
         await _unitOfWork.CityRepository.CreateAsync(city);
         await _unitOfWork.SaveChangesAsync();
 
         var createdCityDto = _mapper.Map<CityResponseDto>(city);
+        createdCityDto.CityImage = $"{Request.Scheme}://{Request.Host}/StaticFiles/Cities/{savedFileName}";
+
         return CreatedAtAction(nameof(GetCity), new { id = city.CityID }, _responseHandler.Created(createdCityDto));
     }
 
@@ -181,7 +196,5 @@ public class CityController : ControllerBase
 
         return Ok(_responseHandler.Deleted<HotelResponseDto>("Hotel deleted successfully"));
     }
-
-
 
 }

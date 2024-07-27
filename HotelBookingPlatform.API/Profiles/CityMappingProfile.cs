@@ -8,7 +8,8 @@ public class CityProfile : Profile
     public CityProfile()
     {
         CreateMap<City, CityResponseDto>();
-        CreateMap<CityCreateRequest, City>();
 
+        CreateMap<CityCreateRequest, City>()
+           .ForMember(dest => dest.CityImage, opt => opt.MapFrom(src => src.CityImage.FileName));
     }
 }
