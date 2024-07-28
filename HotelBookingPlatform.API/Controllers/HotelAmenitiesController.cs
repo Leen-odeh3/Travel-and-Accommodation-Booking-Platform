@@ -1,52 +1,40 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Bases;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.Entities;
+﻿using HotelBookingPlatform.Application.Core.Abstracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-
+using System.Net;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class HotelAmenitiesController : ControllerBase
 {
-    private readonly IUnitOfWork<Hotel> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IHotelAmenitiesService _hotelAmenitiesService;
 
-    public HotelAmenitiesController(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public HotelAmenitiesController(IHotelAmenitiesService hotelAmenitiesService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _hotelAmenitiesService = hotelAmenitiesService;
     }
 
     [HttpGet("hotel-Amenities")]
     [Authorize(Roles = "Admin,User")]
     [SwaggerOperation(Summary = "Retrieve amenities by hotel name with optional pagination.")]
-    public async Task<ActionResult<Response<IEnumerable<AmenityResponseDto>>>> GetAmenitiesByHotelName(
-        [FromQuery] string name,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetAmenitiesByHotelName(
+            [FromQuery] string name,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageNumber = 1)
     {
-        var hotel = await _unitOfWork.HotelRepository.GetHotelByNameAsync(name);
-        if (hotel == null)
+        var response = await _hotelAmenitiesService.GetAmenitiesByHotelNameAsync(name, pageSize, pageNumber);
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            return NotFound(_responseHandler.NotFound<IEnumerable<AmenityResponseDto>>("Hotel not found"));
+            return NotFound(response.Message); 
         }
 
-        var amenities = hotel.RoomClasses
-            .SelectMany(rc => rc.Amenities)
-            .Distinct()
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            return BadRequest(response.Message); 
+        }
 
-        var amenityDtos = _mapper.Map<IEnumerable<AmenityResponseDto>>(amenities);
-
-        return Ok(_responseHandler.Success(amenityDtos));
+        return Ok(response);
     }
 }
