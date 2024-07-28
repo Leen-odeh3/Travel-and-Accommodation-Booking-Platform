@@ -27,7 +27,7 @@ public class Program
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Hotel Booking Platform API",
+                Title = "HotelBookingPlatform.API",
                 Version = "v1"
             });
             c.EnableAnnotations(); 
@@ -70,8 +70,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");
-                c.RoutePrefix = string.Empty; 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");              
             });  
         }
         app.UseStaticFiles(new StaticFileOptions
