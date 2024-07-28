@@ -5,6 +5,7 @@ using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -25,6 +26,7 @@ public class HotelAmenitiesController : ControllerBase
 
     [HttpGet("hotel-Amenities")]
     [Authorize(Roles = "Admin,User")]
+    [SwaggerOperation(Summary = "Retrieve amenities by hotel name with optional pagination.")]
     public async Task<ActionResult<Response<IEnumerable<AmenityResponseDto>>>> GetAmenitiesByHotelName(
         [FromQuery] string name,
         [FromQuery] int pageSize = 10,

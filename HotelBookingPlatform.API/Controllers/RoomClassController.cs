@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -105,5 +107,27 @@ public class RoomClassController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
 
         return Ok(_responseHandler.Deleted<RoomClassDto>("Deleted Done"));
+    }
+
+    [HttpPost("{id}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add an amenity to a room class.")]
+    public async Task<ActionResult<Response<AmenityResponseDto>>> AddAmenityToRoomClass(int id, [FromBody] AmenityCreateRequest request)
+    {
+        var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
+        if (roomClass is null)
+        {
+            return NotFound(_responseHandler.NotFound<AmenityResponseDto>("RoomClass not found"));
+        }
+
+        var amenity = _mapper.Map<Amenity>(request);
+        roomClass.Amenities.Add(amenity);
+
+        _unitOfWork.RoomClasseRepository.UpdateAsync(id,roomClass);
+        await _unitOfWork.SaveChangesAsync();
+
+        var amenityDto = _mapper.Map<AmenityResponseDto>(amenity);
+
+        return Ok(_responseHandler.Success(amenityDto));
     }
 }
