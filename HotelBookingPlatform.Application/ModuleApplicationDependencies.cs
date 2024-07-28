@@ -23,6 +23,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IRoomClassService, RoomClassService>();
         services.AddScoped<IDiscountService, DiscountService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IHotelService, HotelService>();
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
