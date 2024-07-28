@@ -19,6 +19,7 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         DiscountRepository = new DiscountRepository(_context);
         ReviewRepository = new ReviewRepository(_context);
         InvoiceRecordRepository =new InvoiceRecordRepository(_context);
+        AmenityRepository = new AmenityRepository(_context);
     }
     public IHotelRepository HotelRepository { get; set;}
     public IBookingRepository BookingRepository { get; set;}
@@ -29,6 +30,7 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
     public IDiscountRepository DiscountRepository { get; set; }
     public IReviewRepository ReviewRepository { get; set; }
     public IInvoiceRecordRepository InvoiceRecordRepository {get; set; }
+    public IAmenityRepository AmenityRepository { get; set;}
     public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();   
 }
 

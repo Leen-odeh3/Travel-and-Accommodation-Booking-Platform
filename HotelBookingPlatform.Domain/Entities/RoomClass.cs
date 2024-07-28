@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain.Enums;
-
 namespace HotelBookingPlatform.Domain.Entities;
 public class RoomClass
 {
