@@ -1,35 +1,23 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.Bases;
+﻿using HotelBookingPlatform.Domain.Bases;
 using Microsoft.AspNetCore.Authorization;
 using HotelBookingPlatform.Domain.DTOs.City;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.IServices;
+using HotelBookingPlatform.Application.Core.Abstracts;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CityController : ControllerBase
 {
-    private readonly IUnitOfWork<City> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
-    private readonly IFileService _fileService;
+    private readonly ICityService _cityService;
 
-
-    public CityController(IUnitOfWork<City> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
+    public CityController(ICityService cityService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
-        _fileService = fileService;
+        _cityService = cityService;
     }
 
-    // GET: api/City
     [HttpGet]
     [SwaggerOperation(Summary = "Retrieve cities with optional filtering by name and description.")]
     public async Task<ActionResult<Response<IEnumerable<CityResponseDto>>>> GetCities(
@@ -38,161 +26,80 @@ public class CityController : ControllerBase
         [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
-        if (pageSize <= 0 || pageNumber <= 0)
-        {
-            return BadRequest(_responseHandler.BadRequest<IEnumerable<CityResponseDto>>("Page size and page number must be greater than zero."));
-        }
-        Expression<Func<City, bool>> filter = null;
-        if (!string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(Description))
-        {
-            if (!string.IsNullOrEmpty(CityName) && !string.IsNullOrEmpty(Description))
-            {
-                filter = c => c.Name.Contains(CityName) && c.Description.Contains(Description);
-            }
-            else if (!string.IsNullOrEmpty(CityName))
-            {
-                filter = c => c.Name.Contains(CityName);
-            }
-            else if (!string.IsNullOrEmpty(Description))
-            {
-                filter = c => c.Description.Contains(Description);
-            }
-        }
-        var cities = await _unitOfWork.CityRepository.GetAllAsync(filter, pageSize, pageNumber);
-        var cityDtos = _mapper.Map<IEnumerable<CityResponseDto>>(cities);
+        var response = await _cityService.GetCities(CityName, Description, pageSize, pageNumber);
+        if (!response.Succeeded)
+            return BadRequest(response);
 
-        if (cityDtos.Any())
-            return Ok(_responseHandler.Success(cityDtos));
-        else
-            return NotFound(_responseHandler.NotFound<IEnumerable<CityResponseDto>>("No Cities Found"));
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Retrieve a city by its unique identifier.The detailed city information including hotels if requested.")]
     public async Task<ActionResult<Response<CityResponseDto>>> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
+        var response = await _cityService.GetCity(id, includeHotels);
+        if (!response.Succeeded)
+            return NotFound(response);
 
-        if (city is null)
-            return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
-
-        if (includeHotels)
-        {
-            var cityWithHotelsDto = new CityWithHotelsResponseDto
-            {
-                CityID = city.CityID,
-                Name = city.Name,
-                Country = city.Country,
-                PostOffice = city.PostOffice,
-                CreatedAtUtc = city.CreatedAtUtc,
-                ModifiedAtUtc = city.ModifiedAtUtc,
-                Description = city.Description,
-                Hotels = _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
-            };
-
-            return Ok(_responseHandler.Success(cityWithHotelsDto));
-        }
-        else
-        {
-            var cityDto = _mapper.Map<CityResponseDto>(city);
-            return Ok(_responseHandler.Success(cityDto));
-        }
+        return Ok(response);
     }
 
-
-    // POST: api/City
     [HttpPost]
-   // [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new city.")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Create a new city with the specified information.")]
     public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromForm] CityCreateRequest request)
     {
-        if (request.CityImage is null || request.CityImage.Length == 0)
-        {
-            return BadRequest("City image is required.");
-        }
-        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-        var savedFileName = await _fileService.SaveFileAsync(request.CityImage, allowedExtensions);
+        var response = await _cityService.CreateCity(request);
+        if (!response.Succeeded)
+            return BadRequest(response);
 
-        var city = _mapper.Map<City>(request);
-        city.CityImage = savedFileName;
-        city.CreatedAtUtc = DateTime.UtcNow;
-
-        await _unitOfWork.CityRepository.CreateAsync(city);
-        await _unitOfWork.SaveChangesAsync();
-
-        var createdCityDto = _mapper.Map<CityResponseDto>(city);
-        createdCityDto.CityImage = $"{Request.Scheme}://{Request.Host}/StaticFiles/Cities/{savedFileName}";
-
-        return CreatedAtAction(nameof(GetCity), new { id = city.CityID }, _responseHandler.Created(createdCityDto));
+        return CreatedAtAction(nameof(GetCity), new { id = response.Data.CityID }, response);
     }
 
-    // PUT: api/City/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Update detailed information about a city by its unique identifier.")]
-    public async Task<IActionResult> UpdateCity(int id, [FromBody] CityCreateRequest request)
+    [SwaggerOperation(Summary = "Update the information of an existing city.")]
+    public async Task<ActionResult<Response<CityResponseDto>>> UpdateCity(int id, [FromForm] CityCreateRequest request)
     {
-        var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
-        if (existingCity is null)
-            return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
+        var response = await _cityService.UpdateCity(id, request);
+        if (!response.Succeeded)
+            return BadRequest(response);
 
-        var city = _mapper.Map<City>(request);
-        city.CityID = id;
-        await _unitOfWork.CityRepository.UpdateAsync(id, city);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Success(city));
+        return Ok(response);
     }
 
-    // DELETE: api/City/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-
-    public async Task<IActionResult> DeleteCity(int id)
+    [SwaggerOperation(Summary = "Delete an existing city by its unique identifier.")]
+    public async Task<ActionResult<Response<CityResponseDto>>> DeleteCity(int id)
     {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
-        if (city is null)
-            return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
+        var response = await _cityService.DeleteCity(id);
+        if (!response.Succeeded)
+            return NotFound(response);
 
-        await _unitOfWork.CityRepository.DeleteAsync(id);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<CityResponseDto>("City deleted successfully"));
+        return Ok(response);
     }
-    [HttpGet("{id}/Hotels")]
-    [SwaggerOperation(Summary = "Retrieve hotels in a specific city by its unique identifier.")]
+
+    [HttpGet("{id}/hotels")]
+    [SwaggerOperation(Summary = "Retrieve all hotels associated with a city.")]
     public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetCityHotels(int id)
     {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
+        var response = await _cityService.GetCityHotels(id);
+        if (!response.Succeeded)
+            return NotFound(response);
 
-        if (city is null)
-            return NotFound(_responseHandler.NotFound<IEnumerable<HotelResponseDto>>("City not found"));
-
-        var hotels = city.Hotels;
-
-        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
-        return Ok(_responseHandler.Success(hotelDtos));
+        return Ok(response);
     }
 
-    [HttpDelete("{cityId}/Hotel/{hotelId}")]
+    [HttpDelete("{cityId}/hotels/{hotelId}")]
     [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete a hotel in a specific city by city and hotel IDs.")]
-    public async Task<IActionResult> DeleteCityHotel(int cityId, int hotelId)
+    [SwaggerOperation(Summary = "Delete a specific hotel from a city.")]
+    public async Task<ActionResult<Response<HotelResponseDto>>> DeleteCityHotel(int cityId, int hotelId)
     {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        var response = await _cityService.DeleteCityHotel(cityId, hotelId);
+        if (!response.Succeeded)
+            return NotFound(response);
 
-        if (city is null)
-            return NotFound(_responseHandler.NotFound<CityResponseDto>("City not found"));
-
-        var hotelToRemove = city.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
-
-        if (hotelToRemove is null)
-            return NotFound(_responseHandler.NotFound<HotelResponseDto>("Hotel not found in the city"));
-
-        await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<HotelResponseDto>("Hotel deleted successfully"));
+        return Ok(response);
     }
-
 }
