@@ -1,29 +1,27 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Domain.Bases;
+using Microsoft.AspNetCore.Authorization;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.IServices;
-using HotelBookingPlatform.Application.Services;
-
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CityController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<City> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
     private readonly IFileService _fileService;
 
 
-    public CityController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
+    public CityController(IUnitOfWork<City> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

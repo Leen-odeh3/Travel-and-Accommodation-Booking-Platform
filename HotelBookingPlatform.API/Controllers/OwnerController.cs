@@ -11,11 +11,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class OwnerController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<Owner> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
 
-    public OwnerController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public OwnerController(IUnitOfWork<Owner> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

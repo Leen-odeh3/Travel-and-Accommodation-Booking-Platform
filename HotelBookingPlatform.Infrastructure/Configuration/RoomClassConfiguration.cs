@@ -35,5 +35,13 @@ public class RoomClassConfiguration : IEntityTypeConfiguration<RoomClass>
         builder.HasOne(rc => rc.Hotel)
             .WithMany(h => h.RoomClasses)
             .HasForeignKey(rc => rc.HotelId);
+
+        builder.HasMany(rc => rc.Amenities)
+               .WithMany(a => a.RoomClasses)
+               .UsingEntity<Dictionary<string, object>>(
+                   "RoomClassAmenity",
+                   rca => rca.HasOne<Amenity>().WithMany().HasForeignKey("AmenityID"),
+                   rca => rca.HasOne<RoomClass>().WithMany().HasForeignKey("RoomClassID")
+               );
     }
 }

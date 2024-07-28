@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 namespace HotelBookingPlatform.Domain.Entities;
 public class Booking
 {

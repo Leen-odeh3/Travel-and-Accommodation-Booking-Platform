@@ -70,7 +70,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Booking Platform API v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");
                 c.RoutePrefix = string.Empty; 
             });  
         }

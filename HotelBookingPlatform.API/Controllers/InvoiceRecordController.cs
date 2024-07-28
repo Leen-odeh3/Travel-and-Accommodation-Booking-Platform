@@ -13,11 +13,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [Authorize(Roles = "Admin")]
 public class InvoiceRecordController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<InvoiceRecord> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
 
-    public InvoiceRecordController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public InvoiceRecordController(IUnitOfWork<InvoiceRecord> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

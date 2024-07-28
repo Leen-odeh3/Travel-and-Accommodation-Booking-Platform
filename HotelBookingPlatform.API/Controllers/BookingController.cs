@@ -12,11 +12,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [ResponseCache(CacheProfileName = "DefaultCache")]
 public class BookingController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<Booking> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
 
-    public BookingController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public BookingController(IUnitOfWork<Booking> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

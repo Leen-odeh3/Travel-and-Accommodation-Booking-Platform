@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain.Enums;
-
 namespace HotelBookingPlatform.Domain.Entities;
 public class RoomClass
 {
@@ -16,5 +15,5 @@ public class RoomClass
     public Hotel Hotel { get; set; }
     public ICollection<Room> Rooms { get;}
     public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
-
+    public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
 }
