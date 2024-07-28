@@ -3,7 +3,6 @@
 namespace HotelBookingPlatform.Domain.DTOs.Amenity;
 public class AmenityResponseDto
 {
-    public int AmenityID { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public List<RoomClassAmenityDto> RoomClasses { get; set; }
