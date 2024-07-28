@@ -1,10 +1,11 @@
 ﻿using FluentValidation.AspNetCore;
+using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Application.Core.Implementations;
 using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
 using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace HotelBookingPlatform.Application;
 public static class ModuleApplicationDependencies
@@ -16,8 +17,19 @@ public static class ModuleApplicationDependencies
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
         services.AddScoped<IFileService, FileService>();
-        services.AddScoped<ITokenService, TokenService>();    
-
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICityService, CityService>();
+        services.AddScoped<IRoomService, RoomService>();
+        services.AddScoped<IRoomClassService, RoomClassService>();
+        services.AddScoped<IDiscountService, DiscountService>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IHotelService, HotelService>();
+        services.AddScoped<IAmenityService, AmenityService>();
+        services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
+        services.AddScoped<IOwnerService, OwnerService>();
+        services.AddScoped<IInvoiceRecordService, InvoiceRecordService>();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 }

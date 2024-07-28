@@ -1,15 +1,13 @@
 ﻿using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Implementation;
 using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 namespace HotelBookingPlatform.Infrastructure;
 public static class ModuleInfrastructureDependencies
 {

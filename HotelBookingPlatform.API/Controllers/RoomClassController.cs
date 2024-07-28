@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Domain.Bases;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using Swashbuckle.AspNetCore.Annotations;
+using HotelBookingPlatform.Application.Core.Abstracts;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -15,119 +13,73 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class RoomClassController : ControllerBase
 {
-    private readonly IUnitOfWork<RoomClass> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IRoomClassService _roomClassService;
 
-    public RoomClassController(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public RoomClassController(IRoomClassService roomClassService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _roomClassService = roomClassService;
     }
 
     [HttpGet]
     public async Task<ActionResult<Response<IEnumerable<RoomClassDto>>>> GetRoomClass(
-     [FromQuery] int? adultsCapacity = null,
-     [FromQuery] int pageSize = 10,
-     [FromQuery] int pageNumber = 1)
+        [FromQuery] int? adultsCapacity = null,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        if (pageSize <= 0 || pageNumber <= 0)
+        var response = await _roomClassService.GetRoomClassesAsync(adultsCapacity, pageSize, pageNumber);
+        if (response.Succeeded)
         {
-            return BadRequest(_responseHandler.BadRequest<IEnumerable<RoomClassDto>>("Page size and page number must be greater than zero."));
+            return Ok(response);
         }
-
-        Expression<Func<RoomClass, bool>> filter = null;
-
-        if (adultsCapacity.HasValue)
-        {
-            filter = rc => rc.AdultsCapacity >= adultsCapacity;
-        }
-
-        var roomClasses = await _unitOfWork.RoomClasseRepository.GetAllAsync(filter, pageSize, pageNumber);
-        var roomClassDtos = _mapper.Map<IEnumerable<RoomClassDto>>(roomClasses);
-
-        if (roomClassDtos.Any())
-        {
-            return Ok(_responseHandler.Success(roomClassDtos));
-        }
-        else
-        {
-            return NotFound(_responseHandler.NotFound<IEnumerable<RoomClassDto>>("No Room class Found"));
-        }
+        return BadRequest(response);
     }
-
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<Response<RoomClassDto>>> CreateRoomClass(RoomClassCreateDto roomClassCreateDto)
     {
-        var roomClass = _mapper.Map<RoomClass>(roomClassCreateDto);
-        var createdRoomClass = await _unitOfWork.RoomClasseRepository.CreateAsync(roomClass);
-        await _unitOfWork.SaveChangesAsync();
-
-        var roomClassDto = _mapper.Map<RoomClassDto>(createdRoomClass);
-        return CreatedAtAction(nameof(GetRoomClass), new { id = roomClassDto.RoomClassID }, _responseHandler.Success(roomClassDto));
+        var response = await _roomClassService.CreateRoomClassAsync(roomClassCreateDto);
+        if (response.Succeeded)
+        {
+            return CreatedAtAction(nameof(GetRoomClass), new { id = response.Data.RoomClassID }, response);
+        }
+        return BadRequest(response);
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult<Response<RoomClassDto>>> UpdateRoomClass(int id, RoomClassCreateDto roomClassUpdateDto)
     {
-        var existingRoomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
-
-        if (existingRoomClass is null)
+        var response = await _roomClassService.UpdateRoomClassAsync(id, roomClassUpdateDto);
+        if (response.Succeeded)
         {
-            return NotFound(_responseHandler.NotFound<RoomClassDto>($"Room class with id {id} not found"));
+            return Ok(response);
         }
-
-        _mapper.Map(roomClassUpdateDto, existingRoomClass);
-        await _unitOfWork.RoomClasseRepository.UpdateAsync(id, existingRoomClass);
-        await _unitOfWork.SaveChangesAsync();
-
-        var updatedRoomClassDto = _mapper.Map<RoomClassDto>(existingRoomClass);
-        return Ok(_responseHandler.Success(updatedRoomClassDto));
+        return BadRequest(response);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<ActionResult> DeleteRoomClass(int id)
     {
-        var roomClassToDelete = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
-
-        if (roomClassToDelete == null)
+        var response = await _roomClassService.DeleteRoomClassAsync(id);
+        if (response.Succeeded)
         {
-            return NotFound(_responseHandler.NotFound<RoomClassDto>("RoomClass not found"));
+            return Ok(response);
         }
-
-        await _unitOfWork.RoomClasseRepository.DeleteAsync(id);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<RoomClassDto>("Deleted Done"));
+        return BadRequest(response);
     }
 
-    [HttpPost("{id}")]
+    [HttpPost("{id}/amenities")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add an amenity to a room class.")]
     public async Task<ActionResult<Response<AmenityResponseDto>>> AddAmenityToRoomClass(int id, [FromBody] AmenityCreateRequest request)
     {
-        var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
-        if (roomClass is null)
+        var response = await _roomClassService.AddAmenityToRoomClassAsync(id, request);
+        if (response.Succeeded)
         {
-            return NotFound(_responseHandler.NotFound<AmenityResponseDto>("RoomClass not found"));
+            return Ok(response);
         }
-
-        var amenity = _mapper.Map<Amenity>(request);
-        roomClass.Amenities.Add(amenity);
-
-        _unitOfWork.RoomClasseRepository.UpdateAsync(id,roomClass);
-        await _unitOfWork.SaveChangesAsync();
-
-        var amenityDto = _mapper.Map<AmenityResponseDto>(amenity);
-
-        return Ok(_responseHandler.Success(amenityDto));
+        return BadRequest(response);
     }
 }

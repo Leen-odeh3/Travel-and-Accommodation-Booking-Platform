@@ -4,6 +4,8 @@ using HotelBookingPlatform.Domain.DTOs.Booking;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Bases;
 using Microsoft.AspNetCore.Mvc;
+using HotelBookingPlatform.Application.Core.Abstracts;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -12,90 +14,66 @@ namespace HotelBookingPlatform.API.Controllers;
 [ResponseCache(CacheProfileName = "DefaultCache")]
 public class BookingController : ControllerBase
 {
-    private readonly IUnitOfWork<Booking> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IBookingService _bookingService;
 
-    public BookingController(IUnitOfWork<Booking> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public BookingController(IBookingService bookingService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _bookingService = bookingService;
     }
 
-  /*  // GET: api/Booking
-    [HttpGet]
-    public async Task<IActionResult> GetBookings()
-    {
-        var bookings = await _unitOfWork.BookingRepository.GetAllAsync();
-        var bookingDtos = _mapper.Map<IEnumerable<BookingDto>>(bookings);
-
-        return Ok(_responseHandler.Success(bookingDtos));
-    }
-  */
-    // GET: api/Booking/5
     [HttpGet("{id}")]
+    [SwaggerOperation(Summary = "Retrieve a booking by its unique identifier.")]
     public async Task<IActionResult> GetBooking(int id)
     {
-        var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking == null)
+        var response = await _bookingService.GetBookingAsync(id);
+        if (!response.Succeeded)
         {
-            return NotFound(_responseHandler.NotFound<BookingDto>("Booking not found."));
+            return NotFound(response);
         }
 
-        var bookingDto = _mapper.Map<BookingDto>(booking);
-        return Ok(_responseHandler.Success(bookingDto));
+        return Ok(response);
     }
 
-    // POST: api/Booking
     [HttpPost]
+    [SwaggerOperation(Summary = "Create a new booking.")]
+
     public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
     {
         if (!ModelState.IsValid)
-            return BadRequest(_responseHandler.BadRequest<BookingDto>("Invalid data provided."));
+            return BadRequest("Invalid data provided.");
 
-        var booking = _mapper.Map<Booking>(request);
-        await _unitOfWork.BookingRepository.CreateAsync(booking);
-        await _unitOfWork.SaveChangesAsync();
+        var response = await _bookingService.CreateBookingAsync(request);
+        if (!response.Succeeded)
+            return BadRequest(response);
 
-        var bookingDto = _mapper.Map<BookingDto>(booking);
-        return CreatedAtAction(nameof(GetBooking), _responseHandler.Created(bookingDto));
+        return Ok(response);
     }
+
+
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBooking(int id, Booking booking)
+    [SwaggerOperation(Summary = "Update an existing booking.")]
+    public async Task<IActionResult> UpdateBooking(int id, [FromBody] Booking booking)
     {
-        if (id != booking.BookingID)
-        {
-            return BadRequest(_responseHandler.BadRequest<BookingDto>("Invalid data provided."));
-        }
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid data provided.");
 
-        var existingBooking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (existingBooking is null)
-        {
-            return NotFound(_responseHandler.NotFound<BookingDto>("Booking not found."));
-        }
+        var response = await _bookingService.UpdateBookingAsync(id, booking);
+        if (!response.Succeeded)
+            return response.Succeeded ? Ok(response) : BadRequest(response);
 
-        await _unitOfWork.BookingRepository.UpdateAsync(id, booking);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Success("Booking successfully Updated"));
-
+        return Ok(response);
     }
 
-
-    // DELETE: api/Booking/5
     [HttpDelete("{id}")]
+    [SwaggerOperation(Summary = "Delete a booking by its unique identifier.")]
     public async Task<IActionResult> DeleteBooking(int id)
     {
-        var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking is null)
+        var response = await _bookingService.DeleteBookingAsync(id);
+        if (!response.Succeeded)
         {
-            return NotFound(_responseHandler.NotFound<BookingDto>("Booking not found."));
+            return NotFound(response);
         }
 
-        await _unitOfWork.BookingRepository.DeleteAsync(id);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<BookingDto>("Booking successfully deleted."));
+        return Ok(response);
     }
 }

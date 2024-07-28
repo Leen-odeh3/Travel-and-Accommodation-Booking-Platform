@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Bases;
+﻿using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
-using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,88 +10,66 @@ namespace HotelBookingPlatform.API.Controllers;
 [Authorize(Roles = "Admin")]
 public class InvoiceRecordController : ControllerBase
 {
-    private readonly IUnitOfWork<InvoiceRecord> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IInvoiceRecordService _invoiceRecordService;
 
-    public InvoiceRecordController(IUnitOfWork<InvoiceRecord> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public InvoiceRecordController(IInvoiceRecordService invoiceRecordService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _invoiceRecordService = invoiceRecordService;
     }
-
-    // GET: api/InvoiceRecord
-    /*[HttpGet]
-    public async Task<ActionResult<Response<IEnumerable<InvoiceRecordDto>>>> GetAllAsync()
-    {
-        var invoiceRecords = await _unitOfWork.InvoiceRecordRepository.GetAllAsync();
-        var invoiceRecordDtos = _mapper.Map<IEnumerable<InvoiceRecordDto>>(invoiceRecords);
-
-        if (invoiceRecordDtos.Any())
-            return Ok(_responseHandler.Success(invoiceRecordDtos));
-        else
-            return NotFound(_responseHandler.NotFound<IEnumerable<InvoiceRecordDto>>("No invoice records found"));
-    }*/
 
     // GET: api/InvoiceRecord/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Response<InvoiceRecordDto>>> GetByIdAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var invoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
+        var response = await _invoiceRecordService.GetByIdAsync(id);
 
-        if (invoiceRecord == null)
-            return NotFound(_responseHandler.NotFound<InvoiceRecordDto>("Invoice record not found"));
-
-        var invoiceRecordDto = _mapper.Map<InvoiceRecordDto>(invoiceRecord);
-        return Ok(_responseHandler.Success(invoiceRecordDto));
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            _ => Ok(response.Data)
+        };
     }
 
     // POST: api/InvoiceRecord
     [HttpPost]
-    public async Task<ActionResult<Response<InvoiceRecordDto>>> CreateAsync([FromBody] InvoiceRecordDto invoiceRecordDto)
+    public async Task<IActionResult> CreateAsync([FromBody] InvoiceRecordDto invoiceRecordDto)
     {
-        if (invoiceRecordDto == null)
-            return BadRequest(_responseHandler.BadRequest<InvoiceRecordDto>("Invoice record data is null"));
+        var response = await _invoiceRecordService.CreateAsync(invoiceRecordDto);
 
-        var invoiceRecord = _mapper.Map<InvoiceRecord>(invoiceRecordDto);
-        await _unitOfWork.InvoiceRecordRepository.CreateAsync(invoiceRecord);
-        await _unitOfWork.SaveChangesAsync();
-
-        var createdInvoiceRecordDto = _mapper.Map<InvoiceRecordDto>(invoiceRecord);
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = invoiceRecord.InvoiceRecordId }, _responseHandler.Created(createdInvoiceRecordDto));
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(GetByIdAsync), new { id = response.Data.InvoiceRecordId }, response.Data),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            _ => StatusCode((int)response.StatusCode, response.Message)
+        };
     }
 
     // PUT: api/InvoiceRecord/5
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAsync(int id, [FromBody] InvoiceRecordDto invoiceRecordDto)
     {
-        if (invoiceRecordDto == null || id != invoiceRecordDto.InvoiceRecordId)
-            return BadRequest(_responseHandler.BadRequest<InvoiceRecordDto>("Invoice record data is invalid"));
+        var response = await _invoiceRecordService.UpdateAsync(id, invoiceRecordDto);
 
-        var existingInvoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
-        if (existingInvoiceRecord == null)
-            return NotFound(_responseHandler.NotFound<InvoiceRecordDto>("Invoice record not found"));
-
-        var invoiceRecord = _mapper.Map<InvoiceRecord>(invoiceRecordDto);
-        invoiceRecord.InvoiceRecordId = id; 
-        await _unitOfWork.InvoiceRecordRepository.UpdateAsync(id,invoiceRecord);
-        await _unitOfWork.SaveChangesAsync();
-
-        return NoContent();
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            System.Net.HttpStatusCode.NoContent => NoContent(),
+            _ => StatusCode((int)response.StatusCode, response.Message)
+        };
     }
 
     // DELETE: api/InvoiceRecord/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        var invoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
-        if (invoiceRecord == null)
-            return NotFound(_responseHandler.NotFound<InvoiceRecordDto>("Invoice record not found"));
+        var response = await _invoiceRecordService.DeleteAsync(id);
 
-        await _unitOfWork.InvoiceRecordRepository.DeleteAsync(id);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<InvoiceRecordDto>("Invoice record deleted successfully"));
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            _ => Ok(response.Message)
+        };
     }
 }

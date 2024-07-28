@@ -14,9 +14,6 @@ public static class ModulePresentationDependencies
 {
     public static IServiceCollection AddPresentationDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add AutoMapper profiles
-        services.AddAutoMapper(typeof(BookingMappingProfile));
-        services.AddAutoMapper(typeof(HotelMappingProfile));
 
         // Add Identity services
         services.AddIdentity<LocalUser, IdentityRole>()
@@ -45,8 +42,6 @@ public static class ModulePresentationDependencies
             };
         });
         services.AddScoped<ResponseHandler>();
-
-
         return services;
     }
 }
