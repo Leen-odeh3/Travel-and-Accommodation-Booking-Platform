@@ -42,8 +42,6 @@ public static class ModulePresentationDependencies
             };
         });
         services.AddScoped<ResponseHandler>();
-
-
         return services;
     }
 }

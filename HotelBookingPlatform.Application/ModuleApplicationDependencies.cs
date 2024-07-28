@@ -5,6 +5,7 @@ using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
 using HotelBookingPlatform.Domain.IServices;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace HotelBookingPlatform.Application;
 public static class ModuleApplicationDependencies
@@ -18,6 +19,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICityService, CityService>();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 }
