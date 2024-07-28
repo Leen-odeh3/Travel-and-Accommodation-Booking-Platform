@@ -19,6 +19,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICityService, CityService>();
+        services.AddScoped<IRoomService, RoomService>();
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
