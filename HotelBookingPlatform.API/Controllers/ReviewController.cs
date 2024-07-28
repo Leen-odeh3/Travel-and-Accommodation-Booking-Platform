@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.Bases;
+﻿using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.Review;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,15 +9,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class ReviewController : ControllerBase
 {
-    private readonly IUnitOfWork<Review> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IReviewService _reviewService;
 
-    public ReviewController(IUnitOfWork<Review> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public ReviewController(IReviewService reviewService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _reviewService = reviewService;
     }
 
     // POST: api/Review
@@ -29,14 +22,10 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
     {
         if (!ModelState.IsValid)
-            return BadRequest(_responseHandler.BadRequest<ReviewResponseDto>("Invalid data provided."));
+            return BadRequest("Invalid data provided.");
 
-        var review = _mapper.Map<Review>(request);
-        await _unitOfWork.ReviewRepository.CreateAsync(review);
-        await _unitOfWork.SaveChangesAsync();
-
-        var reviewResponse = _mapper.Map<ReviewResponseDto>(review);
-        return CreatedAtAction(nameof(GetReview), new { id = review.ReviewID }, _responseHandler.Created(reviewResponse));
+        var response = await _reviewService.CreateReviewAsync(request);
+        return StatusCode((int)response.StatusCode, response);
     }
 
     // GET: api/Review/5
@@ -44,13 +33,8 @@ public class ReviewController : ControllerBase
     [SwaggerOperation(Summary = "Get detailed information about a review by its unique identifier.")]
     public async Task<IActionResult> GetReview(int id)
     {
-        var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (review is null)
-        {
-            return NotFound(_responseHandler.NotFound<ReviewResponseDto>("Review not found."));
-        }
-        var reviewResponse = _mapper.Map<ReviewResponseDto>(review);
-        return Ok(_responseHandler.Success(reviewResponse));
+        var response = await _reviewService.GetReviewAsync(id);
+        return StatusCode((int)response.StatusCode, response);
     }
 
     // PUT: api/Review/5
@@ -59,35 +43,18 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
         if (!ModelState.IsValid)
-            return BadRequest(_responseHandler.BadRequest<ReviewResponseDto>("Invalid data provided."));
+            return BadRequest("Invalid data provided.");
 
-        var existingReview = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (existingReview == null)
-        {
-            return NotFound(_responseHandler.NotFound<ReviewResponseDto>("Review not found."));
-        }
-
-        _mapper.Map(request, existingReview);
-        await _unitOfWork.ReviewRepository.UpdateAsync(id,existingReview);
-        await _unitOfWork.SaveChangesAsync();
-
-        var reviewResponse = _mapper.Map<ReviewResponseDto>(existingReview);
-        return Ok(_responseHandler.Success(reviewResponse));
+        var response = await _reviewService.UpdateReviewAsync(id, request);
+        return StatusCode((int)response.StatusCode, response);
     }
+
+    // DELETE: api/Review/5
     [HttpDelete("{id}")]
     [SwaggerOperation(Summary = "Delete an existing review by its unique identifier.")]
     public async Task<IActionResult> DeleteReview(int id)
     {
-        var existingReview = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (existingReview is null)
-        {
-            return NotFound(_responseHandler.NotFound<ReviewResponseDto>("Review not found."));
-        }
-
-        await _unitOfWork.ReviewRepository.DeleteAsync(existingReview.ReviewID);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<ReviewResponseDto>("Review successfully deleted."));
+        var response = await _reviewService.DeleteReviewAsync(id);
+        return StatusCode((int)response.StatusCode, response);
     }
-
 }
