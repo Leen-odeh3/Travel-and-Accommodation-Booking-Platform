@@ -7,7 +7,6 @@ namespace HotelBookingPlatform.Infrastructure;
 public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {
     private readonly AppDbContext _context;
-
     public UnitOfWork(AppDbContext context)
     {
         _context = context;
@@ -21,26 +20,15 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         ReviewRepository = new ReviewRepository(_context);
         InvoiceRecordRepository =new InvoiceRecordRepository(_context);
     }
-
     public IHotelRepository HotelRepository { get; set;}
-
     public IBookingRepository BookingRepository { get; set;}
-
     public IRoomClasseRepository RoomClasseRepository { get; set;}
-
     public IRoomRepository RoomRepository { get; set;}
-
     public ICityRepository CityRepository { get; set;}
-
     public IOwnerRepository OwnerRepository { get; set; }
     public IDiscountRepository DiscountRepository { get; set; }
     public IReviewRepository ReviewRepository { get; set; }
-
     public IInvoiceRecordRepository InvoiceRecordRepository {get; set; }
-
-    public async Task<int> SaveChangesAsync()
-    {
-        return await _context.SaveChangesAsync();
-    }
+    public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();   
 }
 
