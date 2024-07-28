@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace HotelBookingPlatform.Infrastructure;
 public static class ModuleInfrastructureDependencies
 {
@@ -24,7 +23,7 @@ public static class ModuleInfrastructureDependencies
         );
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IRoomClasseRepository, RoomClassRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
         services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
