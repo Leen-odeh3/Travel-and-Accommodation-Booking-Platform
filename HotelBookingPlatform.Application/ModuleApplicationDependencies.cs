@@ -26,6 +26,8 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IHotelService, HotelService>();
         services.AddScoped<IAmenityService, AmenityService>();
         services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
+        services.AddScoped<IOwnerService, OwnerService>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;

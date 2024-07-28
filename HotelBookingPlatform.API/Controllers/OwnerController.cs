@@ -5,47 +5,33 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using HotelBookingPlatform.Application.Core.Abstracts;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class OwnerController : ControllerBase
 {
-    private readonly IUnitOfWork<Owner> _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ResponseHandler _responseHandler;
+    private readonly IOwnerService _ownerService;
 
-    public OwnerController(IUnitOfWork<Owner> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public OwnerController(IOwnerService ownerService)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _responseHandler = responseHandler;
+        _ownerService = ownerService;
     }
 
-    // GET: api/Owner
-  /*  [HttpGet]
-    [SwaggerOperation(Summary = "Retrieve a list of owners.")]
-    public async Task<IActionResult> GetOwners()
-    {
-        var owners = await _unitOfWork.OwnerRepository.GetAllAsync();
-        var ownerDtos = _mapper.Map<IEnumerable<OwnerDto>>(owners);
-
-        return Ok(_responseHandler.Success(ownerDtos));
-    }
-  */
     // GET: api/Owner/5
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Get detailed information about an owner by its unique identifier.")]
     public async Task<IActionResult> GetOwner(int id)
     {
-        var owner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (owner == null)
-        {
-            return NotFound(_responseHandler.NotFound<OwnerDto>("Owner not found."));
-        }
+        var response = await _ownerService.GetOwnerAsync(id);
 
-        var ownerDto = _mapper.Map<OwnerDto>(owner);
-        return Ok(_responseHandler.Success(ownerDto));
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            _ => Ok(response.Data)
+        };
     }
 
     // POST: api/Owner
@@ -54,14 +40,15 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> CreateOwner([FromBody] OwnerCreateDto request)
     {
         if (!ModelState.IsValid)
-            return BadRequest(_responseHandler.BadRequest<OwnerDto>("Invalid data provided."));
+            return BadRequest("Invalid data provided.");
 
-        var owner = _mapper.Map<Owner>(request);
-        await _unitOfWork.OwnerRepository.CreateAsync(owner);
-        await _unitOfWork.SaveChangesAsync();
-
-        var ownerDto = _mapper.Map<OwnerDto>(owner);
-        return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.Id }, _responseHandler.Created(ownerDto));
+        var response = await _ownerService.CreateOwnerAsync(request);
+        return response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(GetOwner), new { id = response.Data.Id }, response.Data),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            _ => StatusCode((int)response.StatusCode, response.Message)
+        };
     }
 
     // PUT: api/Owner/5
@@ -71,21 +58,17 @@ public class OwnerController : ControllerBase
     {
         if (id != request.Id)
         {
-            return BadRequest(_responseHandler.BadRequest<OwnerDto>("Invalid data provided."));
+            return BadRequest("Invalid data provided.");
         }
 
-        var existingOwner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (existingOwner == null)
+        var response = await _ownerService.UpdateOwnerAsync(id, request);
+
+        return response.StatusCode switch
         {
-            return NotFound(_responseHandler.NotFound<OwnerDto>("Owner not found."));
-        }
-
-        _mapper.Map(request, existingOwner);
-        await _unitOfWork.OwnerRepository.UpdateAsync(id,existingOwner);
-        await _unitOfWork.SaveChangesAsync();
-
-        var ownerDto = _mapper.Map<OwnerDto>(existingOwner);
-        return Ok(_responseHandler.Success(ownerDto));
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
+            _ => Ok(response.Data)
+        };
     }
 
     // DELETE: api/Owner/5
@@ -93,15 +76,12 @@ public class OwnerController : ControllerBase
     [SwaggerOperation(Summary = "Delete an existing owner.")]
     public async Task<IActionResult> DeleteOwner(int id)
     {
-        var owner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (owner == null)
+        var response = await _ownerService.DeleteOwnerAsync(id);
+
+        return response.StatusCode switch
         {
-            return NotFound(_responseHandler.NotFound<OwnerDto>("Owner not found."));
-        }
-
-        await _unitOfWork.OwnerRepository.DeleteAsync(id);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok(_responseHandler.Deleted<OwnerDto>("Owner successfully deleted."));
+            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
+            _ => Ok(response.Message)
+        };
     }
 }
