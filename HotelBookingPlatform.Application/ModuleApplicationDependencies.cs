@@ -20,6 +20,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IRoomService, RoomService>();
+        services.AddScoped<IRoomClassService, RoomClassService>();
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
