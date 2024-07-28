@@ -11,9 +11,12 @@ using System.Linq.Expressions;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
+    private readonly IFileService _fileService;
+
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
-        : base(unitOfWork, mapper, responseHandler, fileService)
+        : base(unitOfWork, mapper, responseHandler)
     {
+        _fileService = fileService;
     }
     public async Task<Response<IEnumerable<CityResponseDto>>> GetCities(string CityName, string Description, int pageSize, int pageNumber)
     {

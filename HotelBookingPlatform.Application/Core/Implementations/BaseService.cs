@@ -8,13 +8,11 @@ public abstract class BaseService<TEntity> where TEntity : class
     protected readonly IUnitOfWork<TEntity> _unitOfWork;
     protected readonly IMapper _mapper;
     protected readonly ResponseHandler _responseHandler;
-    protected readonly IFileService _fileService;
 
-    protected BaseService(IUnitOfWork<TEntity> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
+    protected BaseService(IUnitOfWork<TEntity> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _responseHandler = responseHandler;
-        _fileService = fileService;
     }
 }

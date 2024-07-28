@@ -12,9 +12,12 @@ namespace HotelBookingPlatform.Application.Core.Implementations;
 
 public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 {
+    private readonly IFileService _fileService;
+
     public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
-        : base(unitOfWork, mapper, responseHandler, fileService)
+        : base(unitOfWork, mapper, responseHandler)
     {
+        _fileService = fileService;
     }
 
     public async Task<Response<IEnumerable<RoomClassDto>>> GetRoomClassesAsync(int? adultsCapacity, int pageSize, int pageNumber)

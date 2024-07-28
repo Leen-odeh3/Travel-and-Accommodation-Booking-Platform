@@ -9,11 +9,12 @@ using HotelBookingPlatform.Domain;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomService : BaseService<Room>, IRoomService
 {
+    private readonly IFileService _fileService;
     public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper, ResponseHandler responseHandler, IFileService fileService)
-        : base(unitOfWork, mapper, responseHandler, fileService)
+        : base(unitOfWork, mapper, responseHandler)
     {
+        _fileService = fileService;
     }
-
     public async Task<Response<RoomResponseDto>> GetRoomAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
