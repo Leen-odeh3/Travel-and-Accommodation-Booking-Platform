@@ -1,6 +1,6 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
 namespace HotelBookingPlatform.Domain;
-public interface IUnitOfWork 
+public interface IUnitOfWork<T>  where T: class 
 {
     IHotelRepository HotelRepository { get; }
     IBookingRepository BookingRepository { get; }

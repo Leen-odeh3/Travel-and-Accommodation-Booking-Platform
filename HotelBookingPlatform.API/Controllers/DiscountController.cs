@@ -13,11 +13,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [ResponseCache(CacheProfileName = "DefaultCache")]
 public class DiscountController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<Discount> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
 
-    public DiscountController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public DiscountController(IUnitOfWork<Discount> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

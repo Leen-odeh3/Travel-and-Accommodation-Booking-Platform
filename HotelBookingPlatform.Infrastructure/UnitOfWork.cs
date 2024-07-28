@@ -4,7 +4,7 @@ using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Implementation;
 
 namespace HotelBookingPlatform.Infrastructure;
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {
     private readonly AppDbContext _context;
 
@@ -22,21 +22,21 @@ public class UnitOfWork : IUnitOfWork
         InvoiceRecordRepository =new InvoiceRecordRepository(_context);
     }
 
-    public IHotelRepository HotelRepository { get; }
+    public IHotelRepository HotelRepository { get; set;}
 
-    public IBookingRepository BookingRepository { get; }
+    public IBookingRepository BookingRepository { get; set;}
 
-    public IRoomClasseRepository RoomClasseRepository { get; }
+    public IRoomClasseRepository RoomClasseRepository { get; set;}
 
-    public IRoomRepository RoomRepository { get; }
+    public IRoomRepository RoomRepository { get; set;}
 
-    public ICityRepository CityRepository { get; }
+    public ICityRepository CityRepository { get; set;}
 
-    public IOwnerRepository OwnerRepository { get; }
-    public IDiscountRepository DiscountRepository { get; }
-    public IReviewRepository ReviewRepository { get; }
+    public IOwnerRepository OwnerRepository { get; set; }
+    public IDiscountRepository DiscountRepository { get; set; }
+    public IReviewRepository ReviewRepository { get; set; }
 
-    public IInvoiceRecordRepository InvoiceRecordRepository {get;}
+    public IInvoiceRecordRepository InvoiceRecordRepository {get; set; }
 
     public async Task<int> SaveChangesAsync()
     {

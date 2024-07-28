@@ -13,11 +13,11 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class HotelController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork<Hotel> _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ResponseHandler _responseHandler;
 
-    public HotelController(IUnitOfWork unitOfWork, IMapper mapper, ResponseHandler responseHandler)
+    public HotelController(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
