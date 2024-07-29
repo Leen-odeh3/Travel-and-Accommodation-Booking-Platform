@@ -1,5 +1,7 @@
-using HotelBookingPlatform.Application;
-using HotelBookingPlatform.Infrastructure;
+using HotelBookingPlatform.API.Extentions;
+using HotelBookingPlatform.API.Middlewares;
+using HotelBookingPlatform.Application.Extentions;
+using HotelBookingPlatform.Infrastructure.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
@@ -78,7 +80,7 @@ public class Program
             FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
             RequestPath = "/StaticFiles"
         });
-
+        app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-namespace HotelBookingPlatform.Infrastructure;
+namespace HotelBookingPlatform.Infrastructure.Extentions;
 public static class ServiceRegisteration
 {
     public static IServiceCollection AddServiceRegisteration(this IServiceCollection services)

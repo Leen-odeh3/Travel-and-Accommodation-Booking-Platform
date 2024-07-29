@@ -5,27 +5,25 @@ using HotelBookingPlatform.Domain.DTOs.Register;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.DTOs.Login;
 using HotelBookingPlatform.Domain.IRepositories;
-using Microsoft.AspNetCore.Authorization;
 using HotelBookingPlatform.Domain.Enums;
 using Swashbuckle.AspNetCore.Annotations;
-
+using HotelBookingPlatform.Domain.Exceptions;
+using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<LocalUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRepository _userRepository;
-    private readonly ResponseHandler _responseHandler;
 
-    public UsersController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository, ResponseHandler responseHandler)
+    public AuthenticationController(UserManager<LocalUser> userManager, RoleManager<IdentityRole> roleManager, IUserRepository userRepository)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userRepository = userRepository;
-        _responseHandler = responseHandler;
     }
 
     [HttpPost("Register")]
@@ -34,55 +32,37 @@ public class UsersController : ControllerBase
     {
 
         if (!await _userRepository.IsUniqueUser(registerRequestDto.Email))
-        {
-            return BadRequest(_responseHandler.BadRequest<object>("User with this email already exists."));
-        }
+            throw new BadRequestException("User with this email already exists.");
 
-        try
-        {
             var userDto = await _userRepository.Register(registerRequestDto);
-            return Ok(_responseHandler.Success(userDto));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>($"An error occurred during registration: {ex.Message}"));
-        }
+            return Ok(userDto);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
-        try
-        {
             var loginResponse = await _userRepository.Login(loginRequestDto);
-            return Ok(_responseHandler.Success(loginResponse));
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(_responseHandler.Unauthorized<object>(ex.Message));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>($"An error occurred during login: {ex.Message}"));
-        }
+            return Ok(loginResponse);       
     }
 
     [HttpPost("assign-admin")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> AssignAdmin([FromBody] AdminAssignmentRequestDto request)
     {
         var MainRole = Role.Admin.ToString();
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
-            return NotFound(_responseHandler.NotFound<object>("User not found."));
+            throw new NotFoundException("User not found.");
         }
         var result = await _userManager.AddToRoleAsync(user, MainRole);
         if (result.Succeeded)
-            return Ok(_responseHandler.Success<object>("The User Currently is Admin."));
+        {
+            return Ok(new { Message = "The user is now an admin." });
+        }
         else
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, _responseHandler.BadRequest<object>("An error occurred while assigning Admin role."));
+            throw new RoleAssignmentException("An error occurred while assigning the admin role.");
         }
     }
 }

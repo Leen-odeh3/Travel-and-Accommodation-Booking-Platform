@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-namespace HotelBookingPlatform.Infrastructure;
+namespace HotelBookingPlatform.Infrastructure.Extentions;
 public static class ModuleInfrastructureDependencies
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services)

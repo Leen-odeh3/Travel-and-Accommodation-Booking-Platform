@@ -2,12 +2,14 @@
 using HotelBookingPlatform.Domain.DTOs.Login;
 using HotelBookingPlatform.Domain.DTOs.Register;
 using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class UserRepository : IUserRepository
 {
@@ -22,17 +24,15 @@ public class UserRepository : IUserRepository
         _roleManager = roleManager;
         _tokenService = tokenService;
     }
-
     public async Task<bool> IsUniqueUser(string email)
     {
         var result = await _context.LocalUsers.FirstOrDefaultAsync(x => x.Email == email);
-        return result == null;
+        return result is null;
     }
-
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
         var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
+        if (user is null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
         {
             throw new UnauthorizedAccessException("Invalid email or password.");
         }
@@ -49,9 +49,9 @@ public class UserRepository : IUserRepository
             }
         };
     }
-
     public async Task<LocalUserDto> Register(RegisterRequestDto registerDto)
     {
+        var defaultRole = "User";
         var user = new LocalUser
         {
             UserName = registerDto.Email.Split('@')[0],
@@ -59,17 +59,15 @@ public class UserRepository : IUserRepository
             FirstName = registerDto.FirstName,
             LastName = registerDto.LastName,
         };
-
         try
         {
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException($"User creation failed: {errors}");
             }
-
-            var defaultRole = "User";
 
             await _userManager.AddToRoleAsync(user, defaultRole);
 
@@ -81,7 +79,7 @@ public class UserRepository : IUserRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("An error occurred during registration: " + ex.Message);
+            throw new InvalidOperationException($"An error occurred during registration: {ex.Message}");
         }
     }
 }

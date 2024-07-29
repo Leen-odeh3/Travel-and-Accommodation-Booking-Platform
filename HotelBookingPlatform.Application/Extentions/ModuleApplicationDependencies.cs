@@ -7,7 +7,7 @@ using HotelBookingPlatform.Domain.IServices;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace HotelBookingPlatform.Application;
+namespace HotelBookingPlatform.Application.Extentions;
 public static class ModuleApplicationDependencies
 {
     public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
