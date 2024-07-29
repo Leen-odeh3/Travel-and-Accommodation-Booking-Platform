@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Register;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.DTOs.Login;
@@ -8,10 +7,9 @@ using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Domain.Enums;
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Domain.Exceptions;
-using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 namespace HotelBookingPlatform.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
@@ -30,19 +28,18 @@ public class AuthenticationController : ControllerBase
     [SwaggerOperation(Summary = "Create New Account")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
-
-        if (!await _userRepository.IsUniqueUser(registerRequestDto.Email))
-            throw new BadRequestException("User with this email already exists.");
-
-            var userDto = await _userRepository.Register(registerRequestDto);
-            return Ok(userDto);
+        return !await _userRepository.IsUniqueUser(registerRequestDto.Email)
+        ? BadRequest(new { Message = "User with this email already exists." })
+        : Ok(await _userRepository.Register(registerRequestDto));
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
-            var loginResponse = await _userRepository.Login(loginRequestDto);
-            return Ok(loginResponse);       
+        var loginResponse = await _userRepository.Login(loginRequestDto);
+        return loginResponse is not null
+               ? Ok(loginResponse)
+               : Unauthorized(new { Message = "Invalid email or password." });
     }
 
     [HttpPost("assign-admin")]
@@ -50,19 +47,14 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> AssignAdmin([FromBody] AdminAssignmentRequestDto request)
     {
         var MainRole = Role.Admin.ToString();
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-        {
-            throw new NotFoundException("User not found.");
-        }
+
+        var user = await _userManager.FindByEmailAsync(request.Email)
+               ?? throw new NotFoundException("User not found.");
+
         var result = await _userManager.AddToRoleAsync(user, MainRole);
-        if (result.Succeeded)
-        {
-            return Ok(new { Message = "The user is now an admin." });
-        }
-        else
-        {
-            throw new RoleAssignmentException("An error occurred while assigning the admin role.");
-        }
+
+        return result.Succeeded
+        ? Ok(new { Message = "The user is now an admin." })
+        : throw new RoleAssignmentException("An error occurred while assigning the admin role.");
     }
 }

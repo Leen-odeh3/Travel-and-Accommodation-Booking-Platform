@@ -8,7 +8,6 @@ using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class UserRepository : IUserRepository
@@ -31,11 +30,11 @@ public class UserRepository : IUserRepository
     }
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
-        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
-        if (user is null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
-        {
+        var user = await _userManager.FindByEmailAsync(loginRequestDto.Email)
+              ?? throw new UnauthorizedAccessException("Invalid email or password.");
+
+        if (!await _userManager.CheckPasswordAsync(user, loginRequestDto.password))
             throw new UnauthorizedAccessException("Invalid email or password.");
-        }
 
         var token = await _tokenService.CreateTokenAsync(user);
 
@@ -59,8 +58,7 @@ public class UserRepository : IUserRepository
             FirstName = registerDto.FirstName,
             LastName = registerDto.LastName,
         };
-        try
-        {
+
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (!result.Succeeded)
@@ -76,10 +74,5 @@ public class UserRepository : IUserRepository
                 UserName = user.UserName,
                 Email = user.Email,
             };
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException($"An error occurred during registration: {ex.Message}");
-        }
     }
 }
