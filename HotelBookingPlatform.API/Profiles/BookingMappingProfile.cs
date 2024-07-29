@@ -7,8 +7,8 @@ public class BookingMappingProfile :Profile
 {
     public BookingMappingProfile()
     {
-        CreateMap<Booking, BookingDto>()
-            .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name));
+       /* CreateMap<Booking, BookingDto>()
+            .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name));*/
 
         CreateMap<BookingCreateRequest, Booking>();
 

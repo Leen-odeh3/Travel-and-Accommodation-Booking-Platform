@@ -28,9 +28,9 @@ public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
         builder.Property(h => h.CreatedAtUtc)
             .IsRequired();
 
-        builder.HasMany(h => h.Bookings)
+       /* builder.HasMany(h => h.Bookings)
             .WithOne(b => b.Hotel)
-            .HasForeignKey(b => b.HotelId);
+            .HasForeignKey(b => b.HotelId);*/
 
         builder.HasMany(h => h.RoomClasses)
             .WithOne(rc => rc.Hotel)
