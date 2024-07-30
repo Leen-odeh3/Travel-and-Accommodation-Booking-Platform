@@ -4,10 +4,12 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Infrastructure.Data;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 namespace HotelBookingPlatform.API.Extentions;

@@ -48,7 +48,7 @@ public class OwnerController : ControllerBase
         try
         {
             var ownerDto = await _ownerService.CreateOwnerAsync(request);
-            return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.Id }, ownerDto);
+            return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.OwnerID}, ownerDto);
         }
         catch (BadRequestException ex)
         {
@@ -61,7 +61,7 @@ public class OwnerController : ControllerBase
     [SwaggerOperation(Summary = "Update an existing owner.")]
     public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerDto request)
     {
-        if (!ModelState.IsValid || id != request.Id)
+        if (!ModelState.IsValid || id != request.OwnerID)
         {
             throw new BadRequestException("Invalid data provided.");
         }

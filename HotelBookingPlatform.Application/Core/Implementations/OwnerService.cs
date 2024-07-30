@@ -40,7 +40,7 @@ public class OwnerService : BaseService<Owner>, IOwnerService
     }
     public async Task<OwnerDto> UpdateOwnerAsync(int id, OwnerDto request)
     {
-        if (id != request.Id)
+        if (id != request.OwnerID)
         {
             throw new BadRequestException("Invalid data provided.");
         }
