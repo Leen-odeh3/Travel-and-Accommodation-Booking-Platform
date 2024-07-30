@@ -14,7 +14,6 @@ public class BookingService : BaseService<Booking>, IBookingService
         : base(unitOfWork, mapper, responseHandler)
     {
     }
-
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);

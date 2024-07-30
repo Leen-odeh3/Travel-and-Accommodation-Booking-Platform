@@ -4,6 +4,7 @@ using HotelBookingPlatform.Domain.DTOs.Owner;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.Exceptions;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class OwnerService : BaseService<Owner>, IOwnerService
@@ -12,40 +13,42 @@ public class OwnerService : BaseService<Owner>, IOwnerService
         : base(unitOfWork, mapper, responseHandler)
     {
     }
-
-    public async Task<Response<OwnerDto>> GetOwnerAsync(int id)
+    public async Task<OwnerDto> GetOwnerAsync(int id)
     {
         var owner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (owner == null)
-        {
-            return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Owner not found." };
-        }
+        if (owner is null)
+            throw new NotFoundException("Owner not found.");
 
         var ownerDto = _mapper.Map<OwnerDto>(owner);
-        return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.OK, Data = ownerDto };
+        return ownerDto;
     }
-
-    public async Task<Response<OwnerDto>> CreateOwnerAsync(OwnerCreateDto request)
+    public async Task<OwnerDto> CreateOwnerAsync(OwnerCreateDto request)
     {
-        var owner = _mapper.Map<Owner>(request);
-        await _unitOfWork.OwnerRepository.CreateAsync(owner);
-        await _unitOfWork.SaveChangesAsync();
+        try
+        {
+            var owner = _mapper.Map<Owner>(request);
+            await _unitOfWork.OwnerRepository.CreateAsync(owner);
+            await _unitOfWork.SaveChangesAsync();
 
-        var ownerDto = _mapper.Map<OwnerDto>(owner);
-        return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.Created, Data = ownerDto };
+            var ownerDto = _mapper.Map<OwnerDto>(owner);
+            return ownerDto;
+        }
+        catch (Exception ex)
+        {
+            throw new BadRequestException($"An error occurred while creating the owner: {ex.Message}");
+        }
     }
-
-    public async Task<Response<OwnerDto>> UpdateOwnerAsync(int id, OwnerDto request)
+    public async Task<OwnerDto> UpdateOwnerAsync(int id, OwnerDto request)
     {
         if (id != request.Id)
         {
-            return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Invalid data provided." };
+            throw new BadRequestException("Invalid data provided.");
         }
 
         var existingOwner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (existingOwner == null)
+        if (existingOwner is null)
         {
-            return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Owner not found." };
+            throw new NotFoundException("Owner not found.");
         }
 
         _mapper.Map(request, existingOwner);
@@ -53,20 +56,18 @@ public class OwnerService : BaseService<Owner>, IOwnerService
         await _unitOfWork.SaveChangesAsync();
 
         var ownerDto = _mapper.Map<OwnerDto>(existingOwner);
-        return new Response<OwnerDto> { StatusCode = System.Net.HttpStatusCode.OK, Data = ownerDto };
+        return ownerDto;
     }
-
-    public async Task<Response<string>> DeleteOwnerAsync(int id)
+    public async Task<string> DeleteOwnerAsync(int id)
     {
         var owner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-        if (owner == null)
-        {
-            return new Response<string> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Owner not found." };
-        }
+        if (owner is null)
+            throw new NotFoundException("Owner not found.");
 
         await _unitOfWork.OwnerRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
 
-        return new Response<string> { StatusCode = System.Net.HttpStatusCode.OK, Message = "Owner successfully deleted." };
+        return "Owner successfully deleted.";
     }
 }
+
