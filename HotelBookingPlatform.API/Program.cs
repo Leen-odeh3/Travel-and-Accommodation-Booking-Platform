@@ -80,8 +80,10 @@ public class Program
         });
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
+
         app.UseAuthentication();
         app.UseAuthorization();
+
         app.MapControllers();
 
         app.Run();
