@@ -65,7 +65,6 @@ public class CityService : BaseService<City>, ICityService
                 Country = city.Country,
                 PostOffice = city.PostOffice,
                 CreatedAtUtc = city.CreatedAtUtc,
-                ModifiedAtUtc = city.ModifiedAtUtc,
                 Description = city.Description,
                 Hotels = _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
             };
