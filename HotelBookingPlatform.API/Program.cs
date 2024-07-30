@@ -2,7 +2,6 @@ using HotelBookingPlatform.API.Extentions;
 using HotelBookingPlatform.API.Middlewares;
 using HotelBookingPlatform.Application.Extentions;
 using HotelBookingPlatform.Infrastructure.Extentions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 namespace HotelBookingPlatform.API;
@@ -11,15 +10,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddControllers(options =>
-        {
-            options.CacheProfiles.Add("DefaultCache", new CacheProfile
-            {
-                Duration = 30,
-                Location = ResponseCacheLocation.Any
-            });
-        });
 
         builder.Services.AddEndpointsApiExplorer();
 

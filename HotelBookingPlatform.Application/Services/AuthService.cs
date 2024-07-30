@@ -92,10 +92,10 @@ public class AuthService : IAuthService
 
     public async Task<string> AddRoleAsync(AddRoleModel model)
     {
-        var user = await _userManager.FindByIdAsync(model.UserId);
+        var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user is null || !await _roleManager.RoleExistsAsync(model.Role))
-            return "Invalid user ID or Role";
+            return "Invalid user Email or Role";
 
         if (await _userManager.IsInRoleAsync(user, model.Role))
             return "User already assigned to this role";

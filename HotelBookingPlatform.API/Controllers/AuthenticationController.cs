@@ -2,6 +2,7 @@
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Domain.Helpers;
+using Microsoft.AspNetCore.Authorization;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/auth")]
@@ -47,7 +48,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("assign-admin")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Assign Admin Role to User",
     Description = "Assigns the admin role to a user identified by their email address. Only authorized administrators can perform this action. Returns a success message if the role is assigned successfully or throws an error if the user is not found or role assignment fails.")]
     public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
