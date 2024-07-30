@@ -5,17 +5,18 @@ using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using System.Linq.Expressions;
+using HotelBookingPlatform.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
-
 public class HotelService : BaseService<Hotel>, IHotelService
 {
     public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
         : base(unitOfWork, mapper, responseHandler)
     {
     }
-
-    public async Task<Response<IEnumerable<HotelResponseDto>>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
+    public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
         Expression<Func<Hotel, bool>> filter = null;
 
@@ -34,73 +35,67 @@ public class HotelService : BaseService<Hotel>, IHotelService
                 filter = h => h.Description.Contains(description);
             }
         }
-
         var hotels = await _unitOfWork.HotelRepository.GetAllAsync(filter, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
-        return hotelDtos.Any()
-            ? _responseHandler.Success(hotelDtos)
-            : _responseHandler.NotFound<IEnumerable<HotelResponseDto>>("No Hotels Found");
-    }
+        if (!hotelDtos.Any())
+            throw new NotFoundException("No hotels found matching the criteria.");
 
-    public async Task<Response<HotelResponseDto>> GetHotel(int id)
+        return hotelDtos;
+    }
+    public async Task<HotelResponseDto> GetHotel(int id)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
 
         if (hotel is null)
-            return _responseHandler.NotFound<HotelResponseDto>("Hotel not found");
+            throw new NotFoundException("Hotel not found");
 
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
-        return _responseHandler.Success(hotelDto);
+        return hotelDto;
     }
 
-    public async Task<Response<HotelResponseDto>> CreateHotel(HotelCreateRequest request)
+    public async Task<ActionResult<HotelResponseDto>> CreateHotel(HotelCreateRequest request)
     {
         var hotel = _mapper.Map<Hotel>(request);
         await _unitOfWork.HotelRepository.CreateAsync(hotel);
         await _unitOfWork.SaveChangesAsync();
 
         var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
-        return _responseHandler.Created(createdHotelDto);
+        return new CreatedAtActionResult(nameof(GetHotel), "Hotels", new { id = createdHotelDto.HotelId }, createdHotelDto);
     }
-
-
-    public async Task<Response<HotelResponseDto>> UpdateHotelAsync(int id, HotelResponseDto request)
+    public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
     {
         var existingHotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
-        if (existingHotel == null)
-            return _responseHandler.NotFound<HotelResponseDto>("Hotel not found");
-
+        if (existingHotel is null)
+        {
+            throw new KeyNotFoundException("Hotel not found");
+        }
         _mapper.Map(request, existingHotel);
+
         await _unitOfWork.HotelRepository.UpdateAsync(id, existingHotel);
         await _unitOfWork.SaveChangesAsync();
-
         var updatedHotelDto = _mapper.Map<HotelResponseDto>(existingHotel);
-        return _responseHandler.Success(updatedHotelDto);
+        return updatedHotelDto;
     }
-
-
-
-public async Task<Response<HotelResponseDto>> DeleteHotel(int id)
+    public async Task<IActionResult> DeleteHotel(int id)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel is null)
-            return _responseHandler.NotFound<HotelResponseDto>("Hotel not found");
+        {
+            throw new KeyNotFoundException("Hotel not found");
+        }
 
         await _unitOfWork.HotelRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
 
-        return _responseHandler.Deleted<HotelResponseDto>("Hotel successfully deleted.");
+        return new OkObjectResult(new { message = "Hotel successfully deleted." });
     }
-
-    public async Task<Response<IEnumerable<HotelResponseDto>>> SearchHotel(string name, string desc, int pageSize, int pageNumber)
+    public async Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber)
     {
         var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
-        return hotelDtos.Any()
-            ? _responseHandler.Success(hotelDtos)
-            : _responseHandler.NotFound<IEnumerable<HotelResponseDto>>("No Hotels Found");
+        return hotelDtos;
     }
 }
 
