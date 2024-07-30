@@ -5,10 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HotelBookingPlatform.Infrastructure.Data;
 public class AppDbContext : IdentityDbContext<LocalUser>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> option):base(option)
-    {
-        
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> option) : base(option) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -30,6 +27,5 @@ public class AppDbContext : IdentityDbContext<LocalUser>
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<InvoiceRecord> InvoiceRecords { get; set; }
-
     public DbSet<Amenity> Amenities { get; set; }
 }

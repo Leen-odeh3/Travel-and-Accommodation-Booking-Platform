@@ -4,11 +4,12 @@ using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using HotelBookingPlatform.Domain.Enums;
 
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = nameof(Role.Admin))]
 public class OwnerController : ControllerBase
 {
     private readonly IOwnerService _ownerService;

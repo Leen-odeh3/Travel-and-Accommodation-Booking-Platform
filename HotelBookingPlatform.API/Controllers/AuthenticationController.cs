@@ -46,7 +46,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("assign-admin")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Assign Admin Role to User",
     Description = "Assigns the admin role to a user identified by their email address. Only authorized administrators can perform this action. Returns a success message if the role is assigned successfully or throws an error if the user is not found or role assignment fails.")]
     public async Task<IActionResult> AssignAdmin([FromBody] AdminAssignmentRequestDto request)

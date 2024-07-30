@@ -5,9 +5,7 @@ using HotelBookingPlatform.Infrastructure.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
-
 namespace HotelBookingPlatform.API;
-
 public class Program
 {
     public static void Main(string[] args)

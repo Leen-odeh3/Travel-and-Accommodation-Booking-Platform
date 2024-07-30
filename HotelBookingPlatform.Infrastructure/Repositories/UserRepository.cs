@@ -37,6 +37,7 @@ public class UserRepository : IUserRepository
             throw new UnauthorizedAccessException("Invalid email or password.");
 
         var token = await _tokenService.CreateTokenAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
 
         return new LoginResponseDto
         {
@@ -45,7 +46,8 @@ public class UserRepository : IUserRepository
             {
                 UserName = user.UserName,
                 Email = user.Email,
-            }
+            },
+             Roles = (List<string>)roles,
         };
     }
     public async Task<LocalUserDto> Register(RegisterRequestDto registerDto)
