@@ -9,5 +9,5 @@ public class CityResponseDto
     public string PostOffice { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public string Description { get; set; }
-    public string CityImage { get; set; }
+    public List<string> CityImages { get; set; }
 }

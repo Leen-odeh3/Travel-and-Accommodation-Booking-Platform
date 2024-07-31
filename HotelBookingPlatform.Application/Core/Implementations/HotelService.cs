@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
@@ -8,13 +7,19 @@ using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
+using HotelBookingPlatform.Domain.Enums;
+using Microsoft.AspNetCore.Http;
+using HotelBookingPlatform.Domain.IServices;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
 {
-    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
-        : base(unitOfWork, mapper, responseHandler)
+    private readonly IFileService _fileService;
+
+    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper,IFileService fileService)
+         : base(unitOfWork, mapper)
     {
+        _fileService = fileService;
     }
     public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
@@ -35,7 +40,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
                 filter = h => h.Description.Contains(description);
             }
         }
-        var hotels = await _unitOfWork.HotelRepository.GetAllAsync(filter, pageSize, pageNumber);
+        var hotels = await _unitOfWork.HotelRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (!hotelDtos.Any())
@@ -97,5 +102,50 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         return hotelDtos;
     }
+
+    public async Task AddPhotosToHotelAsync(int hotelId, IFormFile[] photoFiles)
+    {
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
+        if (hotel == null)
+        {
+            throw new NotFoundException("Hotel not found.");
+        }
+
+        var fileNames = await _fileService.SaveFilesAsync(photoFiles, new[] { FileType.Jpg, FileType.Jpeg, FileType.Png, FileType.Gif });
+
+        foreach (var fileName in fileNames)
+        {
+            var photo = new Photo
+            {
+                FileName = fileName,
+                EntityId = hotelId,
+                EntityType = "Hotel"
+            };
+
+            await _unitOfWork.PhotoRepository.CreateAsync(photo);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task DeletePhotoFromHotelAsync(int hotelId, int photoId)
+    {
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
+        if (hotel == null)
+        {
+            throw new NotFoundException("Hotel not found.");
+        }
+
+        var photo = await _unitOfWork.PhotoRepository.GetByIdAsync(photoId);
+        if (photo is null || photo.EntityId != hotelId || photo.EntityType != "Hotel")
+        {
+            throw new KeyNotFoundException("Photo not found or does not belong to the specified hotel.");
+        }
+
+        await _fileService.DeleteFileAsync(photo.FileName);
+        await _unitOfWork.PhotoRepository.DeleteAsync(photoId);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }
+
 

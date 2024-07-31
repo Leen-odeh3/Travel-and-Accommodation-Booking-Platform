@@ -5,7 +5,6 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using HotelBookingPlatform.Domain.Enums;
-
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -13,7 +12,6 @@ namespace HotelBookingPlatform.API.Controllers;
 public class OwnerController : ControllerBase
 {
     private readonly IOwnerService _ownerService;
-
     public OwnerController(IOwnerService ownerService)
     {
         _ownerService = ownerService;
@@ -24,15 +22,8 @@ public class OwnerController : ControllerBase
     [SwaggerOperation(Summary = "Retrieve an owner by its unique identifier.")]
     public async Task<IActionResult> GetOwner(int id)
     {
-        try
-        {
-            var ownerDto = await _ownerService.GetOwnerAsync(id);
-            return Ok(ownerDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var ownerDto = await _ownerService.GetOwnerAsync(id);
+        return Ok(ownerDto);
     }
 
     // POST: api/Owner
@@ -45,15 +36,8 @@ public class OwnerController : ControllerBase
             throw new BadRequestException("Invalid data provided.");
         }
 
-        try
-        {
-            var ownerDto = await _ownerService.CreateOwnerAsync(request);
-            return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.OwnerID}, ownerDto);
-        }
-        catch (BadRequestException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var ownerDto = await _ownerService.CreateOwnerAsync(request);
+        return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.OwnerID }, ownerDto);
     }
 
     // PUT: api/Owner/5
@@ -66,20 +50,8 @@ public class OwnerController : ControllerBase
             throw new BadRequestException("Invalid data provided.");
         }
 
-        try
-        {
-            var ownerDto = await _ownerService.UpdateOwnerAsync(id, request);
-            return Ok(ownerDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (BadRequestException ex)
-        {
-            return BadRequest(ex.Message);
-        }
- 
+        var ownerDto = await _ownerService.UpdateOwnerAsync(id, request);
+        return Ok(ownerDto);
     }
 
     // DELETE: api/Owner/5
@@ -87,14 +59,17 @@ public class OwnerController : ControllerBase
     [SwaggerOperation(Summary = "Delete an existing owner.")]
     public async Task<IActionResult> DeleteOwner(int id)
     {
-        try
-        {
-            await _ownerService.DeleteOwnerAsync(id);
-            return Ok("Owner successfully deleted.");
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        await _ownerService.DeleteOwnerAsync(id);
+        return Ok("Owner successfully deleted.");
     }
+
+    // GET: api/Owner
+    [HttpGet]
+    [SwaggerOperation(Summary = "Retrieve all owners.")]
+    public async Task<IActionResult> GetAllOwners()
+    {
+        var owners = await _ownerService.GetAllAsync();
+        return Ok(owners);
+    }
+
 }

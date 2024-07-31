@@ -3,5 +3,6 @@ using HotelBookingPlatform.Domain.IRepositories;
 namespace HotelBookingPlatform.Domain.Abstracts;
 public interface IAmenityRepository : IGenericRepository<Amenity>
 {
-    Task<IEnumerable<Amenity>> GetAmenitiesByHotelNameAsync(string hotelName, int pageSize, int pageNumber);
+    Task<IEnumerable<Amenity>> GetAmenitiesByIdsAsync(IEnumerable<int> amenityIds);
+
 }

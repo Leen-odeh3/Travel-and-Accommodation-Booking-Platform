@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Application.Services;
-using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IServices;
@@ -60,8 +59,6 @@ public static class ModulePresentationDependencies
                  Location = ResponseCacheLocation.Any
              });
          });
-
-        services.AddScoped<ResponseHandler>();
         return services;
     }
 }

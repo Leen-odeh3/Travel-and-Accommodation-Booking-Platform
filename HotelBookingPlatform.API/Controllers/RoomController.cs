@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Domain.DTOs.Room;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Bases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Application.Core.Abstracts;
@@ -19,40 +17,63 @@ public class RoomController : ControllerBase
         _roomService = roomService;
     }
 
+    // GET: api/Room/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Response<RoomResponseDto>>> GetRoom(int id)
+    public async Task<ActionResult<RoomResponseDto>> GetRoom(int id)
     {
-        var response = await _roomService.GetRoomAsync(id);
-        if (response.Succeeded)
-            return Ok(response);
-        return NotFound(response);
+        var room = await _roomService.GetRoomAsync(id);
+        if (room == null)
+        {
+            return NotFound(new { message = "Room not found." });
+        }
+
+        return Ok(room);
     }
 
+    // POST: api/Room
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Response<RoomResponseDto>>> CreateRoom([FromBody] RoomCreateRequest request)
+    public async Task<ActionResult<RoomResponseDto>> CreateRoom([FromBody] RoomCreateRequest request)
     {
-        var response = await _roomService.CreateRoomAsync(request);
-        return CreatedAtAction(nameof(GetRoom), new { id = response.Data.RoomId }, response);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid data provided.");
+        }
+
+        var createdRoom = await _roomService.CreateRoomAsync(request);
+        return CreatedAtAction(nameof(GetRoom), new { id = createdRoom.RoomId }, createdRoom);
     }
 
+    // PUT: api/Room/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomCreateRequest request)
     {
-        var response = await _roomService.UpdateRoomAsync(id, request);
-        if (response.Succeeded)
-            return NoContent();
-        return NotFound(response);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid data provided.");
+        }
+
+        var updatedRoom = await _roomService.UpdateRoomAsync(id, request);
+        if (updatedRoom == null)
+        {
+            return NotFound(new { message = "Room not found." });
+        }
+
+        return NoContent();
     }
 
+   /* // DELETE: api/Room/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteRoom(int id)
     {
-        var response = await _roomService.DeleteRoomAsync(id);
-        if (response.Succeeded)
-            return Ok(response);
-        return NotFound(response);
-    }
+        var success = await _roomService.DeleteRoomAsync(id);
+        if (!success)
+        {
+            return NotFound(new { message = "Room not found." });
+        }
+
+        return Ok(new { message = "Room successfully deleted." });
+    }*/
 }

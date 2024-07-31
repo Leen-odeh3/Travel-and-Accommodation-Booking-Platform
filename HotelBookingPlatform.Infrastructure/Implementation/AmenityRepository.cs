@@ -12,12 +12,10 @@ public class AmenityRepository : GenericRepository<Amenity>, IAmenityRepository
     {
         _context = context;
     }
-    public async Task<IEnumerable<Amenity>> GetAmenitiesByHotelNameAsync(string hotelName, int pageSize, int pageNumber)
+    public async Task<IEnumerable<Amenity>> GetAmenitiesByIdsAsync(IEnumerable<int> amenityIds)
     {
         return await _context.Amenities
-            .Where(a => a.RoomClasses.Any(rc => rc.Hotel.Name.Contains(hotelName)))
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+            .Where(a => amenityIds.Contains(a.AmenityID))
             .ToListAsync();
     }
 }

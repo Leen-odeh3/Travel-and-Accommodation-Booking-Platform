@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Hotel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IHotelService
@@ -7,6 +8,8 @@ public interface IHotelService
     Task<HotelResponseDto> GetHotel(int id);
     Task<ActionResult<HotelResponseDto>> CreateHotel(HotelCreateRequest request);
     Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request);
+    Task AddPhotosToHotelAsync(int hotelId, IFormFile[] photoFiles);
+    Task DeletePhotoFromHotelAsync(int hotelId, int photoId);
     Task<IActionResult> DeleteHotel(int id);
     Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber);
 }

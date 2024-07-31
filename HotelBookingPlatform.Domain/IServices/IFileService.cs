@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HotelBookingPlatform.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 namespace HotelBookingPlatform.Domain.IServices;
 public interface IFileService
 {
-    Task<string> SaveFileAsync(IFormFile Image, string[] allowedFileExtentions);
-    void DeleteFileAsync(string FileNameExtention);
+    Task<List<string>> SaveFilesAsync(IFormFile[] files, FileType[] allowedFileTypes);
+    Task DeleteFileAsync(string fileName);
+    Task<string> GetFilePathAsync(string fileName); 
+
 }
