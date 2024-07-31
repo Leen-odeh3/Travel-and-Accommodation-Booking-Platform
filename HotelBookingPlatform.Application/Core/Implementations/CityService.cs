@@ -67,45 +67,43 @@ public class CityService : BaseService<City>, ICityService
 
     }
 
-
     public async Task<CityResponseDto> CreateCity(CityCreateRequest request)
     {
         var allowedFileTypes = new[] { FileType.Jpg, FileType.Jpeg, FileType.Png, FileType.Gif };
         var allowedExtensions = allowedFileTypes.GetAllowedExtensions();
 
-        if (request.CityImages == null || !request.CityImages.Any())
+        if (request.CityImages != null && request.CityImages.Any())
+        {
+            var savedFileNames = await _fileService.SaveFilesAsync(request.CityImages, allowedFileTypes);
+
+            var city = _mapper.Map<City>(request);
+            city.CreatedAtUtc = DateTime.UtcNow;
+
+            foreach (var fileName in savedFileNames)
+            {
+                city.CityImages.Add(new Photo
+                {
+                    FileName = fileName,
+                    FilePath = await _fileService.GetFilePathAsync(fileName),
+                    CreatedAtUtc = DateTime.UtcNow,
+                    EntityType = "City",
+                    EntityId = city.CityID
+                });
+            }
+
+            await _unitOfWork.CityRepository.CreateAsync(city);
+            await _unitOfWork.SaveChangesAsync();
+
+            var createdCityDto = _mapper.Map<CityResponseDto>(city);
+            createdCityDto.CityImages = savedFileNames.ToList();
+
+            return createdCityDto;
+        }
+        else
         {
             throw new ArgumentException("At least one city image is required.");
         }
-
-        var savedFileNames = await _fileService.SaveFilesAsync(request.CityImages, allowedFileTypes);
-
-        var city = _mapper.Map<City>(request);
-        city.CreatedAtUtc = DateTime.UtcNow;
-
-        // Add photos to the city
-        foreach (var fileName in savedFileNames)
-        {
-            city.Photos.Add(new Photo
-            {
-                FileName = fileName,
-                FilePath = await _fileService.GetFilePathAsync(fileName), 
-                CreatedAtUtc = DateTime.UtcNow,
-                EntityType = "City",
-                EntityId = city.CityID 
-            });
-        }
-
-        await _unitOfWork.CityRepository.CreateAsync(city);
-        await _unitOfWork.SaveChangesAsync();
-
-        var createdCityDto = _mapper.Map<CityResponseDto>(city);
-        createdCityDto.CityImages = savedFileNames.ToList();
-
-        return createdCityDto;
     }
-
-
     public void DeleteCityImages(int cityId, IEnumerable<string> fileNames)
     {
         var city = _unitOfWork.CityRepository.GetByIdAsync(cityId).Result; 
@@ -119,7 +117,6 @@ public class CityService : BaseService<City>, ICityService
             _fileService.DeleteFileAsync(fileName);
         }
     }
-
     public async Task<CityResponseDto> UpdateCity(int id, CityCreateRequest request)
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);

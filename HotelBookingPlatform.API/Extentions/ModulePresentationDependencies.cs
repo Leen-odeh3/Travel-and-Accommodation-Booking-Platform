@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using HotelBookingPlatform.API.Profiles;
 
 namespace HotelBookingPlatform.API.Extentions;
 public static class ModulePresentationDependencies
@@ -59,6 +60,7 @@ public static class ModulePresentationDependencies
                  Location = ResponseCacheLocation.Any
              });
          });
+
         return services;
     }
 }

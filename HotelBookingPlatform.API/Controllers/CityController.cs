@@ -51,10 +51,16 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Create a new city with the specified information.")]
     public async Task<ActionResult<CityResponseDto>> CreateCity([FromForm] CityCreateRequest request)
     {
+        if (request.CityImages == null || !request.CityImages.Any())
+        {
+            return BadRequest("At least one image is required.");
+        }
+
         var createdCity = await _cityService.CreateCity(request);
         if (createdCity is null)
-        
-            throw new BadRequestException("Failed to create city");
+        {
+            return BadRequest("Failed to create city");
+        }
 
         return CreatedAtAction(nameof(GetCity), new { id = createdCity.CityID }, createdCity);
     }

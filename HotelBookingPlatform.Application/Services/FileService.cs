@@ -72,9 +72,10 @@ public class FileService : IFileService
 
         return savedFileNames;
     }
-    public async Task<string> GetFilePathAsync(string fileName)
+    public Task<string> GetFilePathAsync(string fileName)
     {
-        return Path.Combine("your_directory_path", fileName);
+        var uploadsPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads");
+        return Task.FromResult(Path.Combine(uploadsPath, fileName));
     }
 
 }
