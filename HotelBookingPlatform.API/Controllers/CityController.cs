@@ -71,4 +71,58 @@ public class CityController : ControllerBase
         }
     }
 
+
+    [HttpPost("{id}/photo")]
+    public async Task<IActionResult> UploadPhoto(int id, IFormFile file)
+    {
+        try
+        {
+            string photoPath = await _cityService.UploadCityPhotoAsync(id, file);
+            return Ok(new { PhotoPath = photoPath });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpGet("{id}/photo")]
+    public async Task<IActionResult> GetPhoto(int id)
+    {
+        try
+        {
+            string photoUrl = await _cityService.GetCityPhotoUrlAsync(id);
+            return Ok(new { PhotoUrl = photoUrl });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}/photo")]
+    public async Task<IActionResult> DeletePhoto(int id)
+    {
+        try
+        {
+            await _cityService.DeleteCityPhotoAsync(id);
+            return Ok("Photo deleted successfully.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 }

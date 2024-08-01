@@ -4,19 +4,15 @@ using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.IServices;
 using HotelBookingPlatform.Domain;
-
 namespace HotelBookingPlatform.Application.Core.Implementations;
-
 public class RoomService : BaseService<Room>, IRoomService
 {
     private readonly IFileService _fileService;
-
     public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper, IFileService fileService)
         : base(unitOfWork, mapper)
     {
         _fileService = fileService;
     }
-
     public async Task<RoomResponseDto> GetRoomAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
@@ -28,7 +24,7 @@ public class RoomService : BaseService<Room>, IRoomService
         return roomDto;
     }
 
-    public async Task<RoomResponseDto> CreateRoomAsync(RoomCreateRequest request)
+  /*  public async Task<RoomResponseDto> CreateRoomAsync(RoomCreateRequest request)
     {
         if (request == null)
             throw new ArgumentNullException(nameof(request), "Room creation request is null.");
@@ -39,7 +35,7 @@ public class RoomService : BaseService<Room>, IRoomService
 
         var createdRoomDto = _mapper.Map<RoomResponseDto>(room);
         return createdRoomDto;
-    }
+    }*/
 
     public async Task<RoomResponseDto> UpdateRoomAsync(int id, RoomCreateRequest request)
     {

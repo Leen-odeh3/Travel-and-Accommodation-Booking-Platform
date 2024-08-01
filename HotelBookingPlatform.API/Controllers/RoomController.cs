@@ -30,7 +30,7 @@ public class RoomController : ControllerBase
         return Ok(room);
     }
 
-    // POST: api/Room
+   /* // POST: api/Room
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<RoomResponseDto>> CreateRoom([FromBody] RoomCreateRequest request)
@@ -42,10 +42,10 @@ public class RoomController : ControllerBase
 
         var createdRoom = await _roomService.CreateRoomAsync(request);
         return CreatedAtAction(nameof(GetRoom), new { id = createdRoom.RoomId }, createdRoom);
-    }
+    }*/
 
     // PUT: api/Room/5
-    [HttpPut("{id}")]
+ /*   [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomCreateRequest request)
     {
@@ -62,7 +62,7 @@ public class RoomController : ControllerBase
 
         return NoContent();
     }
-
+ */
    /* // DELETE: api/Room/5
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]

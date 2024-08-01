@@ -27,4 +27,8 @@
     <ProjectReference Include="..\HotelBookingPlatform.Application\HotelBookingPlatform.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Upload\Cities\" />
+  </ItemGroup>
+
 </Project>

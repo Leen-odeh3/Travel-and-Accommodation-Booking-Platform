@@ -5,13 +5,15 @@ using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.IServices;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-
+    private readonly IFileService _fileService;
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
@@ -55,10 +57,10 @@ public class CityService : BaseService<City>, ICityService
             return cityWithHotelsDto;
         }
 
-            return _mapper.Map<CityWithHotelsResponseDto>(city);
+        return _mapper.Map<CityWithHotelsResponseDto>(city);
 
     }
-//Create
+    //Create
     public async Task<CityResponseDto> UpdateCity(int id, CityCreateRequest request)
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
@@ -81,5 +83,36 @@ public class CityService : BaseService<City>, ICityService
 
         await _unitOfWork.CityRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task<string> UploadCityPhotoAsync(int cityId, IFormFile file)
+    {
+        // Optional: You might want to ensure that the city exists before uploading the photo
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city is null)
+            throw new KeyNotFoundException("City not found.");
+
+        return await _fileService.UploadImageAsync(file, "city", $"{cityId}.png");
+    }
+
+    public async Task<string> GetCityPhotoUrlAsync(int cityId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city is null)
+            throw new KeyNotFoundException("City not found.");
+
+        return await _fileService.GetImageUrlsAsync("city").ContinueWith(task =>
+        {
+            var urls = task.Result;
+            return urls.FirstOrDefault(url => url.EndsWith($"{cityId}.png"));
+        });
+    }
+    public async Task DeleteCityPhotoAsync(int cityId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city is null)
+            throw new KeyNotFoundException("City not found.");
+
+        await _fileService.DeleteImageAsync("city", $"{cityId}.png");
     }
 }
