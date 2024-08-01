@@ -10,36 +10,16 @@ public class AmenityService : BaseService<Amenity>, IAmenityService
         : base(unitOfWork, mapper)
     {
     }
-    public async Task<AmenityResponseDto> CreateAmenityAsync(AmenityCreateDto request)
+    public async Task<IEnumerable<AmenityResponseDto>> GetAllAmenity()
     {
-        if (request.RoomClassIds == null || !request.RoomClassIds.Any())
+        var amenities = await _unitOfWork.AmenityRepository.GetAllAsync();
+
+        if (amenities is null || !amenities.Any())
         {
-            throw new ArgumentException("No RoomClass IDs provided.");
+            throw new KeyNotFoundException("No amenities found.");
         }
+        var amenityDtos = _mapper.Map<IEnumerable<AmenityResponseDto>>(amenities);
 
-        var amenity = _mapper.Map<Amenity>(request);
-        var roomClasses = new List<RoomClass>();
-
-        foreach (var roomClassId in request.RoomClassIds)
-        {
-            var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
-            if (roomClass == null)
-            {
-                throw new KeyNotFoundException($"RoomClass with ID {roomClassId} not found.");
-            }
-            roomClasses.Add(roomClass);
-        }
-
-        foreach (var roomClass in roomClasses)
-        {
-            roomClass.Amenities.Add(amenity);
-            await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClass.RoomClassID, roomClass);
-        }
-
-        await _unitOfWork.SaveChangesAsync();
-
-        var amenityDto = _mapper.Map<AmenityResponseDto>(amenity);
-
-        return amenityDto;
+        return amenityDtos;
     }
 }

@@ -37,7 +37,7 @@ public class HotelAmenitiesController : ControllerBase
         return Ok(amenities);
     }
 
-    [HttpPost("add-amenities")]
+ /*   [HttpPost("add-amenities")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add amenities to a hotel.")]
     public async Task<IActionResult> AddAmenitiesToHotel(
@@ -53,5 +53,5 @@ public class HotelAmenitiesController : ControllerBase
         {
             return NotFound(ex.Message); 
         }
-    }
+    }*/
 }

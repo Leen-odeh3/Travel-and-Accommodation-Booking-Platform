@@ -50,31 +50,4 @@ public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
         return amenityDtos;
     }
 
-    public async Task AddAmenitiesToHotelAsync(string hotelName, IEnumerable<int> amenityIds)
-    {
-        var hotel = await _unitOfWork.HotelRepository.GetHotelByNameAsync(hotelName);
-        if (hotel == null)
-        {
-            throw new KeyNotFoundException("Hotel not found");
-        }
-
-        var amenities = await _unitOfWork.AmenityRepository.GetAmenitiesByIdsAsync(amenityIds);
-        if (amenities.Count() != amenityIds.Count())
-        {
-            throw new KeyNotFoundException("One or more amenities not found");
-        }
-
-        foreach (var amenity in amenities)
-        {
-            if (!hotel.RoomClasses.Any(rc => rc.Amenities.Contains(amenity)))
-            {
-                foreach (var roomClass in hotel.RoomClasses)
-                {
-                    roomClass.Amenities.Add(amenity);
-                    await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClass.RoomClassID, roomClass);
-                }
-            }
-        }
-        await _unitOfWork.SaveChangesAsync();
-    }
 }
