@@ -47,4 +47,12 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Include(h => h.RoomClasses).ThenInclude(xx=>xx.Amenities)
             .FirstOrDefaultAsync(h => h.Name == name);
     }
+
+
+    public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
+    {
+        return await _context.Hotels
+            .Where(h => h.CityID == cityId)
+            .ToListAsync();
+    }
 }

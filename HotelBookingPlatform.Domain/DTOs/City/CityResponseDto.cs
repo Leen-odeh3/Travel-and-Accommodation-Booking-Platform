@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace HotelBookingPlatform.Domain.DTOs.City;
+﻿namespace HotelBookingPlatform.Domain.DTOs.City;
 public class CityResponseDto
 {
     public int CityID { get; set; }
@@ -9,5 +7,4 @@ public class CityResponseDto
     public string PostOffice { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public string Description { get; set; }
-    public List<string> CityImages { get; set; }
 }

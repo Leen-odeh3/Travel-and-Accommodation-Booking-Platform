@@ -1,19 +1,17 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Http;
+using HotelBookingPlatform.Domain.Exceptions;
 using System.Linq.Expressions;
+using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    private readonly IFileService _fileService;
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
@@ -85,34 +83,28 @@ public class CityService : BaseService<City>, ICityService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<string> UploadCityPhotoAsync(int cityId, IFormFile file)
+    public async Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId)
     {
-        // Optional: You might want to ensure that the city exists before uploading the photo
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city is null)
-            throw new KeyNotFoundException("City not found.");
-
-        return await _fileService.UploadImageAsync(file, "city", $"{cityId}.png");
-    }
-
-    public async Task<string> GetCityPhotoUrlAsync(int cityId)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city is null)
-            throw new KeyNotFoundException("City not found.");
-
-        return await _fileService.GetImageUrlsAsync("city").ContinueWith(task =>
+        try
         {
-            var urls = task.Result;
-            return urls.FirstOrDefault(url => url.EndsWith($"{cityId}.png"));
-        });
-    }
-    public async Task DeleteCityPhotoAsync(int cityId)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city is null)
-            throw new KeyNotFoundException("City not found.");
+            var hotels = await _unitOfWork.HotelRepository.GetHotelsForCityAsync(cityId);
 
-        await _fileService.DeleteImageAsync("city", $"{cityId}.png");
+            if (hotels is null)
+            {
+                throw new InvalidOperationException("Hotels not found for the specified city.");
+            }
+
+            return _mapper.Map<IEnumerable<HotelBasicResponseDto>>(hotels);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("An error occurred while retrieving hotels.", ex);
+        }
     }
+
 }
+
+
+
+
+

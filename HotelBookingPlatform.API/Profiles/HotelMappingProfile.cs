@@ -14,5 +14,8 @@ public class HotelMappingProfile : Profile
                 .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews));       
 
         CreateMap<HotelCreateRequest, Hotel>();
+        CreateMap<Hotel, HotelBasicResponseDto>()
+          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+          .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
     }
 }

@@ -7,20 +7,15 @@ using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-using HotelBookingPlatform.Domain.Enums;
-using Microsoft.AspNetCore.Http;
-using HotelBookingPlatform.Domain.IServices;
+
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
 {
-    private readonly IFileService _fileService;
-
-    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper,IFileService fileService)
+    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
          : base(unitOfWork, mapper)
     {
-        _fileService = fileService;
     }
     public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
@@ -59,7 +54,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
         return hotelDto;
     }
-
     public async Task<ActionResult<HotelResponseDto>> CreateHotel(HotelCreateRequest request)
     {
         var hotel = _mapper.Map<Hotel>(request);
@@ -103,8 +97,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         return hotelDtos;
     }
-
-
 }
 
 

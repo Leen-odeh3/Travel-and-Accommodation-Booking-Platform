@@ -8,4 +8,6 @@ public class HotelCreateRequest
     public string PhoneNumber { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
+    public int CityID { get; set; }
+    public int OwnerID { get; set; }
 }

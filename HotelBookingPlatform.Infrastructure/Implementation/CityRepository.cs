@@ -14,7 +14,7 @@ public class CityRepository :GenericRepository<City> , ICityRepository
     }
     public async Task<City> GetCityByIdAsync(int cityId, bool includeHotels = false)
     {
-        IQueryable<City> query = _context.cities.AsQueryable();
+        IQueryable<City> query = _context.Cities.AsQueryable();
 
         if (includeHotels)
         {
@@ -25,10 +25,10 @@ public class CityRepository :GenericRepository<City> , ICityRepository
     }
     public async Task DeleteAsync(int id)
     {
-        var city = await _context.cities.FindAsync(id);
+        var city = await _context.Cities.FindAsync(id);
         if (city != null)
         {
-            _context.cities.Remove(city);
+            _context.Cities.Remove(city);
         }
     }
 }

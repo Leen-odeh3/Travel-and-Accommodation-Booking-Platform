@@ -6,5 +6,4 @@ public class CityCreateRequest
     public string Country { get; set; }
     public string PostOffice { get; set; }
     public string Description { get; set; }
-    public IFormFile[] CityImages { get; set; }
 }

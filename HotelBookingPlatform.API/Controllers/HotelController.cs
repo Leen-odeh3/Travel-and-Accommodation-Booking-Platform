@@ -5,6 +5,8 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.Exceptions;
 using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 using Swashbuckle.AspNetCore.Annotations;
+using HotelBookingPlatform.Application.Core.Implementations;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -47,7 +49,7 @@ public class HotelController : ControllerBase
 
     // POST: api/Hotel
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new hotel", Description = "Creates a new hotel based on the provided hotel creation request.")]
     public async Task<ActionResult<HotelResponseDto>> CreateHotel([FromBody] HotelCreateRequest request)
     {

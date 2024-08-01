@@ -8,15 +8,11 @@ using HotelBookingPlatform.Domain;
 using System.Linq.Expressions;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
-
 public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 {
-    private readonly IFileService _fileService;
-
-    public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper, IFileService fileService)
+    public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
-        _fileService = fileService;
     }
 
     public async Task<IEnumerable<RoomClassDto>> GetRoomClassesAsync(int? adultsCapacity, int pageSize, int pageNumber)

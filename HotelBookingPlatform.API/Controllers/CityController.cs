@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.Exceptions;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
+using HotelBookingPlatform.Domain.DTOs.Hotel;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -43,7 +44,7 @@ public class CityController : ControllerBase
         return Ok(city);
     }
 
-   
+
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
@@ -71,58 +72,23 @@ public class CityController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Gets a list of hotels for a specified city.
+    /// </summary>
+    /// <param name="cityId">The ID of the city to retrieve hotels for.</param>
+    /// <returns>A list of hotels in the specified city.</returns>
+    /// <response code="200">Returns the list of hotels.</response>
+    /// <response code="404">If no hotels are found for the specified city.</response>
+    /// <response code="500">If there is an error processing the request.</response>
 
-    [HttpPost("{id}/photo")]
-    public async Task<IActionResult> UploadPhoto(int id, IFormFile file)
+
+    [HttpGet("{cityId}/hotels")]
+    public async Task<IActionResult> GetHotelsForCity(int cityId)
     {
-        try
-        {
-            string photoPath = await _cityService.UploadCityPhotoAsync(id, file);
-            return Ok(new { PhotoPath = photoPath });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+            var hotels = await _cityService.GetHotelsForCityAsync(cityId);
+            return Ok(hotels);
     }
 
-    [HttpGet("{id}/photo")]
-    public async Task<IActionResult> GetPhoto(int id)
-    {
-        try
-        {
-            string photoUrl = await _cityService.GetCityPhotoUrlAsync(id);
-            return Ok(new { PhotoUrl = photoUrl });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
-    [HttpDelete("{id}/photo")]
-    public async Task<IActionResult> DeletePhoto(int id)
-    {
-        try
-        {
-            await _cityService.DeleteCityPhotoAsync(id);
-            return Ok("Photo deleted successfully.");
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
 }
+
+
