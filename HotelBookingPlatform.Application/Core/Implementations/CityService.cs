@@ -9,6 +9,7 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Enums;
 using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.IServices;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
@@ -17,10 +18,12 @@ namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
     private readonly IFileService _fileService;
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IFileService fileService)
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IFileService fileService, IWebHostEnvironment webHostEnvironment)
         : base(unitOfWork, mapper)
     {
         _fileService = fileService;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
@@ -74,7 +77,8 @@ public class CityService : BaseService<City>, ICityService
 
         if (request.CityImages != null && request.CityImages.Any())
         {
-            var savedFileNames = await _fileService.SaveFilesAsync(request.CityImages, allowedFileTypes);
+            var folderName = "Cities"; // تحديد المجلد الذي ستخزن فيه الصور
+            var savedFileNames = await _fileService.SaveFilesAsync(request.CityImages, allowedFileTypes, folderName);
 
             var city = _mapper.Map<City>(request);
             city.CreatedAtUtc = DateTime.UtcNow;
@@ -84,7 +88,7 @@ public class CityService : BaseService<City>, ICityService
                 city.CityImages.Add(new Photo
                 {
                     FileName = fileName,
-                    FilePath = await _fileService.GetFilePathAsync(fileName),
+                    FilePath = await _fileService.GetFilePathAsync(fileName, folderName), // تأكد من تضمين المجلد
                     CreatedAtUtc = DateTime.UtcNow,
                     EntityType = "City",
                     EntityId = city.CityID
@@ -129,85 +133,15 @@ public class CityService : BaseService<City>, ICityService
 
         return _mapper.Map<CityResponseDto>(city);
     }
-    public async Task<IEnumerable<HotelResponseDto>> GetCityHotels(int id)
+    public async Task DeleteAsync(int id)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
         if (city is null)
-            throw new KeyNotFoundException("City not found.");
-      
-        var hotels = city.Hotels;
-        return _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
-    }
-
-    public async Task<HotelResponseDto> AddHotelToCity(int cityId, HotelCreateRequest request)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city is null)
-            throw new KeyNotFoundException("City not found.");
-
-        var hotel = _mapper.Map<Hotel>(request);
-        hotel.CityID = cityId;
-
-        await _unitOfWork.HotelRepository.CreateAsync(hotel);
-        await _unitOfWork.SaveChangesAsync();
-
-        return _mapper.Map<HotelResponseDto>(hotel);
-    }
-
-    public async Task<string> DeleteCity(int id)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
-        if (city is null)
-            throw new KeyNotFoundException("City not found.");
-
-        _unitOfWork.CityRepository.DeleteAsync(city.CityID);
-        await _unitOfWork.SaveChangesAsync();
-
-        return "City deleted successfully.";
-    }
-    public async Task DeletePhotoFromCityAsync(int cityId, int photoId)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city is null)
         {
-            throw new KeyNotFoundException("City not found.");
+            throw new KeyNotFoundException($"City with ID {id} not found.");
         }
 
-        var photo = await _unitOfWork.PhotoRepository.GetByIdAsync(photoId);
-        if (photo is null || photo.EntityId != cityId || photo.EntityType != "City")
-            throw new KeyNotFoundException("Photo not found or does not belong to the specified city.");
-        await _fileService.DeleteFileAsync(photo.FileName);
-
-        await _unitOfWork.PhotoRepository.DeleteAsync(photoId);
-
+        await _unitOfWork.CityRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
-    }
-    public async Task<IEnumerable<PhotoResponseDto>> AddPhotosToCityAsync(int cityId, IFormFile[] photoFiles)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
-            throw new NotFoundException("City not found.");
-
-        var fileNames = await _fileService.SaveFilesAsync(photoFiles, new[] { FileType.Jpg, FileType.Jpeg, FileType.Png, FileType.Gif });
-
-        var photos = fileNames.Select(fileName => new Photo
-        {
-            FileName = fileName,
-            EntityId = cityId,
-            EntityType = "City"
-        }).ToList();
-
-        foreach (var photo in photos)
-        {
-            await _unitOfWork.PhotoRepository.CreateAsync(photo);
-        }
-
-        await _unitOfWork.SaveChangesAsync();
-
-        return photos.Select(photo => new PhotoResponseDto
-        {
-            FileName = photo.FileName,
-            PhotoId = photo.EntityId,
-        });
     }
 }

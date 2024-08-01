@@ -2,7 +2,6 @@
 using HotelBookingPlatform.Domain.IServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-
 namespace HotelBookingPlatform.Application.Services;
 public class FileService : IFileService
 {
@@ -12,14 +11,15 @@ public class FileService : IFileService
     {
         _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
     }
-    public async Task DeleteFileAsync(string fileName)
+
+    public async Task DeleteFileAsync(string fileName, string folderName)
     {
         if (string.IsNullOrEmpty(fileName))
         {
             throw new ArgumentNullException(nameof(fileName));
         }
 
-        var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads", fileName);
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName, fileName);
 
         if (File.Exists(filePath))
         {
@@ -30,7 +30,8 @@ public class FileService : IFileService
             throw new FileNotFoundException($"The file '{fileName}' was not found at '{filePath}'.");
         }
     }
-    public async Task<List<string>> SaveFilesAsync(IFormFile[] files, FileType[] allowedFileTypes)
+
+    public async Task<List<string>> SaveFilesAsync(IFormFile[] files, FileType[] allowedFileTypes, string folderName)
     {
         if (files == null || files.Length == 0)
         {
@@ -38,17 +39,11 @@ public class FileService : IFileService
         }
 
         var allowedExtensions = allowedFileTypes.GetAllowedExtensions();
-        var contentPath = _webHostEnvironment.ContentRootPath;
-        var uploadsPath = Path.Combine(contentPath, "Uploads");
-        var citiesPath = Path.Combine(uploadsPath, "Cities");
+        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName);
 
         if (!Directory.Exists(uploadsPath))
         {
             Directory.CreateDirectory(uploadsPath);
-        }
-        if (!Directory.Exists(citiesPath))
-        {
-            Directory.CreateDirectory(citiesPath);
         }
 
         var savedFileNames = new List<string>();
@@ -62,9 +57,9 @@ public class FileService : IFileService
             }
 
             var fileName = $"{Guid.NewGuid()}{ext}";
-            var fileNameWithPath = Path.Combine(citiesPath, fileName);
+            var filePath = Path.Combine(uploadsPath, fileName);
 
-            using var stream = new FileStream(fileNameWithPath, FileMode.Create);
+            using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
             savedFileNames.Add(fileName);
@@ -72,10 +67,10 @@ public class FileService : IFileService
 
         return savedFileNames;
     }
-    public Task<string> GetFilePathAsync(string fileName)
-    {
-        var uploadsPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads");
-        return Task.FromResult(Path.Combine(uploadsPath, fileName));
-    }
 
+    public Task<string> GetFilePathAsync(string fileName, string folderName)
+    {
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName, fileName);
+        return Task.FromResult(filePath);
+    }
 }
