@@ -43,24 +43,7 @@ public class CityController : ControllerBase
         return Ok(city);
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new city with the specified information.")]
-    public async Task<ActionResult<CityResponseDto>> CreateCity([FromForm] CityCreateRequest request)
-    {
-        if (request.CityImages == null || !request.CityImages.Any())
-        {
-            return BadRequest("At least one image is required.");
-        }
-
-        var createdCity = await _cityService.CreateCity(request);
-        if (createdCity is null)
-        {
-            return BadRequest("Failed to create city");
-        }
-
-        return CreatedAtAction(nameof(GetCity), new { id = createdCity.CityID }, createdCity);
-    }
+   
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
@@ -87,4 +70,5 @@ public class CityController : ControllerBase
             return NotFound(new { Message = ex.Message });
         }
     }
+
 }

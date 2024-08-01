@@ -12,6 +12,5 @@ public interface IUnitOfWork<T>  where T: class
     IReviewRepository ReviewRepository { get; set; }
     IInvoiceRecordRepository InvoiceRecordRepository { get; set; }
     IAmenityRepository AmenityRepository { get; set; }
-    IPhotoRepository PhotoRepository { get; set; }
     Task<int> SaveChangesAsync();
 }

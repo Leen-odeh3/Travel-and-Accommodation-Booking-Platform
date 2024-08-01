@@ -63,11 +63,8 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");              
             });  
         }
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
-            RequestPath = "/StaticFiles"
-        });
+
+
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
 

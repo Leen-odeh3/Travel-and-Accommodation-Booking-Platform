@@ -123,39 +123,4 @@ public class HotelController : ControllerBase
 
         return Ok(hotels);
     }
-
-
-    // POST: api/Hotel/{hotelId}/photos
-    [HttpPost("{hotelId}/photos")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Add photos to a hotel", Description = "Adds photos to a hotel based on the provided hotel ID.")]
-    public async Task<IActionResult> AddPhotosToHotelAsync(int hotelId, [FromForm] IFormFile[] photoFiles)
-    {
-        try
-        {
-            await _hotelService.AddPhotosToHotelAsync(hotelId, photoFiles);
-            return Ok("Photos added successfully.");
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
-
-    // DELETE: api/Hotel/{hotelId}/photos/{photoId}
-    [HttpDelete("{hotelId}/photos/{photoId}")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete a photo from a hotel", Description = "Deletes a specific photo from a hotel based on hotel ID and photo ID.")]
-    public async Task<IActionResult> DeletePhotoFromHotelAsync(int hotelId, int photoId)
-    {
-        try
-        {
-            await _hotelService.DeletePhotoFromHotelAsync(hotelId, photoId);
-            return NoContent();
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
 }
