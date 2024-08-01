@@ -23,4 +23,12 @@ public class CityRepository :GenericRepository<City> , ICityRepository
 
         return await query.FirstOrDefaultAsync(c => c.CityID == cityId);
     }
+    public async Task DeleteAsync(int id)
+    {
+        var city = await _context.cities.FindAsync(id);
+        if (city != null)
+        {
+            _context.cities.Remove(city);
+        }
+    }
 }

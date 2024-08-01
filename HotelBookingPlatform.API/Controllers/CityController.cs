@@ -1,10 +1,10 @@
-﻿using HotelBookingPlatform.Domain.Bases;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using HotelBookingPlatform.Domain.DTOs.City;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.Exceptions;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -12,7 +12,6 @@ namespace HotelBookingPlatform.API.Controllers;
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
-
     public CityController(ICityService cityService)
     {
         _cityService = cityService;
@@ -20,86 +19,56 @@ public class CityController : ControllerBase
 
     [HttpGet]
     [SwaggerOperation(Summary = "Retrieve cities with optional filtering by name and description.")]
-    public async Task<ActionResult<Response<IEnumerable<CityResponseDto>>>> GetCities(
+    public async Task<ActionResult<IEnumerable<CityResponseDto>>> GetCities(
         [FromQuery] string CityName,
         [FromQuery] string Description,
         [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
-        var response = await _cityService.GetCities(CityName, Description, pageSize, pageNumber);
-        if (!response.Succeeded)
-            return BadRequest(response);
+        var cities = await _cityService.GetCities(CityName, Description, pageSize, pageNumber);
+        if (cities is null || !cities.Any())
+            throw new NotFoundException("No Cities Found");
 
-        return Ok(response);
+        return Ok(cities);
     }
 
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Retrieve a city by its unique identifier.The detailed city information including hotels if requested.")]
-    public async Task<ActionResult<Response<CityResponseDto>>> GetCity(int id, [FromQuery] bool includeHotels = false)
+    [SwaggerOperation(Summary = "Retrieve a city by its unique identifier. The detailed city information including hotels if requested.")]
+    public async Task<ActionResult<object>> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
-        var response = await _cityService.GetCity(id, includeHotels);
-        if (!response.Succeeded)
-            return NotFound(response);
+        var city = await _cityService.GetCity(id, includeHotels);
+        if (city is null)
+            throw new NotFoundException("No Cities Found");
 
-        return Ok(response);
+        return Ok(city);
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new city with the specified information.")]
-    public async Task<ActionResult<Response<CityResponseDto>>> CreateCity([FromForm] CityCreateRequest request)
-    {
-        var response = await _cityService.CreateCity(request);
-        if (!response.Succeeded)
-            return BadRequest(response);
-
-        return CreatedAtAction(nameof(GetCity), new { id = response.Data.CityID }, response);
-    }
+   
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update the information of an existing city.")]
-    public async Task<ActionResult<Response<CityResponseDto>>> UpdateCity(int id, [FromForm] CityCreateRequest request)
+    public async Task<ActionResult<CityResponseDto>> UpdateCity(int id, [FromForm] CityCreateRequest request)
     {
-        var response = await _cityService.UpdateCity(id, request);
-        if (!response.Succeeded)
-            return BadRequest(response);
+        var updatedCity = await _cityService.UpdateCity(id, request);
+        if (updatedCity is null)
 
-        return Ok(response);
+            throw new NotFoundException("City not found");
+
+        return Ok(updatedCity);
     }
-
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete an existing city by its unique identifier.")]
-    public async Task<ActionResult<Response<CityResponseDto>>> DeleteCity(int id)
+    public async Task<IActionResult> DeleteCity(int id)
     {
-        var response = await _cityService.DeleteCity(id);
-        if (!response.Succeeded)
-            return NotFound(response);
-
-        return Ok(response);
+        try
+        {
+            await _cityService.DeleteAsync(id);
+            return Ok(new { Message = "City deleted successfully." });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
     }
 
-    [HttpGet("{id}/hotels")]
-    [SwaggerOperation(Summary = "Retrieve all hotels associated with a city.")]
-    public async Task<ActionResult<Response<IEnumerable<HotelResponseDto>>>> GetCityHotels(int id)
-    {
-        var response = await _cityService.GetCityHotels(id);
-        if (!response.Succeeded)
-            return NotFound(response);
-
-        return Ok(response);
-    }
-
-    [HttpDelete("{cityId}/hotels/{hotelId}")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete a specific hotel from a city.")]
-    public async Task<ActionResult<Response<HotelResponseDto>>> DeleteCityHotel(int cityId, int hotelId)
-    {
-        var response = await _cityService.DeleteCityHotel(cityId, hotelId);
-        if (!response.Succeeded)
-            return NotFound(response);
-
-        return Ok(response);
-    }
 }

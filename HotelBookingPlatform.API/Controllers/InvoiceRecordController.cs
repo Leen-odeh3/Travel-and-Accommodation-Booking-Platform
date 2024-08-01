@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +15,10 @@ public class InvoiceRecordController : ControllerBase
     {
         _invoiceRecordService = invoiceRecordService;
     }
-
+} 
+/* 
     // GET: api/InvoiceRecord/5
-    [HttpGet("{id}")]
+  [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var response = await _invoiceRecordService.GetByIdAsync(id);
@@ -29,7 +29,7 @@ public class InvoiceRecordController : ControllerBase
             System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
             _ => Ok(response.Data)
         };
-    }
+    }*
 
     // POST: api/InvoiceRecord
     [HttpPost]
@@ -72,4 +72,4 @@ public class InvoiceRecordController : ControllerBase
             _ => Ok(response.Message)
         };
     }
-}
+   }*/

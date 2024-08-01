@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
@@ -7,22 +6,26 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class AmenityService : BaseService<Amenity>, IAmenityService
 {
-    public AmenityService(IUnitOfWork<Amenity> unitOfWork, IMapper mapper, ResponseHandler responseHandler)
-        : base(unitOfWork, mapper, responseHandler)
+    public AmenityService(IUnitOfWork<Amenity> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
     {
     }
-
-    public async Task<Response<AmenityResponseDto>> CreateAmenityAsync(AmenityCreateDto request)
+    public async Task<AmenityResponseDto> CreateAmenityAsync(AmenityCreateDto request)
     {
+        if (request.RoomClassIds == null || !request.RoomClassIds.Any())
+        {
+            throw new ArgumentException("No RoomClass IDs provided.");
+        }
+
         var amenity = _mapper.Map<Amenity>(request);
         var roomClasses = new List<RoomClass>();
 
         foreach (var roomClassId in request.RoomClassIds)
         {
             var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
-            if (roomClass is null)
+            if (roomClass == null)
             {
-                return _responseHandler.NotFound<AmenityResponseDto>($"RoomClass with ID {roomClassId} not found");
+                throw new KeyNotFoundException($"RoomClass with ID {roomClassId} not found.");
             }
             roomClasses.Add(roomClass);
         }
@@ -37,6 +40,6 @@ public class AmenityService : BaseService<Amenity>, IAmenityService
 
         var amenityDto = _mapper.Map<AmenityResponseDto>(amenity);
 
-        return _responseHandler.Success(amenityDto);
+        return amenityDto;
     }
 }

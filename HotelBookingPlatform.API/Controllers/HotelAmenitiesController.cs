@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -10,7 +9,6 @@ namespace HotelBookingPlatform.API.Controllers;
 public class HotelAmenitiesController : ControllerBase
 {
     private readonly IHotelAmenitiesService _hotelAmenitiesService;
-
     public HotelAmenitiesController(IHotelAmenitiesService hotelAmenitiesService)
     {
         _hotelAmenitiesService = hotelAmenitiesService;
@@ -20,21 +18,40 @@ public class HotelAmenitiesController : ControllerBase
     [Authorize(Roles = "Admin,User")]
     [SwaggerOperation(Summary = "Retrieve amenities by hotel name with optional pagination.")]
     public async Task<IActionResult> GetAmenitiesByHotelName(
-            [FromQuery] string name,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] int pageNumber = 1)
+        [FromQuery] string name,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var response = await _hotelAmenitiesService.GetAmenitiesByHotelNameAsync(name, pageSize, pageNumber);
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return NotFound(response.Message); 
-        }
-
-        if (response.StatusCode == HttpStatusCode.BadRequest)
-        {
-            return BadRequest(response.Message); 
-        }
 
         return Ok(response);
+    }
+
+    [HttpGet("hotel-Amenities/all")]
+    [Authorize(Roles = "Admin,User")]
+    [SwaggerOperation(Summary = "Retrieve all amenities by hotel name.")]
+    public async Task<IActionResult> GetAllAmenitiesByHotelName([FromQuery] string name)
+    {
+        var amenities = await _hotelAmenitiesService.GetAllAmenitiesByHotelNameAsync(name);
+
+        return Ok(amenities);
+    }
+
+    [HttpPost("add-amenities")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add amenities to a hotel.")]
+    public async Task<IActionResult> AddAmenitiesToHotel(
+        [FromQuery] string hotelName,
+        [FromBody] IEnumerable<int> amenityIds)
+    {
+        try
+        {
+            await _hotelAmenitiesService.AddAmenitiesToHotelAsync(hotelName, amenityIds);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message); 
+        }
     }
 }

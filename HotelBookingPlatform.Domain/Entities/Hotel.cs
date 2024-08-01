@@ -13,7 +13,8 @@ public class Hotel
     public City City { get; set; }
     public int OwnerID { get; set; }
     public Owner Owner { get; set; }
-    public ICollection<Booking> Bookings { get; set;}
+    // public ICollection<Booking> Bookings { get; set;}
+    public ICollection<Photo> Photos { get; set; } = new List<Photo>();
     public ICollection<RoomClass> RoomClasses { get; set;}
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 

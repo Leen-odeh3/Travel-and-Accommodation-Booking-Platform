@@ -1,13 +1,7 @@
 ﻿using FluentValidation;
-using HotelBookingPlatform.Domain.DTOs.Register;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using HotelBookingPlatform.Domain.Helpers;
 namespace HotelBookingPlatform.Application.Validator;
-public class RegisterUserValidator : AbstractValidator<RegisterRequestDto>
+public class RegisterUserValidator : AbstractValidator<RegisterModel>
 {
     public RegisterUserValidator()
     {

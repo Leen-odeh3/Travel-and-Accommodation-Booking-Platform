@@ -1,67 +1,96 @@
-﻿using HotelBookingPlatform.Domain.IServices;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-namespace HotelBookingPlatform.Application.Services;
-public class FileService : IFileService
+using HotelBookingPlatform.Domain.Enums;
+using HotelBookingPlatform.Domain.IServices;
+
+namespace HotelBookingPlatform.Application.Services
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
-
-    public FileService(IWebHostEnvironment webHostEnvironment)
+    public class FileService : IFileService
     {
-        _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public FileService(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
+        }
+
+        public async Task DeleteFileAsync(string fileName, string folderName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName, fileName);
+
+            if (File.Exists(filePath))
+            {
+                await Task.Run(() => File.Delete(filePath));
+            }
+            else
+            {
+                throw new FileNotFoundException($"The file '{fileName}' was not found at '{filePath}'.");
+            }
+        }
+
+        public async Task<IEnumerable<string>> SaveFilesAsync(IFormFile[] files, FileType[] allowedFileTypes, string folderName)
+        {
+            if (files == null || !files.Any())
+                throw new ArgumentException("Files cannot be null or empty.");
+
+            if (string.IsNullOrEmpty(folderName))
+                throw new ArgumentException("Folder name cannot be null or empty.");
+
+            var savedFileNames = new List<string>();
+            var folderPath = GetFolderPath(folderName);
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var extension = Path.GetExtension(file.FileName).ToLower();
+                    if (!allowedFileTypes.GetAllowedExtensions().Contains(extension))
+                        throw new ArgumentException("Invalid file type.");
+
+                    var fileName = Guid.NewGuid().ToString() + extension;
+                    var filePath = Path.Combine(folderPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    savedFileNames.Add(fileName);
+                }
+            }
+
+            return savedFileNames;
+        }
+
+        private string GetFolderPath(string folderName)
+        {
+            if (string.IsNullOrEmpty(folderName))
+                throw new ArgumentException("Folder name cannot be null or empty.");
+
+            var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            return folderPath;
+        }
+
+        public Task<string> GetFilePathAsync(string fileName, string folderName)
+        {
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName, fileName);
+            return Task.FromResult(filePath);
+        }
     }
-
-    public void DeleteFileAsync(string fileName)
-    {
-        if (string.IsNullOrEmpty(fileName))
-        {
-            throw new ArgumentNullException(nameof(fileName));
-        }
-
-        var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads", fileName);
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-        else
-        {
-            throw new FileNotFoundException($"The file '{fileName}' was not found at '{filePath}'.");
-        }
-    }
-
-    public async Task<string> SaveFileAsync(IFormFile Image, string[] allowedFileExtentions)
-    {
-        if (Image is null)
-        {
-            throw new ArgumentNullException(nameof(Image));
-        }
-        var contentPath = _webHostEnvironment.ContentRootPath;
-        var uploadsPath = Path.Combine(contentPath, "Uploads");
-        var citiesPath = Path.Combine(uploadsPath, "Cities");
-
-        if (!Directory.Exists(uploadsPath))
-        {
-            Directory.CreateDirectory(uploadsPath);
-        }
-        if (!Directory.Exists(citiesPath))
-        {
-            Directory.CreateDirectory(citiesPath);
-        }
-
-        var ext = Path.GetExtension(Image.FileName);
-        if (!allowedFileExtentions.Contains(ext))
-        {
-            throw new ArgumentException($"Only {string.Join(",", allowedFileExtentions)} are allowed.");
-        }
-
-        var fileName = $"{Guid.NewGuid().ToString()}{ext}";
-        var fileNameWithPath = Path.Combine(citiesPath, fileName);
-
-        using var stream = new FileStream(fileNameWithPath, FileMode.Create);
-        await Image.CopyToAsync(stream);
-
-        return fileName;
-    }
-
 }

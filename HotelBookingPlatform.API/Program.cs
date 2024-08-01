@@ -1,25 +1,15 @@
-using HotelBookingPlatform.Application;
-using HotelBookingPlatform.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+using HotelBookingPlatform.API.Extentions;
+using HotelBookingPlatform.API.Middlewares;
+using HotelBookingPlatform.Application.Extentions;
+using HotelBookingPlatform.Infrastructure.Extentions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
-
 namespace HotelBookingPlatform.API;
-
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddControllers(options =>
-        {
-            options.CacheProfiles.Add("DefaultCache", new CacheProfile
-            {
-                Duration = 30,
-                Location = ResponseCacheLocation.Any
-            });
-        });
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -73,15 +63,14 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");              
             });  
         }
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
-            RequestPath = "/StaticFiles"
-        });
 
+
+        app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
+
         app.UseAuthentication();
         app.UseAuthorization();
+
         app.MapControllers();
 
         app.Run();

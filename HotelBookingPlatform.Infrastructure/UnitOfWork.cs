@@ -2,7 +2,6 @@
 using HotelBookingPlatform.Domain.Abstracts;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Implementation;
-
 namespace HotelBookingPlatform.Infrastructure;
 public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {

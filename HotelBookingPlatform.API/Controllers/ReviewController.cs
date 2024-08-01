@@ -9,7 +9,7 @@ namespace HotelBookingPlatform.API.Controllers;
 [ApiController]
 public class ReviewController : ControllerBase
 {
-    private readonly IReviewService _reviewService;
+  /*  private readonly IReviewService _reviewService;
 
     public ReviewController(IReviewService reviewService)
     {
@@ -56,5 +56,5 @@ public class ReviewController : ControllerBase
     {
         var response = await _reviewService.DeleteReviewAsync(id);
         return StatusCode((int)response.StatusCode, response);
-    }
+    }*/
 }

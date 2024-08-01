@@ -6,5 +6,4 @@ public class LocalUser : IdentityUser
     public string LastName { get; set; }
     public ICollection<Booking> Bookings { get; set; }
     public ICollection<Review> Reviews { get; set; }
-
 }

@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Bases;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,15 +20,21 @@ public class AmenityController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new amenity and associate it with room classes.")]
-    public async Task<ActionResult<Response<AmenityResponseDto>>> CreateAmenity([FromBody] AmenityCreateDto request)
+    public async Task<ActionResult<AmenityResponseDto>> CreateAmenity([FromBody] AmenityCreateDto request)
     {
-        var result = await _amenityService.CreateAmenityAsync(request);
-        if (!result.Succeeded)
+        try
         {
-            return BadRequest(result);
+            var result = await _amenityService.CreateAmenityAsync(request);
+            return Ok(result);
         }
-
-        return Ok(result);
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
 
