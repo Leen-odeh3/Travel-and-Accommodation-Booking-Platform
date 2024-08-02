@@ -118,6 +118,22 @@ public class CityService : BaseService<City>, ICityService
         await _unitOfWork.SaveChangesAsync();
     }
 
+
+    public async Task DeleteHotelFromCityAsync(int cityId, int hotelId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
+        if (hotel is null || hotel.CityID != cityId)
+            throw new KeyNotFoundException("Hotel not found in the specified city.");
+
+        await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
+        city.Hotels.Remove(hotel);
+
+        await _unitOfWork.SaveChangesAsync();
+    }
 }
 
 

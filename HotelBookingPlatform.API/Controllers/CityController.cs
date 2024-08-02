@@ -98,6 +98,26 @@ public class CityController : ControllerBase
         await _cityService.AddHotelToCityAsync(cityId, hotelRequest);
         return Ok(new { Message = "Hotel added to city successfully." });
     }
+
+    [HttpDelete("{cityId}/hotel/{hotelId}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Remove a hotel from a specific city.")]
+    public async Task<IActionResult> DeleteHotelFromCity(int cityId, int hotelId)
+    {
+        try
+        {
+            await _cityService.DeleteHotelFromCityAsync(cityId, hotelId);
+            return Ok(new { Message = "Hotel removed from city successfully." });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request.", Details = ex.Message });
+        }
+    }
 }
 
 

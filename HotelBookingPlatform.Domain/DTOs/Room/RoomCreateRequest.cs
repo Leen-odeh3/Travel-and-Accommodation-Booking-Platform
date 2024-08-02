@@ -5,4 +5,5 @@ public class RoomCreateRequest
 {
     public int RoomClassID { get; set; }
     public string Number { get; set; }
+
 }

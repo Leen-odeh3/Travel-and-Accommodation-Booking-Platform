@@ -9,8 +9,7 @@ public class RoomClass
     public int AdultsCapacity { get; set; }
     public int ChildrenCapacity { get; set; }
     public decimal PricePerNight { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
-    public DateTime? ModifiedAtUtc { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
     public ICollection<Room> Rooms { get;}

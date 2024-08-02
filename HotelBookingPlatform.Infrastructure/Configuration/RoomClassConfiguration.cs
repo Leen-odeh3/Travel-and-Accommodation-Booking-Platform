@@ -12,10 +12,6 @@ public class RoomClassConfiguration : IEntityTypeConfiguration<RoomClass>
         builder.Property(rc => rc.RoomType)
             .IsRequired();
 
-        builder.Property(rc => rc.Name)
-            .IsRequired()
-            .HasMaxLength(100);
-
         builder.Property(rc => rc.Description)
             .HasMaxLength(500);
 
