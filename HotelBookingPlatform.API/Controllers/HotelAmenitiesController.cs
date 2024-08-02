@@ -1,7 +1,10 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
+using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -28,7 +31,7 @@ public class HotelAmenitiesController : ControllerBase
     }
 
     [HttpGet("hotel-Amenities/all")]
-    [Authorize(Roles = "Admin,User")]
+   // [Authorize(Roles = "Admin,User")]
     [SwaggerOperation(Summary = "Retrieve all amenities by hotel name.")]
     public async Task<IActionResult> GetAllAmenitiesByHotelName([FromQuery] string name)
     {
@@ -37,21 +40,33 @@ public class HotelAmenitiesController : ControllerBase
         return Ok(amenities);
     }
 
- /*   [HttpPost("add-amenities")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Add amenities to a hotel.")]
-    public async Task<IActionResult> AddAmenitiesToHotel(
-        [FromQuery] string hotelName,
-        [FromBody] IEnumerable<int> amenityIds)
+
+
+
+    [HttpPut("{amenityId}")]
+    //[Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Update a specific amenity by its ID.")]
+    public async Task<IActionResult> UpdateAmenity(int amenityId, [FromBody] AmenityCreateRequest updateDto)
     {
         try
         {
-            await _hotelAmenitiesService.AddAmenitiesToHotelAsync(hotelName, amenityIds);
-            return NoContent();
+            await _hotelAmenitiesService.UpdateAmenityAsync(amenityId, updateDto);
+            return Ok(new { message = "Amenity updated successfully." });
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex.Message); 
+            return NotFound(new { message = ex.Message });
         }
-    }*/
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
+        }
+    }
+
+
+
+
+
+
+
 }

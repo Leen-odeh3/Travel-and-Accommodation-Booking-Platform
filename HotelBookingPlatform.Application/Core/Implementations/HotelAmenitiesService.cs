@@ -3,6 +3,8 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.Exceptions;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
@@ -49,5 +51,22 @@ public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
 
         return amenityDtos;
     }
+
+
+    public async Task UpdateAmenityAsync(int amenityId, AmenityCreateRequest updateDto)
+    {
+        // Create an Amenity entity from DTO
+        var amenity = new Amenity
+        {
+            AmenityID = amenityId,
+            Name = updateDto.Name,
+            Description = updateDto.Description
+        };
+
+        // Call the repository update method
+        await _unitOfWork.AmenityRepository.UpdateAsync(amenityId, amenity);
+    }
+
+
 
 }

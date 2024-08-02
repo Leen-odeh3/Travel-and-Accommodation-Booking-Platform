@@ -55,4 +55,5 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Where(h => h.CityID == cityId)
             .ToListAsync();
     }
+
 }
