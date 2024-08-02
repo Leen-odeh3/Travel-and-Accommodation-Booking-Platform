@@ -28,8 +28,16 @@ public class CityService : BaseService<City>, ICityService
             filter = c => (!string.IsNullOrEmpty(cityName) && c.Name.Contains(cityName)) ||
                           (!string.IsNullOrEmpty(description) && c.Description.Contains(description));
         }
-
         var cities = await _unitOfWork.CityRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
+        foreach (var city in cities)
+        {
+            city.VisitCount += 1;
+            await _unitOfWork.CityRepository.UpdateAsync(city.CityID, city);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
     }
     public async Task<CityWithHotelsResponseDto> GetCity(int id, bool includeHotels)
@@ -38,6 +46,11 @@ public class CityService : BaseService<City>, ICityService
         if (city is null)
             throw new KeyNotFoundException("City not found.");
 
+        city.VisitCount += 1;
+
+        // تحديث المدينة في قاعدة البيانات
+        await _unitOfWork.CityRepository.UpdateAsync(id, city);
+        await _unitOfWork.SaveChangesAsync();
 
         if (includeHotels)
         {
@@ -58,7 +71,6 @@ public class CityService : BaseService<City>, ICityService
         return _mapper.Map<CityWithHotelsResponseDto>(city);
 
     }
-    //Create
     public async Task<CityResponseDto> UpdateCity(int id, CityCreateRequest request)
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
@@ -82,7 +94,6 @@ public class CityService : BaseService<City>, ICityService
         await _unitOfWork.CityRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
-
     public async Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId)
     {
         try
@@ -101,8 +112,6 @@ public class CityService : BaseService<City>, ICityService
             throw new ApplicationException("An error occurred while retrieving hotels.", ex);
         }
     }
-
-
     public async Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
@@ -117,8 +126,6 @@ public class CityService : BaseService<City>, ICityService
 
         await _unitOfWork.SaveChangesAsync();
     }
-
-
     public async Task DeleteHotelFromCityAsync(int cityId, int hotelId)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
@@ -134,9 +141,6 @@ public class CityService : BaseService<City>, ICityService
 
         await _unitOfWork.SaveChangesAsync();
     }
-
-
-
     public async Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount)
     {
         // Assume we have a method in repository to get cities sorted by visit count

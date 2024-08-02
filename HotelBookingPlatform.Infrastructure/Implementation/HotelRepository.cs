@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
+using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
@@ -47,8 +48,6 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Include(h => h.RoomClasses).ThenInclude(xx=>xx.Amenities)
             .FirstOrDefaultAsync(h => h.Name == name);
     }
-
-
     public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
     {
         return await _context.Hotels

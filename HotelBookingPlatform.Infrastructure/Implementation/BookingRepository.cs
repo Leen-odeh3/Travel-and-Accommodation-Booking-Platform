@@ -48,10 +48,10 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
         if (booking.Status == BookingStatus.Cancelled ||booking.Rooms is null || !booking.Rooms.Any() )
             return 0m;
 
-        if (booking.CheckInDateUtc >= booking.CheckOutDateUtc)
+        if (booking.CheckInDate >= booking.CheckOutDate)
             throw new InvalidOperationException("Check-out date must be after check-in date.");
 
-        var nights = (booking.CheckOutDateUtc - booking.CheckInDateUtc).Days;
+        var nights = (booking.CheckOutDate- booking.CheckInDate).Days;
         if (nights <= 0)
             throw new InvalidOperationException("The number of nights must be greater than zero.");
 

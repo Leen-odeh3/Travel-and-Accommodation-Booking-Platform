@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+using HotelBookingPlatform.Domain.DTOs.HomePage;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
@@ -97,6 +100,77 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         return hotelDtos;
     }
+
+
+    public async Task<SearchResultsDto> SearchHotelsAsync(SearchRequestDto request)
+    {
+        // جلب جميع الفنادق من المستودع
+        var allHotels = await _unitOfWork.HotelRepository.GetAllAsync();
+
+        var query = allHotels.AsQueryable();
+
+        // تصفية الفنادق حسب اسم المدينة
+        if (!string.IsNullOrEmpty(request.CityName))
+        {
+            query = query.Where(h => h.City.Name.Contains(request.CityName));
+        }
+
+        // تصفية الفنادق حسب تصنيف النجوم
+        if (request.StarRating.HasValue)
+        {
+            query = query.Where(h => h.StarRating == request.StarRating);
+        }
+
+        // تصفية الفنادق حسب تواريخ الوصول والمغادرة
+        if (request.CheckInDate != default && request.CheckOutDate != default)
+        {
+            query = query.Where(h => !h.Bookings.Any(b => b.CheckOutDate > request.CheckInDate && b.CheckInDate < request.CheckOutDate));
+        }
+
+        // جلب الفنادق مع تضمين البيانات ذات الصلة
+        var hotels = await query
+            .Include(h => h.City)
+            .Include(h => h.RoomClasses)
+            .ThenInclude(rc => rc.Amenities)
+            .ToListAsync();
+
+        // تحويل الفنادق إلى النتائج المطلوبة
+        var hotelSearchResults = hotels.Select(hotel => new HotelSearchResultDto
+        {
+            HotelId = hotel.HotelId,
+            HotelName = hotel.Name,
+            StarRating = hotel.StarRating,
+            RoomPrice = hotel.RoomClasses.Any()
+                ? (double)hotel.RoomClasses.Min(rc => rc.PricePerNight) 
+                : 0.0,
+            RoomType = hotel.RoomClasses.Any()
+                ? hotel.RoomClasses.First().RoomType.ToString()
+                : "Unknown",
+            CityName = hotel.City?.Name ?? "Unknown",
+            Discount = hotel.RoomClasses.Any()
+                ? (double)hotel.RoomClasses
+                    .SelectMany(rc => rc.Discounts)
+                    .Max(d => d.Percentage)
+                : 0.0,
+            Amenities = hotel.RoomClasses
+                .SelectMany(rc => rc.Amenities)
+                .Select(a => new AmenityResponseDto
+                {
+                    AmenityId = a.AmenityID,
+                    Name = a.Name,
+                    Description = a.Description
+                })
+                .ToList()
+        }).ToList();
+
+        return new SearchResultsDto
+        {
+            Hotels = hotelSearchResults
+        };
+    }
+
+
+
 }
 
 
