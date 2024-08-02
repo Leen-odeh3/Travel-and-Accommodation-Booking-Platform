@@ -3,4 +3,5 @@
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IRoomClassService
 {
+
 }

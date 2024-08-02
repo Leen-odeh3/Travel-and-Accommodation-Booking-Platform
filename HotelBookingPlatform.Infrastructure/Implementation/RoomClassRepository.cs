@@ -3,8 +3,6 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-
-
 namespace HotelBookingPlatform.Infrastructure.Implementation
 {
     public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepository
@@ -42,5 +40,6 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
                 .Include(rc => rc.Discounts) 
                 .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
         }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.DTOs.RoomClass;
+using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -7,4 +9,5 @@ public class RoomClassController : ControllerBase
 {
  
 }
+
 
