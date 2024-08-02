@@ -12,7 +12,6 @@ public class HotelResponseDto
     public string? Description { get; set; }
     public string PhoneNumber { get; set; }
     public DateTime CreatedAtUtc { get; set; }
-    public DateTime? ModifiedAtUtc { get; set; }
     public ICollection<ReviewResponseDto> Reviews { get; set; } = new List<ReviewResponseDto>();
 
 }

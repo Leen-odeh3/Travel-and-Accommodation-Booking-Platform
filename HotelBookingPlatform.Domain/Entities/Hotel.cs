@@ -8,7 +8,6 @@ public class Hotel
     public string? Description { get; set; }
     public string PhoneNumber { get; set; }
     public DateTime CreatedAtUtc { get; set; }
-    public DateTime? ModifiedAtUtc { get; set; }
     public int CityID { get; set; }
     public City City { get; set; }
     public int OwnerID { get; set; }
