@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Application.Core.Implementations;
+using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -25,6 +26,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
         services.AddScoped<IOwnerService, OwnerService>();
         services.AddScoped<IInvoiceRecordService, InvoiceRecordService>();
+        services.AddScoped<IFileService, FileService>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

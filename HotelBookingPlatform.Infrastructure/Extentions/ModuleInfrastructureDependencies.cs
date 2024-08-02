@@ -22,6 +22,7 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped<IRoomClasseRepository, RoomClassRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+        services.AddScoped<IFileRepository, FileRepository>();
 
         return services;
     }

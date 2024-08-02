@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HotelBookingPlatform.Domain.Entities;
+﻿namespace HotelBookingPlatform.Domain.Entities;
 public class Review 
 {
   public int ReviewID {  get; set; }

@@ -28,4 +28,5 @@ public class AppDbContext : IdentityDbContext<LocalUser>
     public DbSet<Review> Reviews { get; set; }
     public DbSet<InvoiceRecord> InvoiceRecords { get; set; }
     public DbSet<Amenity> Amenities { get; set; }
+    public DbSet<Image> Images { get; set; }
 }

@@ -49,11 +49,16 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AmenityID");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("Amenities");
                 });
@@ -69,11 +74,14 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Property<DateTime>("BookingDateUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckInDateUtc")
+                    b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckOutDateUtc")
+                    b.Property<DateTime>("CheckOutDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
@@ -93,6 +101,8 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookingID");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("UserId");
 
@@ -208,6 +218,51 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.HasIndex("OwnerID");
 
                     b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Image", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
+
+                    b.Property<string>("AltText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CityID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Extension")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomClassID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("CityID");
+
+                    b.HasIndex("RoomClassID");
+
+                    b.HasIndex("RoomID");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.InvoiceRecord", b =>
@@ -614,13 +669,30 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Amenity", b =>
+                {
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.Hotel", "Hotel")
+                        .WithMany("Amenities")
+                        .HasForeignKey("HotelId");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Booking", b =>
                 {
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.Hotel", "Hotel")
+                        .WithMany("Bookings")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HotelBookingPlatform.Domain.Entities.LocalUser", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Hotel");
 
                     b.Navigation("User");
                 });
@@ -653,6 +725,21 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Navigation("City");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Image", b =>
+                {
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.City", null)
+                        .WithMany("Images")
+                        .HasForeignKey("CityID");
+
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.RoomClass", null)
+                        .WithMany("Images")
+                        .HasForeignKey("RoomClassID");
+
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.Room", null)
+                        .WithMany("Images")
+                        .HasForeignKey("RoomID");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.InvoiceRecord", b =>
@@ -781,10 +868,16 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.City", b =>
                 {
                     b.Navigation("Hotels");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Hotel", b =>
                 {
+                    b.Navigation("Amenities");
+
+                    b.Navigation("Bookings");
+
                     b.Navigation("Reviews");
 
                     b.Navigation("RoomClasses");
@@ -802,9 +895,16 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Navigation("Hotels");
                 });
 
+            modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.RoomClass", b =>
                 {
                     b.Navigation("Discounts");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Rooms");
                 });

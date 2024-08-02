@@ -7,4 +7,5 @@ public class Room
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public RoomClass RoomClass { get; set; }
     public ICollection<Booking> Bookings { get; set; }
+    public ICollection<Image> Images { get; set; } = new List<Image>();
 }

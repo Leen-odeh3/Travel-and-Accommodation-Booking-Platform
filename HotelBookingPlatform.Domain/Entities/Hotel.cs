@@ -15,6 +15,5 @@ public class Hotel
     public ICollection<RoomClass> RoomClasses { get; set;}
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-    public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>(); // إضافة خاصية Amenities
-
+    public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>(); 
 }

@@ -16,5 +16,8 @@ public interface ICityService
     Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest);
     Task DeleteHotelFromCityAsync(int cityId, int hotelId);
 
-
+    ///
+    Task UploadCityImageAsync(int cityId, IFormFile imageFile);
+    Task DeleteCityImageAsync(int cityId, string imageUrl);
+    Task<IEnumerable<string>> GetCityImagesAsync(int cityId);
 }

@@ -4,7 +4,9 @@ using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.Enums;
 using HotelBookingPlatform.Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
@@ -12,9 +14,12 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
+    private readonly IFileService _fileService;
+
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IFileService fileService)
         : base(unitOfWork, mapper)
     {
+        _fileService = fileService;
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -153,6 +158,92 @@ public class CityService : BaseService<City>, ICityService
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
     }
+
+
+
+
+
+
+
+
+
+
+    //////////////////////////
+
+
+
+
+    public async Task UploadCityImageAsync(int cityId, IFormFile imageFile)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        // Ensure the image file is valid
+        if (imageFile == null || imageFile.Length == 0)
+            throw new ArgumentException("Invalid image file.");
+
+        // Upload the image file
+        var filePath = await _fileService.UploadFileAsync(imageFile, "city-images");
+
+        // Create a new image entity
+        var image = new Image
+        {
+            Url = filePath,
+            Extension = ImageExtension.GetExtensionFromFileName(imageFile.FileName), // Assuming you have a method to get the extension
+            AltText = "Image for " + city.Name, // You can customize the alt text as needed
+            EntityId = cityId,
+            EntityType = EntityType.City
+        };
+
+        // Add the image to the city's images collection
+        city.Images.Add(image);
+
+        // Save changes to the database
+        await _unitOfWork.CityRepository.UpdateAsync(cityId, city);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task DeleteCityImageAsync(int cityId, string imageUrl)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        var image = city.Images.FirstOrDefault(img => img.Url.Equals(imageUrl, StringComparison.OrdinalIgnoreCase));
+        if (image == null)
+            throw new KeyNotFoundException("Image not found.");
+
+        // Delete the image file from the server
+        await _fileService.DeleteFileAsync(image.Url);
+
+        // Remove the image from the city's images collection
+        city.Images.Remove(image);
+
+        // Save changes to the database
+        await _unitOfWork.CityRepository.UpdateAsync(cityId, city);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<string>> GetCityImagesAsync(int cityId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        // Return the URLs of the images
+        return city.Images.Select(img => img.Url);
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
 
