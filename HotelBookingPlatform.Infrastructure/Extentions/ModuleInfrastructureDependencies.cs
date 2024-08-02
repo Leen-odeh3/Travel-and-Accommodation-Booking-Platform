@@ -20,6 +20,7 @@ public static class ModuleInfrastructureDependencies
         );
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IRoomClasseRepository, RoomClassRepository>();
+        services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
         return services;

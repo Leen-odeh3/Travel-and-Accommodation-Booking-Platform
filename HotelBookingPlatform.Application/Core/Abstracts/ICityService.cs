@@ -11,7 +11,7 @@ public interface ICityService
     Task DeleteAsync(int id);
     ///////////////
     ///
-
+    Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount);
     Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId);
     Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest);
     Task DeleteHotelFromCityAsync(int cityId, int hotelId);

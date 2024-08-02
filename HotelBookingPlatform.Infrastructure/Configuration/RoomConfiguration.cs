@@ -15,9 +15,6 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.CreatedAtUtc)
                .IsRequired();
 
-        builder.Property(r => r.ModifiedAtUtc)
-               .IsRequired(false);
-
         builder.HasOne(r => r.RoomClass)
                .WithMany(rc => rc.Rooms)
                .HasForeignKey(r => r.RoomClassID);

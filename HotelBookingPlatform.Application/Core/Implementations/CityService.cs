@@ -134,6 +134,21 @@ public class CityService : BaseService<City>, ICityService
 
         await _unitOfWork.SaveChangesAsync();
     }
+
+
+
+    public async Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount)
+    {
+        // Assume we have a method in repository to get cities sorted by visit count
+        var cities = await _unitOfWork.CityRepository.GetTopVisitedCitiesAsync(topCount);
+
+        if (cities == null || !cities.Any())
+        {
+            throw new NotFoundException("No cities found.");
+        }
+
+        return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
+    }
 }
 
 

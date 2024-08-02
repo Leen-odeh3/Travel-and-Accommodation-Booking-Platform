@@ -1,9 +1,10 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.Core.Implementations;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
+using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -144,6 +145,106 @@ public class RoomClassController : ControllerBase
             return NotFound(new { message = ex.Message });
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [HttpPost("{roomClassId}/rooms")]
+    [SwaggerOperation(
+            Summary = "Add a new room to a specific room class",
+            Description = "Adds a new room to the room class identified by the specified roomClassId. The request body should include the room's number and any other necessary details."
+        )]
+    public async Task<ActionResult<RoomResponseDto>> AddRoomToRoomClass(int roomClassId, [FromBody] RoomCreateRequest request)
+    {
+        try
+        {
+            var roomDto = await _roomClassService.AddRoomToRoomClassAsync(roomClassId, request);
+
+            // Return Ok with the newly created room's details
+            return Ok(roomDto);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                error = "An error occurred while processing your request.",
+                details = ex.Message
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+    [HttpGet("{roomClassId}/rooms")]
+    [SwaggerOperation(
+    Summary = "Get all rooms for a specific room class",
+    Description = "Retrieves a list of all rooms associated with the room class identified by the specified roomClassId."
+)]
+    public async Task<IActionResult> GetRoomsByRoomClassId(int roomClassId)
+    {
+        try
+        {
+            var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
+            return Ok(rooms);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                error = "An error occurred while processing your request.",
+                details = ex.Message
+            });
+        }
+    }
+
+
+    [HttpDelete("{roomClassId}/rooms/{roomId}")]
+    [SwaggerOperation(
+        Summary = "Delete a specific room from a room class",
+        Description = "Deletes a specific room from the room class identified by the specified roomClassId. If the room or room class is not found, returns a 404 Not Found response. On successful deletion, returns a 204 No Content response."
+    )]
+    public async Task<IActionResult> DeleteRoomFromRoomClass(int roomClassId, int roomId)
+    {
+        try
+        {
+            await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
+            return Ok(new { message = "Room deleted successfully." }); // 200 OK with a message
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing the request." });
+        }
+    }
+
+
 
 
 }

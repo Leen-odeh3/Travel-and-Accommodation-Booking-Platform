@@ -12,7 +12,7 @@ public class RoomClass
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
-    public ICollection<Room> Rooms { get;}
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
     public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
     public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
 }

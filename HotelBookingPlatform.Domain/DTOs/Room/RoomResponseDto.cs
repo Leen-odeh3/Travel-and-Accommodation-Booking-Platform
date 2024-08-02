@@ -5,5 +5,4 @@ public class RoomResponseDto
     public string RoomClassName { get; set; }
     public string Number { get; set; }
     public DateTime CreatedAtUtc { get; set; }
-    public DateTime? ModifiedAtUtc { get; set; }
 }

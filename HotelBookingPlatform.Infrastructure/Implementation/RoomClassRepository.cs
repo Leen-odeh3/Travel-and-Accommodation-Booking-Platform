@@ -48,5 +48,16 @@ namespace HotelBookingPlatform.Infrastructure.Implementation
                 .FirstOrDefaultAsync(rc => rc.RoomClassID == roomClassId);
         }
 
+  
+
+
+
+    public async Task<RoomClass> GetRoomClassWithRoomsAsync(int id)
+    {
+        return await _context.RoomClasses
+            .Include(rc => rc.Rooms) // Include the related rooms
+            .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
     }
+
 }
+  }
