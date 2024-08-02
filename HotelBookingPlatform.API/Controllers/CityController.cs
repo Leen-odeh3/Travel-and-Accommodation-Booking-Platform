@@ -89,6 +89,15 @@ public class CityController : ControllerBase
             return Ok(hotels);
     }
 
+
+    [HttpPost("{cityId}/hotel")]
+    //[Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add a hotel to a specific city.")]
+    public async Task<IActionResult> AddHotelToCity(int cityId, [FromBody] HotelCreateRequest hotelRequest)
+    {
+        await _cityService.AddHotelToCityAsync(cityId, hotelRequest);
+        return Ok(new { Message = "Hotel added to city successfully." });
+    }
 }
 
 

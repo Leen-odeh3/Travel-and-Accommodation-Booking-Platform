@@ -102,6 +102,22 @@ public class CityService : BaseService<City>, ICityService
         }
     }
 
+
+    public async Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        var hotel = _mapper.Map<Hotel>(hotelRequest);
+        hotel.CityID = cityId;
+
+        await _unitOfWork.HotelRepository.CreateAsync(hotel);
+        city.Hotels.Add(hotel);
+
+        await _unitOfWork.SaveChangesAsync();
+    }
+
 }
 
 
