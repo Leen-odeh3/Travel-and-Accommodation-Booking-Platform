@@ -1,6 +1,5 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
-using Microsoft.AspNetCore.Http;
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface ICityService
 {
@@ -15,6 +14,9 @@ public interface ICityService
     Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId);
     Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest);
     Task DeleteHotelFromCityAsync(int cityId, int hotelId);
+    ////
+    ///
 
- 
+
+
 }

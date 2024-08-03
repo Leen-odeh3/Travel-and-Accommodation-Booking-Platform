@@ -28,9 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Uploads\Hotels\" />
+    <Folder Include="Uploads\Cities\" />
     <Folder Include="wwwroot\Uploads\Cities\" />
-    <Folder Include="wwwroot\Uploads\RoomClass\" />
+    <Folder Include="wwwroot\Uploads\City\" />
+    <Folder Include="wwwroot\Uploads\Hotels\" />
+    <Folder Include="wwwroot\Uploads\RoomClasses\" />
     <Folder Include="wwwroot\Uploads\Rooms\" />
   </ItemGroup>
 

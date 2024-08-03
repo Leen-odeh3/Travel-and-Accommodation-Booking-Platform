@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
+using HotelBookingPlatform.Domain.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
@@ -14,12 +17,9 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    private readonly IWebHostEnvironment _environment;
-
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment)
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
-        _environment = environment;
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -163,8 +163,16 @@ public class CityService : BaseService<City>, ICityService
     //////////////////////////
 
 
-  
+
+    ////
+    ///
+
+   
+
+
 }
+
+
 
 
 
