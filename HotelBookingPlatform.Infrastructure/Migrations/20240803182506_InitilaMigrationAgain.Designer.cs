@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240803141534_CreateImages")]
-    partial class CreateImages
+    [Migration("20240803182506_InitilaMigrationAgain")]
+    partial class InitilaMigrationAgain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,9 +130,6 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -227,24 +224,32 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Image", b =>
                 {
-                    b.Property<int>("ImageId")
+                    b.Property<int>("ImageID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"), 1L, 1);
 
-                    b.Property<string>("AltText")
+                    b.Property<int?>("CityID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EntityId")
-                        .HasColumnType("int");
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EntityType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Extension")
-                        .HasColumnType("int");
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("HotelId")
                         .HasColumnType("int");
@@ -255,11 +260,9 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                     b.Property<int?>("RoomID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("ImageID");
 
-                    b.HasKey("ImageId");
+                    b.HasIndex("CityID");
 
                     b.HasIndex("HotelId");
 
@@ -736,6 +739,10 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Image", b =>
                 {
+                    b.HasOne("HotelBookingPlatform.Domain.Entities.City", null)
+                        .WithMany("Images")
+                        .HasForeignKey("CityID");
+
                     b.HasOne("HotelBookingPlatform.Domain.Entities.Hotel", null)
                         .WithMany("Images")
                         .HasForeignKey("HotelId");
@@ -875,6 +882,8 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.City", b =>
                 {
                     b.Navigation("Hotels");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("HotelBookingPlatform.Domain.Entities.Hotel", b =>

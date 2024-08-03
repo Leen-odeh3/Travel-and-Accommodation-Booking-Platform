@@ -17,11 +17,9 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    private readonly IFileRepository _fileRepository;
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment,IFileRepository fileRepository)
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
-       _fileRepository = fileRepository;
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -169,47 +167,9 @@ public class CityService : BaseService<City>, ICityService
     ////
     ///
 
-
-    public async Task AddCityImagesAsync(int cityId, IList<IFormFile> imageFiles)
-    {
-        foreach (var file in imageFiles)
-        {
-            await _fileRepository.AddFileAsync("City", cityId, file);
-        }
-    }
-
-    public async Task<IEnumerable<FileDetails>> GetCityImagesAsync(int cityId)
-    {
-        return await _fileRepository.GetFilesAsync("City", cityId);
-    }
-
-    public async Task DeleteCityImageAsync(int cityId, string fileName)
-    {
-        await _fileRepository.DeleteFileAsync("City", cityId, fileName);
-    }
+   
 
 
-    public async Task DeleteCityImageAsync(int cityId, int imageId)
-    {
-        // تحقق من وجود المدينة
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
-            throw new Exception("City not found");
-
-        // العثور على الصورة وحذفها
-        var image = await _fileRepository.GetImageByIdAsync(imageId);
-        if (image == null || image.EntityID != cityId || image.EntityType != "City")
-            throw new Exception("Image not found or does not belong to this city");
-
-        // حذف الملف من النظام
-        if (File.Exists(image.FilePath))
-        {
-            File.Delete(image.FilePath);
-        }
-
-        // حذف بيانات الصورة من قاعدة البيانات
-        await _fileRepository.DeleteAsync(imageId);
-    }
 }
 
 

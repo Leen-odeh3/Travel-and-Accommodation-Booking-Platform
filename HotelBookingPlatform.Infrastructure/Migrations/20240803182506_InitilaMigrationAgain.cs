@@ -5,34 +5,39 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HotelBookingPlatform.Infrastructure.Migrations
 {
-    public partial class CreateAgain : Migration
+    public partial class InitilaMigrationAgain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-
+        { 
             migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
-                    ImageId = table.Column<int>(type: "int", nullable: false)
+                    ImageID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Extension = table.Column<int>(type: "int", nullable: false),
-                    AltText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EntityId = table.Column<int>(type: "int", nullable: false),
-                    EntityType = table.Column<int>(type: "int", nullable: false),
+                    EntityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EntityID = table.Column<int>(type: "int", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CityID = table.Column<int>(type: "int", nullable: true),
+                    HotelId = table.Column<int>(type: "int", nullable: true),
                     RoomClassID = table.Column<int>(type: "int", nullable: true),
                     RoomID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.ImageId);
+                    table.PrimaryKey("PK_Images", x => x.ImageID);
                     table.ForeignKey(
                         name: "FK_Images_Cities_CityID",
                         column: x => x.CityID,
                         principalTable: "Cities",
                         principalColumn: "CityID");
+                    table.ForeignKey(
+                        name: "FK_Images_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "HotelId");
                     table.ForeignKey(
                         name: "FK_Images_RoomClasses_RoomClassID",
                         column: x => x.RoomClassID,
@@ -44,10 +49,6 @@ namespace HotelBookingPlatform.Infrastructure.Migrations
                         principalTable: "Rooms",
                         principalColumn: "RoomID");
                 });
-
-
-
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

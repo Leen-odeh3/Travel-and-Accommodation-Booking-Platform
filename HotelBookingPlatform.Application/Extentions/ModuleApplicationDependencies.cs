@@ -28,8 +28,6 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
         services.AddScoped<IOwnerService, OwnerService>();
         services.AddScoped<IInvoiceRecordService, InvoiceRecordService>();
-        services.AddTransient<IFileService, FileService>();
-        services.AddScoped<IFileRepository, FileRepository>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

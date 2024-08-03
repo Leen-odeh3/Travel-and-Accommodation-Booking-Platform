@@ -124,34 +124,7 @@ public class CityController : ControllerBase
 
     /////////////
     ///
-    [HttpPost("{cityId}/images")]
-    public async Task<IActionResult> AddCityImages(int cityId, IList<IFormFile> imageFiles)
-    {
-        await _cityService.AddCityImagesAsync(cityId, imageFiles);
-        return Ok(new { Message = "City images added successfully." });
-    }
-
-    [HttpGet("{cityId}/images")]
-    public async Task<IActionResult> GetCityImages(int cityId)
-    {
-        var images = await _cityService.GetCityImagesAsync(cityId);
-        return Ok(images);
-    }
-
-    [HttpDelete("{cityId}/images/{imageId}")]
-    public async Task<IActionResult> DeleteCityImage(int cityId, int imageId)
-    {
-        try
-        {
-            await _cityService.DeleteCityImageAsync(cityId, imageId);
-            return NoContent(); // أو أي استجابة مناسبة
-        }
-        catch (Exception ex)
-        {
-            // التعامل مع الاستثناءات وإرجاع الاستجابة المناسبة
-            return StatusCode(500, new { error = ex.Message });
-        }
-    }
+  
 
 
 }
