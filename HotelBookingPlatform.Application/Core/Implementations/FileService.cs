@@ -1,97 +1,89 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
-public class FileService : IFileService
+namespace HotelBookingPlatform.Application.Core.Implementations
 {
-    private readonly IWebHostEnvironment _environment;
-
-    public FileService(IWebHostEnvironment environment)
+    public class FileService : IFileService
     {
-        _environment = environment;
-    }
+        private readonly string _uploadsFolder;
 
-    public async Task<string> SaveFileAsync(IFormFile imageFile, string[] allowedFileExtensions, string subFolder)
-    {
-        if (imageFile == null)
+        public FileService(IHostEnvironment environment)
         {
-            throw new ArgumentNullException(nameof(imageFile));
+            _uploadsFolder = Path.Combine(environment.ContentRootPath, "Uploads");
         }
 
-        if (allowedFileExtensions == null || allowedFileExtensions.Length == 0)
+        public async Task<string> SaveFileAsync(IFormFile file, string[] allowedFileExtensions, string subFolder)
         {
-            throw new ArgumentNullException(nameof(allowedFileExtensions));
+            if (file.Length == 0) return null;
+
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedFileExtensions.Contains(fileExtension))
+            {
+                throw new InvalidDataException($"File type '{fileExtension}' is not allowed.");
+            }
+
+            var fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid() + fileExtension;
+            var subFolderPath = Path.Combine(_uploadsFolder, subFolder);
+            Directory.CreateDirectory(subFolderPath);
+            var filePath = Path.Combine(subFolderPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return fileName;
         }
 
-        if (string.IsNullOrEmpty(subFolder))
+        public async Task<IList<string>> SaveFilesAsync(IList<IFormFile> files, string[] allowedFileExtensions, string subFolder)
         {
-            throw new ArgumentNullException(nameof(subFolder));
+            var savedFileNames = new List<string>();
+
+            if (files == null || !files.Any())
+                return savedFileNames;
+
+            var subFolderPath = Path.Combine(_uploadsFolder, subFolder);
+            Directory.CreateDirectory(subFolderPath);
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                    if (!allowedFileExtensions.Contains(fileExtension))
+                    {
+                        throw new InvalidDataException($"File type '{fileExtension}' is not allowed.");
+                    }
+
+                    var fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid() + fileExtension;
+                    var filePath = Path.Combine(subFolderPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    savedFileNames.Add(fileName);
+                }
+            }
+
+            return savedFileNames;
         }
 
-        var contentPath = _environment.WebRootPath;
-        if (string.IsNullOrEmpty(contentPath))
+        public void DeleteFile(string fileName, string subFolder)
         {
-            throw new InvalidOperationException("WebRootPath is not set.");
+            var filePath = Path.Combine(_uploadsFolder, subFolder, fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
 
-        var path = Path.Combine(contentPath, "Uploads", subFolder);
-
-        if (!Directory.Exists(path))
+        public async Task<string> GetFilePathAsync(string fileName, string subFolder)
         {
-            Directory.CreateDirectory(path);
+            var filePath = Path.Combine(_uploadsFolder, subFolder, fileName);
+            return await Task.FromResult(File.Exists(filePath) ? filePath : null);
         }
-
-        var ext = Path.GetExtension(imageFile.FileName);
-        if (!allowedFileExtensions.Contains(ext.ToLower()))
-        {
-            throw new ArgumentException($"Only {string.Join(",", allowedFileExtensions)} are allowed.");
-        }
-
-        var fileName = $"{Guid.NewGuid()}{ext}";
-        var fileNameWithPath = Path.Combine(path, fileName);
-        using var stream = new FileStream(fileNameWithPath, FileMode.Create);
-        await imageFile.CopyToAsync(stream);
-        return fileName;
-    }
-
-    public async Task<string> GetFilePathAsync(string fileName, string subFolder)
-    {
-        if (string.IsNullOrEmpty(fileName))
-        {
-            throw new ArgumentNullException(nameof(fileName));
-        }
-
-        var contentPath = _environment.WebRootPath;
-        if (string.IsNullOrEmpty(contentPath))
-        {
-            throw new InvalidOperationException("WebRootPath is not set.");
-        }
-
-        var path = Path.Combine(contentPath, "Uploads", subFolder, fileName);
-
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException($"File not found: {fileName}");
-        }
-
-        return await Task.FromResult(path);
-    }
-
-    public void DeleteFile(string fileNameWithExtension, string subFolder)
-    {
-        if (string.IsNullOrEmpty(fileNameWithExtension))
-        {
-            throw new ArgumentNullException(nameof(fileNameWithExtension));
-        }
-
-        var contentPath = _environment.WebRootPath;
-        var path = Path.Combine(contentPath, "Uploads", subFolder, fileNameWithExtension);
-
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException($"File not found: {fileNameWithExtension}");
-        }
-
-        File.Delete(path);
     }
 }

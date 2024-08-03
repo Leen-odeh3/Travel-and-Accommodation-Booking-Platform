@@ -124,93 +124,34 @@ public class CityController : ControllerBase
 
     /////////////
     ///
-
-    [HttpPost("{cityId}/image")]
-    public async Task<IActionResult> AddCityImage(int cityId, IFormFile imageFile)
+    [HttpPost("{cityId}/images")]
+    public async Task<IActionResult> AddCityImages(int cityId, IList<IFormFile> imageFiles)
     {
-        if (imageFile == null || imageFile.Length == 0)
-        {
-            return BadRequest("No file uploaded.");
-        }
-
-        try
-        {
-            await _cityService.AddCityImageAsync(cityId, imageFile);
-            return Ok("Image uploaded successfully.");
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        await _cityService.AddCityImagesAsync(cityId, imageFiles);
+        return Ok(new { Message = "City images added successfully." });
     }
 
-
-    [HttpDelete("{cityId}/image")]
-    public async Task<IActionResult> DeleteCityImage(int cityId)
+    [HttpGet("{cityId}/images")]
+    public async Task<IActionResult> GetCityImages(int cityId)
     {
-        try
-        {
-            await _cityService.DeleteCityImageAsync(cityId);
-            return Ok(new { Message = "Image deleted successfully." });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { Message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request.", Details = ex.Message });
-        }
+        var images = await _cityService.GetCityImagesAsync(cityId);
+        return Ok(images);
     }
 
-
-    [HttpGet("{cityId}/image")]
-    public async Task<IActionResult> GetCityImage(int cityId)
+    [HttpDelete("{cityId}/images/{imageId}")]
+    public async Task<IActionResult> DeleteCityImage(int cityId, int imageId)
     {
         try
         {
-            var imagePath = await _cityService.GetCityImagePathAsync(cityId);
-
-            if (string.IsNullOrEmpty(imagePath))
-            {
-                return NotFound("Image path is null or empty.");
-            }
-
-            if (!System.IO.File.Exists(imagePath))
-            {
-                return NotFound("Image not found.");
-            }
-
-            var ext = Path.GetExtension(imagePath).ToLower();
-            var contentType = ext switch
-            {
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".gif" => "image/gif",
-                _ => "application/octet-stream"
-            };
-
-            var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
-            return File(fileStream, contentType);
-        }
-        catch (FileNotFoundException ex)
-        {
-            return NotFound(new { Message = ex.Message });
+            await _cityService.DeleteCityImageAsync(cityId, imageId);
+            return NoContent(); // أو أي استجابة مناسبة
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            // التعامل مع الاستثناءات وإرجاع الاستجابة المناسبة
+            return StatusCode(500, new { error = ex.Message });
         }
     }
 
 
 }
-

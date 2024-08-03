@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
+using HotelBookingPlatform.Domain.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
@@ -14,12 +17,11 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    private readonly IFileService _fileService;
-
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment,IFileService fileService)
+    private readonly IFileRepository _fileRepository;
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment,IFileRepository fileRepository)
         : base(unitOfWork, mapper)
     {
-       _fileService = fileService;
+       _fileRepository = fileRepository;
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -162,57 +164,54 @@ public class CityService : BaseService<City>, ICityService
 
     //////////////////////////
 
-    public async Task AddCityImageAsync(int cityId, IFormFile imageFile)
-    {
-        if (imageFile == null)
-        {
-            throw new ArgumentNullException(nameof(imageFile));
-        }
 
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
-        {
-            throw new KeyNotFoundException("City not found.");
-        }
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-        var fileName = await _fileService.SaveFileAsync(imageFile, allowedExtensions, "Cities");
-
-        city.Image = fileName;
-        await _unitOfWork.CityRepository.UpdateAsync(cityId,city);
-    }
-
-    public async Task DeleteCityImageAsync(int cityId)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
-            throw new KeyNotFoundException("City not found.");
-
-        if (string.IsNullOrEmpty(city.Image))
-            throw new ArgumentException("No image to delete.");
-
-        _fileService.DeleteFile(city.Image, "Cities");
-        city.Image = null;
-
-        await _unitOfWork.CityRepository.UpdateAsync(cityId, city);
-        await _unitOfWork.SaveChangesAsync();
-    }
 
     ////
     ///
-    public async Task<string> GetCityImagePathAsync(int cityId)
-    {
-        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null || string.IsNullOrEmpty(city.Image))
-        {
-            throw new FileNotFoundException("City or image not found.");
-        }
 
-        return await _fileService.GetFilePathAsync(city.Image, "Cities");
+
+    public async Task AddCityImagesAsync(int cityId, IList<IFormFile> imageFiles)
+    {
+        foreach (var file in imageFiles)
+        {
+            await _fileRepository.AddFileAsync("City", cityId, file);
+        }
+    }
+
+    public async Task<IEnumerable<FileDetails>> GetCityImagesAsync(int cityId)
+    {
+        return await _fileRepository.GetFilesAsync("City", cityId);
+    }
+
+    public async Task DeleteCityImageAsync(int cityId, string fileName)
+    {
+        await _fileRepository.DeleteFileAsync("City", cityId, fileName);
     }
 
 
+    public async Task DeleteCityImageAsync(int cityId, int imageId)
+    {
+        // تحقق من وجود المدينة
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new Exception("City not found");
+
+        // العثور على الصورة وحذفها
+        var image = await _fileRepository.GetImageByIdAsync(imageId);
+        if (image == null || image.EntityID != cityId || image.EntityType != "City")
+            throw new Exception("Image not found or does not belong to this city");
+
+        // حذف الملف من النظام
+        if (File.Exists(image.FilePath))
+        {
+            File.Delete(image.FilePath);
+        }
+
+        // حذف بيانات الصورة من قاعدة البيانات
+        await _fileRepository.DeleteAsync(imageId);
+    }
 }
+
 
 
 

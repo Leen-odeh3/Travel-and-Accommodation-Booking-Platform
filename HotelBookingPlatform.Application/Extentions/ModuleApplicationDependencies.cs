@@ -3,6 +3,8 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Application.Core.Implementations;
 using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
+using HotelBookingPlatform.Domain.Abstracts;
+using HotelBookingPlatform.Infrastructure.Implementation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -26,8 +28,8 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
         services.AddScoped<IOwnerService, OwnerService>();
         services.AddScoped<IInvoiceRecordService, InvoiceRecordService>();
-        // services.AddScoped<IImageService, ImageService>();
         services.AddTransient<IFileService, FileService>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

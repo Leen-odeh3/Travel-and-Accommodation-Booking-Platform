@@ -83,7 +83,7 @@ public class Program
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(uploadsPath),
-            RequestPath = "/Resources/Cities"
+            RequestPath = "/Uploads/Cities"
         });
 
 

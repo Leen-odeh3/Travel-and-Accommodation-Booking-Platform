@@ -1,5 +1,6 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.Helpers;
 using Microsoft.AspNetCore.Http;
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface ICityService
@@ -17,9 +18,9 @@ public interface ICityService
     Task DeleteHotelFromCityAsync(int cityId, int hotelId);
     ////
     ///
-    Task AddCityImageAsync(int cityId, IFormFile imageFile);
-    Task DeleteCityImageAsync(int cityId);
-    Task<string> GetCityImagePathAsync(int cityId);
+    Task AddCityImagesAsync(int cityId, IList<IFormFile> imageFiles);
+    Task<IEnumerable<FileDetails>> GetCityImagesAsync(int cityId);
+    Task DeleteCityImageAsync(int cityId, int imageId);
 
 
 }

@@ -2,10 +2,10 @@
 namespace HotelBookingPlatform.Domain.Entities;
 public class Image
 {
-    public int ImageId { get; set; }
-    public string Url { get; set; } 
-    public ImageExtension Extension { get; set; } 
-    public string AltText { get; set; }
-    public int EntityId { get; set; }
-    public EntityType EntityType { get; set; }
+    public int ImageID { get; set; }
+    public string EntityType { get; set; }
+    public int EntityID { get; set; }
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
 }
