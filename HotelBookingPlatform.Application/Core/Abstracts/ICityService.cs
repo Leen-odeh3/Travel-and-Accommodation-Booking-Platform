@@ -15,6 +15,11 @@ public interface ICityService
     Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId);
     Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest);
     Task DeleteHotelFromCityAsync(int cityId, int hotelId);
+    ////
+    ///
+    Task AddCityImageAsync(int cityId, IFormFile imageFile);
+    Task DeleteCityImageAsync(int cityId);
+    Task<string> GetCityImagePathAsync(int cityId);
 
- 
+
 }

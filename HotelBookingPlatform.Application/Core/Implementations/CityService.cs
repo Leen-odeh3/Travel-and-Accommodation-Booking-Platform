@@ -14,12 +14,12 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    private readonly IWebHostEnvironment _environment;
+    private readonly IFileService _fileService;
 
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment)
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, IWebHostEnvironment environment,IFileService fileService)
         : base(unitOfWork, mapper)
     {
-        _environment = environment;
+       _fileService = fileService;
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -162,9 +162,58 @@ public class CityService : BaseService<City>, ICityService
 
     //////////////////////////
 
+    public async Task AddCityImageAsync(int cityId, IFormFile imageFile)
+    {
+        if (imageFile == null)
+        {
+            throw new ArgumentNullException(nameof(imageFile));
+        }
 
-  
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+        {
+            throw new KeyNotFoundException("City not found.");
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var fileName = await _fileService.SaveFileAsync(imageFile, allowedExtensions, "Cities");
+
+        city.Image = fileName;
+        await _unitOfWork.CityRepository.UpdateAsync(cityId,city);
+    }
+
+    public async Task DeleteCityImageAsync(int cityId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null)
+            throw new KeyNotFoundException("City not found.");
+
+        if (string.IsNullOrEmpty(city.Image))
+            throw new ArgumentException("No image to delete.");
+
+        _fileService.DeleteFile(city.Image, "Cities");
+        city.Image = null;
+
+        await _unitOfWork.CityRepository.UpdateAsync(cityId, city);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    ////
+    ///
+    public async Task<string> GetCityImagePathAsync(int cityId)
+    {
+        var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city == null || string.IsNullOrEmpty(city.Image))
+        {
+            throw new FileNotFoundException("City or image not found.");
+        }
+
+        return await _fileService.GetFilePathAsync(city.Image, "Cities");
+    }
+
+
 }
+
 
 
 

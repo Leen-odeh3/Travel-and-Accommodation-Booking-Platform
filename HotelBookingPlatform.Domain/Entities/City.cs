@@ -11,5 +11,5 @@ public class City
     public ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
     public DateTime CreatedAtUtc { get; set; }
     public int VisitCount { get; set; }
-    public ICollection<Image> Images { get; set; } = new List<Image>();
+    public string? Image { get; set; }
 }

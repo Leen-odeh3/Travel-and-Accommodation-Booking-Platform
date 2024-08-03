@@ -64,18 +64,30 @@ public class Program
             });  
         }
 
-        var uploadPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
-        if (!Directory.Exists(uploadPath))
+
+
+
+        // «·Õ’Ê· ⁄·Ï «·„”«— «·Ã–—Ì ··„‘—Ê⁄
+        var contentRootPath = builder.Environment.ContentRootPath;
+
+        //  ÕœÌœ «·„”«— «·ﬂ«„· ·„·›«  «· Õ„Ì·
+        var uploadsPath = Path.Combine(contentRootPath, "Uploads", "Cities");
+
+        // «· Õﬁﬁ „‰ √‰ «·„”«— «·„Õœœ ·Ì” ›«—€« √Ê null° Ê≈‰‘«¡ «·„Ã·œ ≈–« ·„ Ìﬂ‰ „ÊÃÊœ«
+        if (!Directory.Exists(uploadsPath))
         {
-            Directory.CreateDirectory(uploadPath);
+            Directory.CreateDirectory(uploadsPath);
         }
 
-        // Configure static files to serve from the Uploads directory
+        // ≈÷«›… StaticFiles middleware
         app.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(uploadPath),
-            RequestPath = "/Resources"
+            FileProvider = new PhysicalFileProvider(uploadsPath),
+            RequestPath = "/Resources/Cities"
         });
+
+
+
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
 

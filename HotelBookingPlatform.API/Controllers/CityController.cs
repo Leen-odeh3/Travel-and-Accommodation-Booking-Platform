@@ -125,7 +125,92 @@ public class CityController : ControllerBase
     /////////////
     ///
 
+    [HttpPost("{cityId}/image")]
+    public async Task<IActionResult> AddCityImage(int cityId, IFormFile imageFile)
+    {
+        if (imageFile == null || imageFile.Length == 0)
+        {
+            return BadRequest("No file uploaded.");
+        }
+
+        try
+        {
+            await _cityService.AddCityImageAsync(cityId, imageFile);
+            return Ok("Image uploaded successfully.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+
+    [HttpDelete("{cityId}/image")]
+    public async Task<IActionResult> DeleteCityImage(int cityId)
+    {
+        try
+        {
+            await _cityService.DeleteCityImageAsync(cityId);
+            return Ok(new { Message = "Image deleted successfully." });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request.", Details = ex.Message });
+        }
+    }
+
+
+    [HttpGet("{cityId}/image")]
+    public async Task<IActionResult> GetCityImage(int cityId)
+    {
+        try
+        {
+            var imagePath = await _cityService.GetCityImagePathAsync(cityId);
+
+            if (string.IsNullOrEmpty(imagePath))
+            {
+                return NotFound("Image path is null or empty.");
+            }
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound("Image not found.");
+            }
+
+            var ext = Path.GetExtension(imagePath).ToLower();
+            var contentType = ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+
+            var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+            return File(fileStream, contentType);
+        }
+        catch (FileNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
+
 
 }
-
 
