@@ -64,7 +64,18 @@ public class Program
             });  
         }
 
+        var uploadPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
+        if (!Directory.Exists(uploadPath))
+        {
+            Directory.CreateDirectory(uploadPath);
+        }
 
+        // Configure static files to serve from the Uploads directory
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(uploadPath),
+            RequestPath = "/Resources"
+        });
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
 

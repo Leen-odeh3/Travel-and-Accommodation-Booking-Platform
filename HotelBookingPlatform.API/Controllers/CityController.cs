@@ -126,33 +126,6 @@ public class CityController : ControllerBase
     ///
 
 
-    [HttpPost("{cityId}/upload-image")]
-    public async Task<IActionResult> UploadCityImage(int cityId, IFormFile imageFile)
-    {
-        try
-        {
-            await _cityService.UploadCityImageAsync(cityId, imageFile);
-            return Ok(new { Message = "Image uploaded successfully." });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
-    }
-
-    [HttpDelete("{cityId}/delete-image")]
-    public async Task<IActionResult> DeleteCityImage(int cityId, [FromQuery] string imageUrl)
-    {
-        await _cityService.DeleteCityImageAsync(cityId, imageUrl);
-        return NoContent();
-    }
-
-    [HttpGet("{cityId}/images")]
-    public async Task<IActionResult> GetCityImages(int cityId)
-    {
-        var images = await _cityService.GetCityImagesAsync(cityId);
-        return Ok(images);
-    }
 }
 
 

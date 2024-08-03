@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace HotelBookingPlatform.Domain.Entities;
 public class City 
 {
     public int CityID { get; set; }
