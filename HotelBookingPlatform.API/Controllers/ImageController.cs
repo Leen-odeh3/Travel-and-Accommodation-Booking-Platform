@@ -1,100 +1,113 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
 using Microsoft.AspNetCore.Mvc;
-namespace HotelBookingPlatform.API.Controllers;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-[Route("api/[controller]")]
-[ApiController]
-
-public class ImageController : ControllerBase
+namespace HotelBookingPlatform.API.Controllers
 {
-    private readonly IImageRepository _imageRepository;
-
-    public ImageController(IImageRepository imageRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ImageController : ControllerBase
     {
-        _imageRepository = imageRepository;
-    }
+        private readonly IImageRepository _imageRepository;
 
-    // تحميل صورة
-    [HttpPost("Upload")]
-    public async Task<IActionResult> UploadImage(IFormFile file, string entityType, int entityId)
-    {
-        if (file == null || file.Length == 0)
+        public ImageController(IImageRepository imageRepository)
         {
-            return BadRequest("No file uploaded.");
+            _imageRepository = imageRepository;
         }
 
-        try
+        // إضافة مجموعة من الصور
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImages(string entityType, int entityId, IList<IFormFile> files)
         {
-            using (var memoryStream = new System.IO.MemoryStream())
+            if (files == null || files.Count == 0)
             {
-                await file.CopyToAsync(memoryStream);
-                byte[] imageData = memoryStream.ToArray();
-
-                await _imageRepository.SaveImageAsync(entityType, entityId, imageData);
+                return BadRequest("No files uploaded.");
             }
 
-            return Ok("Image uploaded successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
-    }
+            var imageDataList = new List<byte[]>();
 
-    // استرجاع الصور
-    [HttpGet("GetImages")]
-    public async Task<IActionResult> GetImages(string entityType, int entityId)
-    {
-        try
-        {
-            var images = await _imageRepository.GetImagesAsync(entityType, entityId);
-            if (!images.Any())
+            foreach (var file in files)
             {
-                return NotFound("No images found.");
+                if (file.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
+                        imageDataList.Add(memoryStream.ToArray());
+                    }
+                }
             }
 
-            var result = images.Select(img => new
+            try
             {
-                img.EntityType,
-                img.EntityId,
-                ImageData = Convert.ToBase64String(img.FileData)
-            });
+                // حفظ الصور باستخدام SaveImagesAsync
+                await _imageRepository.SaveImagesAsync(entityType, entityId, imageDataList);
+                return Ok("Images uploaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
 
-            return Ok(result);
-        }
-        catch (Exception ex)
+        // استرجاع الصور
+        [HttpGet("GetImages")]
+        public async Task<IActionResult> GetImages(string entityType, int entityId)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
-    }
+            try
+            {
+                var images = await _imageRepository.GetImagesAsync(entityType, entityId);
+                if (!images.Any())
+                {
+                    return NotFound("No images found.");
+                }
 
-    // حذف صورة
-    [HttpDelete("Delete")]
-    public async Task<IActionResult> DeleteImage(string entityType, int entityId)
-    {
-        try
-        {
-            await _imageRepository.DeleteImagesAsync(entityType, entityId);
-            return Ok("Image(s) deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
-    }
+                var result = images.Select(img => new
+                {
+                    img.EntityType,
+                    img.EntityId,
+                    ImageData = Convert.ToBase64String(img.FileData)
+                });
 
-    // حذف جميع الصور لنوع معين
-    [HttpDelete("DeleteAll")]
-    public async Task<IActionResult> DeleteAllImages(string entityType)
-    {
-        try
-        {
-            await _imageRepository.DeleteImagesAsync(entityType);
-            return Ok("All images of the specified type have been deleted successfully.");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            }
         }
-        catch (Exception ex)
+
+        // حذف صورة معينة بناءً على معرف الصورة
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteImage(int imageId)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            try
+            {
+                await _imageRepository.DeleteImageAsync(imageId);
+                return Ok("Image deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            }
+        }
+
+        // حذف جميع الصور لنوع معين
+        [HttpDelete("DeleteAll")]
+        public async Task<IActionResult> DeleteAllImages(string entityType)
+        {
+            try
+            {
+                await _imageRepository.DeleteImagesAsync(entityType);
+                return Ok("All images of the specified type have been deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            }
         }
     }
 }

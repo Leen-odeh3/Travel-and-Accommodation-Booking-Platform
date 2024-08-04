@@ -11,6 +11,18 @@ public class ImageRepository : IImageRepository
     {
         _context = context;
     }
+    public async Task DeleteImageAsync(int imageId)
+    {
+        var image = await _context.Images
+            .FirstOrDefaultAsync(img => img.Id == imageId);
+
+        if (image != null)
+        {
+            _context.Images.Remove(image);
+
+            await _context.SaveChangesAsync();
+        }
+    }
 
     public async Task<IEnumerable<Image>> GetImagesAsync(string entityType, int entityId)
     {
@@ -19,25 +31,28 @@ public class ImageRepository : IImageRepository
             .ToListAsync();
     }
 
-    public async Task SaveImageAsync(string entityType, int entityId, byte[] imageData)
+    public async Task SaveImagesAsync(string entityType, int entityId, IEnumerable<byte[]> imageDataList)
     {
-        var existingImage = await _context.Images
-            .FirstOrDefaultAsync(img => img.EntityType == entityType && img.EntityId == entityId);
+        foreach (var imageData in imageDataList)
+        {
+            var existingImage = await _context.Images
+                .FirstOrDefaultAsync(img => img.EntityType == entityType && img.EntityId == entityId);
 
-        if (existingImage != null)
-        {
-            existingImage.FileData = imageData;
-            _context.Images.Update(existingImage);
-        }
-        else
-        {
-            var newImage = new Image
+            if (existingImage != null)
             {
-                EntityType = entityType,
-                EntityId = entityId,
-                FileData = imageData
-            };
-            await _context.Images.AddAsync(newImage);
+                existingImage.FileData = imageData;
+                _context.Images.Update(existingImage);
+            }
+            else
+            {
+                var newImage = new Image
+                {
+                    EntityType = entityType,
+                    EntityId = entityId,
+                    FileData = imageData
+                };
+                await _context.Images.AddAsync(newImage);
+            }
         }
 
         await _context.SaveChangesAsync();
