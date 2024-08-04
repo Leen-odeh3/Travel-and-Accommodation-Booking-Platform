@@ -6,6 +6,8 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.Exceptions;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.Abstracts;
+using HotelBookingPlatform.Infrastructure.Implementation;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -13,9 +15,12 @@ namespace HotelBookingPlatform.API.Controllers;
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
-    public CityController(ICityService cityService)
+    private readonly IImageRepository _imageRepository;
+
+    public CityController(ICityService cityService, IImageRepository imageRepository)
     {
         _cityService = cityService;
+        _imageRepository = imageRepository;
     }
 
     [HttpGet]
@@ -124,7 +129,106 @@ public class CityController : ControllerBase
 
     /////////////
     ///
-  
+
+    [HttpPost("{cityId}/uploadImages")]
+    public async Task<IActionResult> UploadImages(int cityId, IList<IFormFile> files)
+    {
+        // تحديد نوع الكائن كـ "City"
+        var entityType = "City";
+
+        if (files == null || files.Count == 0)
+        {
+            return BadRequest("No files uploaded.");
+        }
+
+        var imageDataList = new List<byte[]>();
+
+        foreach (var file in files)
+        {
+            if (file.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    imageDataList.Add(memoryStream.ToArray());
+                }
+            }
+        }
+
+        try
+        {
+            await _imageRepository.SaveImagesAsync(entityType, cityId, imageDataList);
+            return Ok("Images uploaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
 
 
+    // استرجاع الصور المرتبطة بمدينة معينة
+    [HttpGet("{cityId}/GetImages")]
+    public async Task<IActionResult> GetImages(int cityId)
+    {
+        try
+        {
+            var images = await _imageRepository.GetImagesAsync("City", cityId);
+            if (!images.Any())
+            {
+                return NotFound("No images found.");
+            }
+
+            var result = images.Select(img => new
+            {
+                img.EntityType,
+                img.EntityId,
+                ImageData = Convert.ToBase64String(img.FileData)
+            });
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
+
+    // حذف صورة معينة لمدينة معينة
+    [HttpDelete("{cityId}/DeleteImage")]
+    public async Task<IActionResult> DeleteImage(int cityId, string imageName)
+    {
+        try
+        {
+            var images = await _imageRepository.GetImagesAsync("City", cityId);
+            var imageToDelete = images.FirstOrDefault(img => img.EntityId.ToString() == imageName); // Assuming imageName represents a unique identifier or filename
+
+            if (imageToDelete == null)
+            {
+                return NotFound("Image not found.");
+            }
+
+            await _imageRepository.DeleteImageAsync(cityId);
+            return Ok("Image deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
+
+    // حذف جميع الصور لمدينة معينة
+    [HttpDelete("{cityId}/DeleteAllImages")]
+    public async Task<IActionResult> DeleteAllImages(int cityId)
+    {
+        try
+        {
+            await _imageRepository.DeleteImagesAsync("City", cityId);
+            return Ok("All images deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
 }

@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Uploads\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Uploads\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Uploads\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Uploads\**" />
+    <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.32">
@@ -25,15 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBookingPlatform.Application\HotelBookingPlatform.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Uploads\Cities\" />
-    <Folder Include="wwwroot\Uploads\Cities\" />
-    <Folder Include="wwwroot\Uploads\City\" />
-    <Folder Include="wwwroot\Uploads\Hotels\" />
-    <Folder Include="wwwroot\Uploads\RoomClasses\" />
-    <Folder Include="wwwroot\Uploads\Rooms\" />
   </ItemGroup>
 
 </Project>
