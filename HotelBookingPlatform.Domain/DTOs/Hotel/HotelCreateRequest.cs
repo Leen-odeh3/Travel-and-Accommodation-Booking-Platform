@@ -9,4 +9,6 @@ public class HotelCreateRequest
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? ModifiedAtUtc { get; set; }
     public int OwnerID { get; set; }
+    public int CityID { get; set; }
+
 }

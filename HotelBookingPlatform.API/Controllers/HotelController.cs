@@ -7,16 +7,19 @@ using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.Unaut
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Implementations;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
+using HotelBookingPlatform.Domain.Abstracts;
+using HotelBookingPlatform.Domain.Entities;
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class HotelController : ControllerBase
 {
     private readonly IHotelService _hotelService;
-
-    public HotelController(IHotelService hotelService)
+    private readonly IImageRepository _imageRepository;
+    public HotelController(IHotelService hotelService, IImageRepository imageRepository)
     {
         _hotelService = hotelService;
+        _imageRepository = imageRepository;
     }
 
     // GET: api/Hotel
@@ -124,5 +127,111 @@ public class HotelController : ControllerBase
             throw new NotFoundException("No hotels found matching the search criteria.");
 
         return Ok(hotels);
+    }
+
+
+    ////
+    ///
+
+    [HttpPost("{hotelId}/uploadImages")]
+    public async Task<IActionResult> UploadImages(int hotelId, IList<IFormFile> files)
+    {
+        // تحديد نوع الكائن كـ "City"
+        var entityType = "Hotel";
+
+        if (files == null || files.Count == 0)
+        {
+            return BadRequest("No files uploaded.");
+        }
+
+        var imageDataList = new List<byte[]>();
+
+        foreach (var file in files)
+        {
+            if (file.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    imageDataList.Add(memoryStream.ToArray());
+                }
+            }
+        }
+
+        try
+        {
+            await _imageRepository.SaveImagesAsync(entityType, hotelId, imageDataList);
+            return Ok("Images uploaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+
+    // استرجاع الصور المرتبطة بمدينة معينة
+    [HttpGet("{hotelId}/GetImages")]
+    public async Task<IActionResult> GetImages(int hotelId)
+    {
+        try
+        {
+            var images = await _imageRepository.GetImagesAsync("Hotel", hotelId);
+            if (!images.Any())
+            {
+                return NotFound("No images found.");
+            }
+
+            var result = images.Select(img => new
+            {
+                img.EntityType,
+                img.EntityId,
+                ImageData = Convert.ToBase64String(img.FileData)
+            });
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
+
+    // حذف صورة معينة لمدينة معينة
+    [HttpDelete("{hotelId}/DeleteImage")]
+    public async Task<IActionResult> DeleteImage(int hotelId, string imageName)
+    {
+        try
+        {
+            var images = await _imageRepository.GetImagesAsync("Hotel", hotelId);
+            var imageToDelete = images.FirstOrDefault(img => img.EntityId.ToString() == imageName); // Assuming imageName represents a unique identifier or filename
+
+            if (imageToDelete == null)
+            {
+                return NotFound("Image not found.");
+            }
+
+            await _imageRepository.DeleteImageAsync(hotelId);
+            return Ok("Image deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
+    }
+
+    // حذف جميع الصور لمدينة معينة
+    [HttpDelete("{hotelId}/DeleteAllImages")]
+    public async Task<IActionResult> DeleteAllImages(int hotelId)
+    {
+        try
+        {
+            await _imageRepository.DeleteImagesAsync("Hotel", hotelId);
+            return Ok("All images deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+        }
     }
 }

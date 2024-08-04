@@ -18,10 +18,11 @@ namespace HotelBookingPlatform.API.Controllers
             _imageRepository = imageRepository;
         }
 
-        // إضافة مجموعة من الصور
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadImages(string entityType, int entityId, IList<IFormFile> files)
+        [HttpPost("{cityId}/uploadImages")]
+        public async Task<IActionResult> UploadImages(int cityId, IList<IFormFile> files)
         {
+            var entityType = "City";
+
             if (files == null || files.Count == 0)
             {
                 return BadRequest("No files uploaded.");
@@ -43,8 +44,8 @@ namespace HotelBookingPlatform.API.Controllers
 
             try
             {
-                // حفظ الصور باستخدام SaveImagesAsync
-                await _imageRepository.SaveImagesAsync(entityType, entityId, imageDataList);
+                // Save all images
+                await _imageRepository.SaveImagesAsync(entityType, cityId, imageDataList);
                 return Ok("Images uploaded successfully.");
             }
             catch (Exception ex)
@@ -52,6 +53,8 @@ namespace HotelBookingPlatform.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
+
+
 
         // استرجاع الصور
         [HttpGet("GetImages")]
@@ -95,13 +98,13 @@ namespace HotelBookingPlatform.API.Controllers
             }
         }
 
-        // حذف جميع الصور لنوع معين
-        [HttpDelete("DeleteAll")]
+        [HttpDelete("{entityType}/DeleteAll")]
         public async Task<IActionResult> DeleteAllImages(string entityType)
         {
             try
             {
-                await _imageRepository.DeleteImagesAsync(entityType);
+                // Pass the entityType and 0 for entityId to delete all images of that type
+                await _imageRepository.DeleteImagesAsync(entityType, 0);
                 return Ok("All images of the specified type have been deleted successfully.");
             }
             catch (Exception ex)
@@ -109,5 +112,10 @@ namespace HotelBookingPlatform.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
             }
         }
+
     }
+
+
+
+
 }

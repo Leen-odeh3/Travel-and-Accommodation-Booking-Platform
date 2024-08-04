@@ -35,24 +35,17 @@ public class ImageRepository : IImageRepository
     {
         foreach (var imageData in imageDataList)
         {
-            var existingImage = await _context.Images
-                .FirstOrDefaultAsync(img => img.EntityType == entityType && img.EntityId == entityId);
+            var newImage = new Image
+            {
+                EntityType = entityType,
+                EntityId = entityId,
+                FileData = imageData
+            };
 
-            if (existingImage != null)
-            {
-                existingImage.FileData = imageData;
-                _context.Images.Update(existingImage);
-            }
-            else
-            {
-                var newImage = new Image
-                {
-                    EntityType = entityType,
-                    EntityId = entityId,
-                    FileData = imageData
-                };
-                await _context.Images.AddAsync(newImage);
-            }
+            await _context.Images.AddAsync(newImage);
+
+            // Log each image being added
+            Console.WriteLine($"Adding image for EntityType: {entityType}, EntityId: {entityId}");
         }
 
         await _context.SaveChangesAsync();
