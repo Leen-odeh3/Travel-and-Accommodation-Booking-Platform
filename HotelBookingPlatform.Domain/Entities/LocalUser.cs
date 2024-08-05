@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HotelBookingPlatform.Domain.Helpers;
+using Microsoft.AspNetCore.Identity;
 namespace HotelBookingPlatform.Domain.Entities;
 public class LocalUser : IdentityUser
 {
@@ -6,4 +7,5 @@ public class LocalUser : IdentityUser
     public string LastName { get; set; }
     public ICollection<Booking> Bookings { get; set; }
     public ICollection<Review> Reviews { get; set; }
+    public List<RefreshToken>? RefreshTokens { get; set; }
 }

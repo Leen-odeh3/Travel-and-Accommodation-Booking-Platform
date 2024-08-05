@@ -23,7 +23,10 @@ public static class ModulePresentationDependencies
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRoleService, RoleService>();
+
         // Configure JWT settings
         services.Configure<JWT>(configuration.GetSection("JWT"));
         services.AddAuthentication(options =>
