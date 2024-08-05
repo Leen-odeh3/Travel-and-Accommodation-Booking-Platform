@@ -47,6 +47,15 @@ public class GlobalExceptionHandling
             case Domain.Exceptions.InvalidOperationException _:
                 status = HttpStatusCode.BadRequest; 
                 break;
+            case UserNotFoundException _:
+                status = HttpStatusCode.NotFound;
+                break;
+            case RoleNotFoundException _:
+                status = HttpStatusCode.BadRequest;
+                break;
+            case RoleAlreadyAssignedException _:
+                status = HttpStatusCode.BadRequest;
+                break;
             default:
                 status = HttpStatusCode.InternalServerError;
                 break;

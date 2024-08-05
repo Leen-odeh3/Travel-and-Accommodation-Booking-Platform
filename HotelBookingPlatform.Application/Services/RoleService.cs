@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.Domain.Entities;
+using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IServices;
 using Microsoft.AspNetCore.Identity;
@@ -20,15 +21,22 @@ public class RoleService : IRoleService
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
-        if (user is null || !await _roleManager.RoleExistsAsync(model.Role))
-            return "Invalid user Email or Role";
+        if (user is null)
+            throw new UserNotFoundException("User not found with the given email.");
+
+        if (!await _roleManager.RoleExistsAsync(model.Role))
+            throw new RoleNotFoundException("The specified role does not exist.");
 
         if (await _userManager.IsInRoleAsync(user, model.Role))
-            return "User already assigned to this role";
+            throw new RoleAlreadyAssignedException("User is already assigned to this role.");
 
         var result = await _userManager.AddToRoleAsync(user, model.Role);
 
-        return result.Succeeded ? "Role added successfully." : "Sonething went wrong";
+        if (!result.Succeeded)
+            throw new Exception("An error occurred while adding the role.");
+
+        return "Role added successfully.";
     }
+
 
 }

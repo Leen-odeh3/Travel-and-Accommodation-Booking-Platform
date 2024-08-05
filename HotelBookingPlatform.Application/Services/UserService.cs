@@ -1,9 +1,11 @@
 ﻿using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Enums;
+using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Helpers;
 using HotelBookingPlatform.Domain.IServices;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
+using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 
 namespace HotelBookingPlatform.Application.Services;
 public class UserService : IUserService
@@ -20,7 +22,7 @@ public class UserService : IUserService
     {
         var DeafaultRole = Role.User.ToString();
         if (await _userManager.FindByEmailAsync(model.Email) is not null)
-            return new AuthModel { Message = "Email is already registered!" };
+            throw new BadRequestException("Email is already registered!");
 
         var user = new LocalUser
         {
@@ -34,12 +36,8 @@ public class UserService : IUserService
 
         if (!result.Succeeded)
         {
-            var errors = string.Empty;
-
-            foreach (var error in result.Errors)
-                errors += $"{error.Description},";
-
-            return new AuthModel { Message = errors };
+            var errors = string.Join(",", result.Errors.Select(error => error.Description));
+            throw new BadRequestException(errors);
         }
 
         await _userManager.AddToRoleAsync(user, DeafaultRole);
@@ -65,10 +63,7 @@ public class UserService : IUserService
         var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
-        {
-            authModel.Message = "Email or Password is incorrect!";
-            return authModel;
-        }
+            throw new UnauthorizedAccessException("Email or Password is incorrect!");
 
         var jwtSecurityToken = await _tokenService.CreateJwtToken(user);
         var rolesList = await _userManager.GetRolesAsync(user);
