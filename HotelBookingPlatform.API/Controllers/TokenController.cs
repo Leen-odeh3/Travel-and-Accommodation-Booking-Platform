@@ -21,32 +21,6 @@ public class TokenController : ControllerBase
     }
 
     /// <summary>
-    /// Refreshes the JWT token using the provided refresh token from the cookies.
-    /// </summary>
-    /// <response code="200">Returns the new JWT token and refresh token details.</response>
-    /// <response code="400">If the refresh token is missing or invalid.</response>
-    [HttpGet("refreshToken")]
-    [SwaggerOperation(Summary = "Refresh JWT Token", Description = "Refreshes the JWT token using the provided refresh token from the cookies.")]
-    [SwaggerResponse(200, "Returns the new JWT token and refresh token details.", typeof(AuthModel))]
-    [SwaggerResponse(400, "If the refresh token is missing or invalid.")]
-    public async Task<IActionResult> RefreshToken()
-    {
-        var refreshToken = Request.Cookies["refreshToken"];
-
-        if (string.IsNullOrEmpty(refreshToken))
-            throw new BadRequestException("Refresh token is missing from cookies.");
-
-        var result = await _tokenService.RefreshTokenAsync(refreshToken);
-
-        if (!result.IsAuthenticated)
-            throw new BadRequestException(result.Message);
-
-        _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
-
-        return Ok(result);
-    }
-
-    /// <summary>
     /// Revokes the specified token and removes it from the user's refresh tokens.
     /// </summary>
     /// <param name="model">The token information to revoke.</param>

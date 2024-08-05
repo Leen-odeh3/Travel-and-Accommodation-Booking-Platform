@@ -28,13 +28,12 @@ public class OwnerController : ControllerBase
 
     // POST: api/Owner
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new owner.")]
     public async Task<IActionResult> CreateOwner([FromBody] OwnerCreateDto request)
     {
         if (!ModelState.IsValid)
-        {
             throw new BadRequestException("Invalid data provided.");
-        }
 
         var ownerDto = await _ownerService.CreateOwnerAsync(request);
         return CreatedAtAction(nameof(GetOwner), new { id = ownerDto.OwnerID }, ownerDto);
@@ -42,20 +41,17 @@ public class OwnerController : ControllerBase
 
     // PUT: api/Owner/5
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update an existing owner.")]
-    public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerDto request)
+    public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerCreateDto request)
     {
-        if (!ModelState.IsValid || id != request.OwnerID)
-        {
-            throw new BadRequestException("Invalid data provided.");
-        }
-
         var ownerDto = await _ownerService.UpdateOwnerAsync(id, request);
         return Ok(ownerDto);
     }
 
     // DELETE: api/Owner/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete an existing owner.")]
     public async Task<IActionResult> DeleteOwner(int id)
     {
