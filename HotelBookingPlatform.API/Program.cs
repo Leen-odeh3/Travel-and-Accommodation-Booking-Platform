@@ -2,6 +2,7 @@ using HotelBookingPlatform.API.Extentions;
 using HotelBookingPlatform.API.Middlewares;
 using HotelBookingPlatform.Application.Extentions;
 using HotelBookingPlatform.Infrastructure.Extentions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 namespace HotelBookingPlatform.API;
@@ -47,7 +48,6 @@ public class Program
                 }
             });
         });
-
         builder.Services.AddApplicationDependencies()
                         .AddPresentationDependencies(builder.Configuration)
                         .AddInfrastructureDependencies()
@@ -63,17 +63,11 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");              
             });  
         }
+    
+    var contentRootPath = builder.Environment.ContentRootPath;
 
-
-
-
-        // «·Õ’Ê· ⁄·Ï «·„”«— «·Ã–—Ì ··„‘—Ê⁄
-        var contentRootPath = builder.Environment.ContentRootPath;
-
-        //  ÕœÌœ «·„”«— «·ﬂ«„· ·„·›«  «· Õ„Ì·
         var uploadsPath = Path.Combine(contentRootPath, "Uploads", "Cities");
 
-        // «· Õﬁﬁ „‰ √‰ «·„”«— «·„Õœœ ·Ì” ›«—€« √Ê null° Ê≈‰‘«¡ «·„Ã·œ ≈–« ·„ Ìﬂ‰ „ÊÃÊœ«
         if (!Directory.Exists(uploadsPath))
         {
             Directory.CreateDirectory(uploadsPath);
@@ -85,7 +79,6 @@ public class Program
             FileProvider = new PhysicalFileProvider(uploadsPath),
             RequestPath = "/Uploads/Cities"
         });
-
 
 
         app.UseMiddleware<GlobalExceptionHandling>();

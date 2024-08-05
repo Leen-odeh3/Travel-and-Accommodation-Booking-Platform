@@ -44,6 +44,10 @@ public class UserService : IUserService
 
         var jwtSecurityToken = await _tokenService.CreateJwtToken(user);
 
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        user.RefreshTokens?.Add(refreshToken);
+        await _userManager.UpdateAsync(user);
+
         return new AuthModel
         {
             Email = user.Email,
@@ -52,8 +56,10 @@ public class UserService : IUserService
             Roles = new List<string> { DeafaultRole },
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
             Username = user.UserName,
-            Message = "Registration successful."
-    };
+            Message = "Registration successful.",
+            RefreshToken = refreshToken.Token,
+            RefreshTokenExpiration = refreshToken.ExpiresOn
+        };
     }
 
     public async Task<AuthModel> LoginAsync(LoginModel model)
@@ -75,6 +81,21 @@ public class UserService : IUserService
         authModel.ExpiresOn = jwtSecurityToken.ValidTo;
         authModel.Roles = rolesList.ToList();
         authModel.Message = "Login successful.";
+
+        if (user.RefreshTokens.Any(t => t.IsActive))
+        {
+            var activeRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
+            authModel.RefreshToken = activeRefreshToken.Token;
+            authModel.RefreshTokenExpiration = activeRefreshToken.ExpiresOn;
+        }
+        else
+        {
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            authModel.RefreshToken = refreshToken.Token;
+            authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+        }
 
         return authModel;
     }

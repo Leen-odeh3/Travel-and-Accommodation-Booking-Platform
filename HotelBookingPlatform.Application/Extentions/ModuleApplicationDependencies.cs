@@ -13,6 +13,8 @@ public static class ModuleApplicationDependencies
 {
     public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+
         services.AddFluentValidation(fv =>
         {
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();

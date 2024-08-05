@@ -2,6 +2,7 @@
 using HotelBookingPlatform.Domain.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Authentication;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -10,9 +11,12 @@ namespace HotelBookingPlatform.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    public UserController(IUserService userService)
+    private readonly ITokenService _tokenService;
+
+    public UserController(IUserService userService, ITokenService tokenService)
     {
         _userService = userService;
+        _tokenService = tokenService;
     }
 
     [HttpPost("register")]
@@ -25,7 +29,9 @@ public class UserController : ControllerBase
         var result = await _userService.RegisterAsync(model);
 
         if (!result.IsAuthenticated)
-            return BadRequest(result.Message);
+            throw new AuthenticationException(result.Message);
+
+        _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
         return Ok(result);
     }
@@ -42,6 +48,9 @@ public class UserController : ControllerBase
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Message);
+
+        if (!string.IsNullOrEmpty(result.RefreshToken))
+           _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
         return Ok(result);
     }
