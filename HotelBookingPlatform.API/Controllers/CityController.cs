@@ -19,7 +19,7 @@ public class CityController : ControllerBase
         _imageService = imageService;
     }
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add a new city.")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -51,7 +51,7 @@ public class CityController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update the information of an existing city.")]
     public async Task<ActionResult<CityResponseDto>> UpdateCity(int id, [FromForm] CityCreateRequest request)
     {
@@ -60,7 +60,7 @@ public class CityController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCity(int id)
     {
             await _cityService.DeleteAsync(id);
@@ -75,7 +75,7 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("{cityId}/hotel")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add a hotel to a specific city.")]
     public async Task<IActionResult> AddHotelToCity(int cityId, [FromBody] HotelCreateRequest hotelRequest)
     {
