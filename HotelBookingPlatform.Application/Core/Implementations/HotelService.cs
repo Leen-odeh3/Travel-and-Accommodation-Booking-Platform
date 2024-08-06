@@ -133,10 +133,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         {
             HotelId = hotel.HotelId,
             HotelName = hotel.Name,
-            StarRating = hotel.StarRating,
-            RoomPrice = hotel.RoomClasses.Any()
-                ? (double)hotel.RoomClasses.Min(rc => rc.PricePerNight) 
-                : 0.0,
+            StarRating = hotel.StarRating,          
             RoomType = hotel.RoomClasses.Any()
                 ? hotel.RoomClasses.First().RoomType.ToString()
                 : "Unknown",

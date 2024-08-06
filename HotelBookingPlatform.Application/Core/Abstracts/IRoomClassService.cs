@@ -15,5 +15,6 @@ public interface IRoomClassService
     Task<RoomResponseDto> AddRoomToRoomClassAsync(int roomClassId, RoomCreateRequest request);
     Task<IEnumerable<RoomResponseDto>> GetRoomsByRoomClassIdAsync(int roomClassId);
     Task DeleteRoomFromRoomClassAsync(int roomClassId, int roomId);
+    Task AddAmenityToRoomClassAsync(int roomClassId, AmenityCreateRequest request);
 
 }

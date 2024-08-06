@@ -1,6 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Room;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -29,64 +30,6 @@ public class RoomController : ControllerBase
 
         return Ok(room);
     }
-
-    /* // POST: api/Room
-     [HttpPost]
-     [Authorize(Roles = "Admin")]
-     public async Task<ActionResult<RoomResponseDto>> CreateRoom([FromBody] RoomCreateRequest request)
-     {
-         if (!ModelState.IsValid)
-         {
-             return BadRequest("Invalid data provided.");
-         }
-
-         var createdRoom = await _roomService.CreateRoomAsync(request);
-         return CreatedAtAction(nameof(GetRoom), new { id = createdRoom.RoomId }, createdRoom);
-     }*/
-
-    // PUT: api/Room/5
-    /*   [HttpPut("{id}")]
-       [Authorize(Roles = "Admin")]
-       public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomCreateRequest request)
-       {
-           if (!ModelState.IsValid)
-           {
-               return BadRequest("Invalid data provided.");
-           }
-
-           var updatedRoom = await _roomService.UpdateRoomAsync(id, request);
-           if (updatedRoom == null)
-           {
-               return NotFound(new { message = "Room not found." });
-           }
-
-           return NoContent();
-       }
-    */
-    /* // DELETE: api/Room/5
-     [HttpDelete("{id}")]
-     [Authorize(Roles = "Admin")]
-     public async Task<IActionResult> DeleteRoom(int id)
-     {
-         var success = await _roomService.DeleteRoomAsync(id);
-         if (!success)
-         {
-             return NotFound(new { message = "Room not found." });
-         }
-
-         return Ok(new { message = "Room successfully deleted." });
-     }*/
-
-
-
-
-
-
-
-
-
-    ////
-    ///
 
     [HttpPost("{roomId}/uploadImages")]
     public async Task<IActionResult> UploadImages(int roomId, IList<IFormFile> files)

@@ -15,6 +15,16 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.CreatedAtUtc)
                .IsRequired();
 
+        builder.Property(rc => rc.AdultsCapacity)
+           .IsRequired();
+
+        builder.Property(rc => rc.ChildrenCapacity)
+            .IsRequired();
+
+        builder.Property(rc => rc.PricePerNight)
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
+
         builder.HasOne(r => r.RoomClass)
                .WithMany(rc => rc.Rooms)
                .HasForeignKey(r => r.RoomClassID);

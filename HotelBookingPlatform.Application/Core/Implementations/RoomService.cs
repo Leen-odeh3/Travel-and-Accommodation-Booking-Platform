@@ -3,12 +3,17 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
+using HotelBookingPlatform.Infrastructure.Data;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomService : BaseService<Room>, IRoomService
 {
-    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper)
+    private readonly AppDbContext _context;
+
+    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper, AppDbContext context)
         : base(unitOfWork, mapper)
     {
+        _context = context;
     }
     public async Task<RoomResponseDto> GetRoomAsync(int id)
     {
@@ -46,3 +51,4 @@ public class RoomService : BaseService<Room>, IRoomService
         await _unitOfWork.SaveChangesAsync();
     }
 }
+
