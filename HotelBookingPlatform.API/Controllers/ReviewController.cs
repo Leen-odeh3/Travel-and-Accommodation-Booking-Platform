@@ -1,15 +1,18 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.Review;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ReviewController : ControllerBase
 {
-  /*  private readonly IReviewService _reviewService;
+  private readonly IReviewService _reviewService;
 
     public ReviewController(IReviewService reviewService)
     {
@@ -18,43 +21,36 @@ public class ReviewController : ControllerBase
 
     // POST: api/Review
     [HttpPost]
-    [SwaggerOperation(Summary = "Create a new review for a hotel.")]
-    public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
+    public async Task<ActionResult<ReviewResponseDto>> CreateReview([FromBody] ReviewCreateRequest request)
     {
-        if (!ModelState.IsValid)
-            return BadRequest("Invalid data provided.");
-
-        var response = await _reviewService.CreateReviewAsync(request);
-        return StatusCode((int)response.StatusCode, response);
+        await _reviewService.CreateReviewAsync(request);
+        return Ok(new { Message = "Review created successfully." });
     }
 
     // GET: api/Review/5
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Get detailed information about a review by its unique identifier.")]
-    public async Task<IActionResult> GetReview(int id)
+    [SwaggerOperation(Summary = "Get a review by ID", Description = "Retrieves a specific review by its ID.")]
+    public async Task<ActionResult<ReviewResponseDto>> GetReview(int id)
     {
-        var response = await _reviewService.GetReviewAsync(id);
-        return StatusCode((int)response.StatusCode, response);
+        var review = await _reviewService.GetReviewAsync(id);
+        return Ok(review);
     }
 
     // PUT: api/Review/5
     [HttpPut("{id}")]
-    [SwaggerOperation(Summary = "Update an existing review by its unique identifier.")]
-    public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
+    [SwaggerOperation(Summary = "Update an existing review", Description = "Updates an existing review specified by its ID.")]
+    public async Task<ActionResult<ReviewResponseDto>> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
-        if (!ModelState.IsValid)
-            return BadRequest("Invalid data provided.");
-
-        var response = await _reviewService.UpdateReviewAsync(id, request);
-        return StatusCode((int)response.StatusCode, response);
+        var updatedReview = await _reviewService.UpdateReviewAsync(id, request);
+        return Ok(updatedReview);
     }
 
     // DELETE: api/Review/5
     [HttpDelete("{id}")]
-    [SwaggerOperation(Summary = "Delete an existing review by its unique identifier.")]
+    [SwaggerOperation(Summary = "Delete a review", Description = "Deletes a review specified by its ID.")]
     public async Task<IActionResult> DeleteReview(int id)
     {
-        var response = await _reviewService.DeleteReviewAsync(id);
-        return StatusCode((int)response.StatusCode, response);
-    }*/
+        await _reviewService.DeleteReviewAsync(id);
+        return Ok(new { Message = "Review deleted successfully." });
+    }
 }

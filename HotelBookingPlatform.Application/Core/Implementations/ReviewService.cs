@@ -3,34 +3,32 @@ using HotelBookingPlatform.Domain.DTOs.Review;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Application.HelperMethods;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ReviewService : BaseService<Review>, IReviewService
 {
-    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         : base(unitOfWork, mapper)
     {
+        _httpContextAccessor = httpContextAccessor;
     }
-
-    public async Task<ReviewResponseDto> CreateReviewAsync(ReviewCreateRequest request)
+    public async Task CreateReviewAsync(ReviewCreateRequest request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Invalid data provided.");
-        }
+        var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var review = _mapper.Map<Review>(request); // Use _mapper here
+        review.UserId = userId;
 
-        var review = _mapper.Map<Review>(request);
         await _unitOfWork.ReviewRepository.CreateAsync(review);
-        await _unitOfWork.SaveChangesAsync();
-
-        var reviewResponse = _mapper.Map<ReviewResponseDto>(review);
-        return reviewResponse;
     }
-
     public async Task<ReviewResponseDto> GetReviewAsync(int id)
     {
         var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (review == null)
+        if (review is null)
         {
             throw new KeyNotFoundException("Review not found.");
         }
@@ -41,16 +39,11 @@ public class ReviewService : BaseService<Review>, IReviewService
 
     public async Task<ReviewResponseDto> UpdateReviewAsync(int id, ReviewCreateRequest request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "Invalid data provided.");
-        }
+        ValidationHelper.ValidateRequest(request);
 
         var existingReview = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (existingReview == null)
-        {
+        if (existingReview is null)
             throw new KeyNotFoundException("Review not found.");
-        }
 
         _mapper.Map(request, existingReview);
         await _unitOfWork.ReviewRepository.UpdateAsync(id, existingReview);
@@ -59,11 +52,10 @@ public class ReviewService : BaseService<Review>, IReviewService
         var reviewResponse = _mapper.Map<ReviewResponseDto>(existingReview);
         return reviewResponse;
     }
-
     public async Task DeleteReviewAsync(int id)
     {
         var existingReview = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (existingReview == null)
+        if (existingReview is null)
         {
             throw new KeyNotFoundException("Review not found.");
         }

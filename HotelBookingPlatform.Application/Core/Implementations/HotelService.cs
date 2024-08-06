@@ -7,11 +7,10 @@ using System.Linq.Expressions;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using Microsoft.EntityFrameworkCore;
+using HotelBookingPlatform.Application.HelperMethods;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
@@ -49,6 +48,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<HotelResponseDto> GetHotel(int id)
     {
+        ValidationHelper.ValidateId(id);
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
 
         if (hotel is null)
@@ -59,6 +59,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<ActionResult<HotelResponseDto>> CreateHotel(HotelCreateRequest request)
     {
+        ValidationHelper.ValidateRequest(request);
         var hotel = _mapper.Map<Hotel>(request);
         await _unitOfWork.HotelRepository.CreateAsync(hotel);
         await _unitOfWork.SaveChangesAsync();
@@ -68,6 +69,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
     {
+        ValidationHelper.ValidateRequest(request);
         var existingHotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (existingHotel is null)
         {
@@ -82,6 +84,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<IActionResult> DeleteHotel(int id)
     {
+        ValidationHelper.ValidateId(id);
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel is null)
         {
@@ -96,45 +99,36 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber)
     {
         var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
-        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
+        if (hotels is null || !hotels.Any())
+            throw new NotFoundException("No hotels found matching the search criteria.");
 
+        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
         return hotelDtos;
     }
-
-
     public async Task<SearchResultsDto> SearchHotelsAsync(SearchRequestDto request)
     {
-        // جلب جميع الفنادق من المستودع
         var allHotels = await _unitOfWork.HotelRepository.GetAllAsync();
 
         var query = allHotels.AsQueryable();
-
-        // تصفية الفنادق حسب اسم المدينة
         if (!string.IsNullOrEmpty(request.CityName))
         {
             query = query.Where(h => h.City.Name.Contains(request.CityName));
         }
-
-        // تصفية الفنادق حسب تصنيف النجوم
         if (request.StarRating.HasValue)
         {
             query = query.Where(h => h.StarRating == request.StarRating);
         }
 
-        // تصفية الفنادق حسب تواريخ الوصول والمغادرة
         if (request.CheckInDate != default && request.CheckOutDate != default)
         {
             query = query.Where(h => !h.Bookings.Any(b => b.CheckOutDate > request.CheckInDate && b.CheckInDate < request.CheckOutDate));
         }
-
-        // جلب الفنادق مع تضمين البيانات ذات الصلة
         var hotels = await query
             .Include(h => h.City)
             .Include(h => h.RoomClasses)
             .ThenInclude(rc => rc.Amenities)
             .ToListAsync();
 
-        // تحويل الفنادق إلى النتائج المطلوبة
         var hotelSearchResults = hotels.Select(hotel => new HotelSearchResultDto
         {
             HotelId = hotel.HotelId,
@@ -168,9 +162,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
             Hotels = hotelSearchResults
         };
     }
-
-
-
 }
 
 

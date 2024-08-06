@@ -1,6 +1,5 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IHotelService
@@ -12,5 +11,4 @@ public interface IHotelService
     Task<IActionResult> DeleteHotel(int id);
     Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber);
     Task<SearchResultsDto> SearchHotelsAsync(SearchRequestDto request);
-
 }

@@ -1,14 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Hotel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.Exceptions;
-using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 using Swashbuckle.AspNetCore.Annotations;
-using HotelBookingPlatform.Application.Core.Implementations;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -32,9 +25,6 @@ public class HotelController : ControllerBase
         [FromQuery] int pageNumber = 1)
     {
         var hotels = await _hotelService.GetHotels(hotelName, description, pageSize, pageNumber);
-        if (hotels is null || !hotels.Any())
-            throw new NotFoundException("No hotels found matching the criteria.");
-
         return Ok(hotels);
     }
 
@@ -44,9 +34,6 @@ public class HotelController : ControllerBase
     public async Task<ActionResult<HotelResponseDto>> GetHotel(int id)
     {
         var hotel = await _hotelService.GetHotel(id);
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found");
-
         return Ok(hotel);
     }
 
@@ -56,61 +43,28 @@ public class HotelController : ControllerBase
     [SwaggerOperation(Summary = "Create a new hotel", Description = "Creates a new hotel based on the provided hotel creation request.")]
     public async Task<ActionResult<HotelResponseDto>> CreateHotel([FromBody] HotelCreateRequest request)
     {
-        try
-        {
             var createdHotel = await _hotelService.CreateHotel(request);
             return Created("/api/Hotel", createdHotel);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            throw new UnauthorizedAccessException("You do not have permission to perform this action.");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("An error occurred while creating the hotel.", ex);
-        }
     }
 
     // PUT: api/Hotel/5
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update an existing hotel", Description = "Updates the details of an existing hotel specified by its ID.")]
     public async Task<ActionResult<HotelResponseDto>> UpdateHotel(int id, [FromBody] HotelResponseDto request)
     {
-        try
-        {
             var updatedHotel = await _hotelService.UpdateHotelAsync(id, request);
             return Ok(updatedHotel);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            throw new UnauthorizedAccessException("You do not have permission to perform this action.");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("An error occurred while updating the hotel.", ex);
-        }
     }
 
     // DELETE: api/Hotel/5
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete a hotel", Description = "Deletes a hotel specified by its ID.")]
     public async Task<ActionResult> DeleteHotel(int id)
     {
-        try
-        {
             await _hotelService.DeleteHotel(id);
-            return NoContent();
-        }
-        catch (UnauthorizedAccessException)
-        {
-            throw new UnauthorizedAccessException("You do not have permission to perform this action.");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("An error occurred while deleting the hotel.", ex);
-        }
+        return Ok(new { Message = "Hotel deleted successfully" });
     }
 
     // GET: api/Hotel/search
@@ -123,16 +77,11 @@ public class HotelController : ControllerBase
         [FromQuery] int pageNumber = 1)
     {
         var hotels = await _hotelService.SearchHotel(name, desc, pageSize, pageNumber);
-        if (hotels is null || !hotels.Any())
-            throw new NotFoundException("No hotels found matching the search criteria.");
-
         return Ok(hotels);
     }
-
-
-    ////
-    ///
+   
     [HttpPost("{hotelId}/uploadImages")]
+    [SwaggerOperation(Summary = "Upload images for a specific hotel.")]
     public async Task<IActionResult> UploadImages(int hotelId, IList<IFormFile> files)
     {
         await _imageService.UploadImagesAsync("Hotel", hotelId, files);
@@ -140,6 +89,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpGet("{hotelId}/GetImages")]
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific hotel.")]
     public async Task<IActionResult> GetImages(int hotelId)
     {
         var images = await _imageService.GetImagesAsync("Hotel", hotelId);
@@ -147,6 +97,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpDelete("{hotelId}/DeleteImage")]
+    [SwaggerOperation(Summary = "Delete a specific image associated with a hotel.")]
     public async Task<IActionResult> DeleteImage(int hotelId, int imageId)
     {
         await _imageService.DeleteImageAsync("Hotel", hotelId,imageId);
@@ -154,6 +105,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpDelete("{hotelId}/DeleteAllImages")]
+    [SwaggerOperation(Summary = "Delete all images associated with a specific Hotel.")]
     public async Task<IActionResult> DeleteAllImages(int hotelId)
     {
         await _imageService.DeleteAllImagesAsync("Hotel", hotelId);

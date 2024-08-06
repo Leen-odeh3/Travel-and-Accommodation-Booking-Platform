@@ -80,6 +80,12 @@ public class Program
             RequestPath = "/uploads/City"
         });
 
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "uploads", "City")),
+            RequestPath = "/uploads/Hotel"
+        });
+
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
         app.UseAuthentication();

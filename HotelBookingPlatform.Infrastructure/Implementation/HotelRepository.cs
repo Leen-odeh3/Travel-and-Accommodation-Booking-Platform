@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
@@ -12,14 +11,16 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
     {
         _context = context;
     }
-    public async Task<IEnumerable<Hotel>> SearchCriteria(
-        string name,
-        string desc,
-        int pageSize = 10,
-        int pageNumber = 1)
+    private IQueryable<Hotel> GetHotelsWithIncludes()
     {
-        return await _context.Hotels
-            .Include(h => h.City).Include(h => h.Owner).Include(h => h.Reviews)
+        return _context.Hotels
+            .Include(h => h.City)
+            .Include(h => h.Owner)
+            .Include(h => h.Reviews);
+    }
+    public async Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1)
+    {
+        return await GetHotelsWithIncludes()
             .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
                         (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
             .Skip((pageNumber - 1) * pageSize)
@@ -29,8 +30,7 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
     {
-        return await _context.Hotels
-            .Include(h => h.City).Include(h => h.Owner)
+        return await GetHotelsWithIncludes()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -38,21 +38,21 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<Hotel> GetByIdAsync(int id)
     {
-        return await _context.Hotels
-            .Include(h => h.City).Include(h => h.Reviews).Include(h => h.Owner)
+        return await GetHotelsWithIncludes()
             .FirstOrDefaultAsync(h => h.HotelId == id);
     }
+
     public async Task<Hotel> GetHotelByNameAsync(string name)
     {
         return await _context.Hotels
-            .Include(h => h.RoomClasses).ThenInclude(xx=>xx.Amenities)
+            .Include(h => h.RoomClasses).ThenInclude(xx => xx.Amenities)
             .FirstOrDefaultAsync(h => h.Name == name);
     }
+
     public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
     {
         return await _context.Hotels
             .Where(h => h.CityID == cityId)
             .ToListAsync();
     }
-
 }
