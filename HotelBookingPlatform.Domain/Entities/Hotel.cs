@@ -7,7 +7,7 @@ public class Hotel
     public int StarRating { get; set; }
     public string? Description { get; set; }
     public string PhoneNumber { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public int CityID { get; set; }
     public City City { get; set; }
     public int OwnerID { get; set; }

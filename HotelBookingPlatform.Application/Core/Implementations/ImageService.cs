@@ -3,33 +3,55 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : BaseService<Image> ,IImageService
 {
-    public ImageService(IUnitOfWork<Image> unitOfWork, IMapper mapper)
-         : base(unitOfWork, mapper) { }
+    private readonly IConfiguration _configuration;
 
+    public ImageService(IUnitOfWork<Image> unitOfWork, IMapper mapper, IConfiguration configuration)
+         : base(unitOfWork, mapper)
+    {
+        _configuration = configuration;
+    }
     public async Task UploadImagesAsync(string entityType, int entityId, IList<IFormFile> files)
     {
-        if (files is null || files.Count == 0)
+        if (files == null || files.Count == 0)
             throw new ArgumentException("No files uploaded.");
 
-        var imageDataList = new List<byte[]>();
+        var imageUrls = new List<string>();
 
         foreach (var file in files)
         {
             if (file.Length > 0)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    imageDataList.Add(memoryStream.ToArray());
-                }
+                var fileUrl = await SaveFileAndGetUrlAsync(entityType, file);
+                imageUrls.Add(fileUrl);
             }
         }
-        await _unitOfWork.ImageRepository.SaveImagesAsync(entityType, entityId, imageDataList);
+
+        await _unitOfWork.ImageRepository.SaveImagesAsync(entityType, entityId, imageUrls);
     }
+
+    private async Task<string> SaveFileAndGetUrlAsync(string entityType, IFormFile file)
+    {
+        var uploadsPath = Path.Combine("wwwroot", "uploads", entityType);
+        var fileName = Path.GetFileName(file.FileName);
+        var filePath = Path.Combine(uploadsPath, fileName);
+
+        Directory.CreateDirectory(uploadsPath); 
+
+        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(fileStream);
+        }
+        var baseUrl = _configuration["AppSettings:BaseUrl"];
+        var fileUrl = $"{baseUrl}/uploads/{entityType}/{fileName}";
+
+        return fileUrl;
+    }
+
     public async Task<IEnumerable<object>> GetImagesAsync(string entityType, int entityId)
     {
         var images = await _unitOfWork.ImageRepository.GetImagesAsync(entityType, entityId);
@@ -40,9 +62,10 @@ public class ImageService : BaseService<Image> ,IImageService
         {
             img.EntityType,
             img.EntityId,
-            ImageData = Convert.ToBase64String(img.FileData)
+            ImageUrl = img.ImageUrl // استخدام الرابط المباشر للصورة
         });
     }
+
     public async Task DeleteImageAsync(string entityType, int entityId, int id)
     {
         try

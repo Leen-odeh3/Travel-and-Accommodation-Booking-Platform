@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Application.HelperMethods;
-using HotelBookingPlatform.Domain.Entities;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -95,7 +93,7 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("{cityId}/uploadImages")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload images for a specific city.")]
     public async Task<IActionResult> UploadImages(int cityId, IList<IFormFile> files)
     {
@@ -107,13 +105,14 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Retrieve all images associated with a specific city.")]
     public async Task<IActionResult> GetImages(int cityId)
     {
-            var images = await _imageService.GetImagesAsync("City", cityId);
-            return Ok(images);
+        var images = await _imageService.GetImagesAsync("City", cityId);
+        return Ok(images);
     }
+
 
     [HttpDelete("{cityId}/DeleteImage")]
     [SwaggerOperation(Summary = "Delete a specific image associated with a city.")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteImage(int cityId, int imageId)
     {
             await _imageService.DeleteImageAsync("City", cityId, imageId);
@@ -121,7 +120,7 @@ public class CityController : ControllerBase
     }
 
     [HttpDelete("{cityId}/DeleteAllImages")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete all images associated with a specific city.")]
     public async Task<IActionResult> DeleteAllImages(int cityId)
     {

@@ -30,21 +30,22 @@ public class ImageRepository : IImageRepository
             .ToListAsync();
     }
 
-    public async Task SaveImagesAsync(string entityType, int entityId, IEnumerable<byte[]> imageDataList)
+    public async Task SaveImagesAsync(string entityType, int entityId, IEnumerable<string> imageUrls)
     {
-        foreach (var imageData in imageDataList)
+        foreach (var imageUrl in imageUrls)
         {
             var newImage = new Image
             {
                 EntityType = entityType,
                 EntityId = entityId,
-                FileData = imageData
+                ImageUrl = imageUrl 
             };
 
             await _context.Images.AddAsync(newImage);
         }
         await _context.SaveChangesAsync();
     }
+
 
     public async Task DeleteImagesAsync(string entityType, int entityId = 0)
     {

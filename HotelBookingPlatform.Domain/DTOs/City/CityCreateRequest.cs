@@ -5,7 +5,4 @@ public class CityCreateRequest
     public string Country { get; set; }
     public string PostOffice { get; set; }
     public string Description { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
-
-    //  public ICollection<string> Images { get; set; } = new List<string>();
 }

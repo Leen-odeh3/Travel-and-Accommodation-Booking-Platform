@@ -2,7 +2,6 @@ using HotelBookingPlatform.API.Extentions;
 using HotelBookingPlatform.API.Middlewares;
 using HotelBookingPlatform.Application.Extentions;
 using HotelBookingPlatform.Infrastructure.Extentions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 namespace HotelBookingPlatform.API;
@@ -53,8 +52,19 @@ public class Program
                         .AddInfrastructureDependencies()
                         .AddServiceRegisteration();
 
-        var app = builder.Build();
 
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+        var app = builder.Build();
+      
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -63,27 +73,14 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBookingPlatformAPI_v1");              
             });  
         }
-    
-    var contentRootPath = builder.Environment.ContentRootPath;
-
-        var uploadsPath = Path.Combine(contentRootPath, "Uploads", "Cities");
-
-        if (!Directory.Exists(uploadsPath))
-        {
-            Directory.CreateDirectory(uploadsPath);
-        }
-
-        // ≈÷«›… StaticFiles middleware
         app.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(uploadsPath),
-            RequestPath = "/Uploads/Cities"
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "uploads", "City")),
+            RequestPath = "/uploads/City"
         });
-
 
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
-
         app.UseAuthentication();
         app.UseAuthorization();
 

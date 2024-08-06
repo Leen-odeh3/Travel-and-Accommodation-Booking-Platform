@@ -45,7 +45,7 @@ namespace HotelBookingPlatform.API.Controllers
             try
             {
                 // Save all images
-                await _imageRepository.SaveImagesAsync(entityType, cityId, imageDataList);
+                await _imageRepository.SaveImagesAsync(entityType, cityId, (IEnumerable<string>)imageDataList);
                 return Ok("Images uploaded successfully.");
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace HotelBookingPlatform.API.Controllers
                 {
                     img.EntityType,
                     img.EntityId,
-                    ImageData = Convert.ToBase64String(img.FileData)
+                    //ImageData = Convert.ToBase64String(img.FileData)
                 });
 
                 return Ok(result);
