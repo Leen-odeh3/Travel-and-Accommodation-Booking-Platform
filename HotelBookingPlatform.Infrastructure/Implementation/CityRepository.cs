@@ -31,21 +31,10 @@ public class CityRepository :GenericRepository<City> , ICityRepository
             _context.Cities.Remove(city);
         }
     }
-
-
     public async Task<IEnumerable<City>> GetTopVisitedCitiesAsync(int topCount)
     {
-        if (_context == null)
-        {
-            throw new InvalidOperationException("DbContext is not initialized.");
-        }
-
-        if (_context.Cities == null)
-        {
-            throw new InvalidOperationException("Cities DbSet is not initialized.");
-        }
         return await _context.Cities
-            .OrderByDescending(c => c.VisitCount) // Ensure VisitCount is a valid property
+            .OrderByDescending(c => c.VisitCount) 
             .Take(topCount)
             .ToListAsync();
     }

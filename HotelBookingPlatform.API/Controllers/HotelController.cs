@@ -15,11 +15,11 @@ namespace HotelBookingPlatform.API.Controllers;
 public class HotelController : ControllerBase
 {
     private readonly IHotelService _hotelService;
-    private readonly IImageRepository _imageRepository;
-    public HotelController(IHotelService hotelService, IImageRepository imageRepository)
+    private readonly IImageService _imageService;
+    public HotelController(IHotelService hotelService, IImageService imageService)
     {
         _hotelService = hotelService;
-        _imageRepository = imageRepository;
+        _imageService = imageService;
     }
 
     // GET: api/Hotel
@@ -132,106 +132,32 @@ public class HotelController : ControllerBase
 
     ////
     ///
-
     [HttpPost("{hotelId}/uploadImages")]
     public async Task<IActionResult> UploadImages(int hotelId, IList<IFormFile> files)
     {
-        // تحديد نوع الكائن كـ "City"
-        var entityType = "Hotel";
-
-        if (files == null || files.Count == 0)
-        {
-            return BadRequest("No files uploaded.");
-        }
-
-        var imageDataList = new List<byte[]>();
-
-        foreach (var file in files)
-        {
-            if (file.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    imageDataList.Add(memoryStream.ToArray());
-                }
-            }
-        }
-
-        try
-        {
-            await _imageRepository.SaveImagesAsync(entityType, hotelId, imageDataList);
-            return Ok("Images uploaded successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-        }
+        await _imageService.UploadImagesAsync("Hotel", hotelId, files);
+        return Ok("Images uploaded successfully.");
     }
 
-
-    // استرجاع الصور المرتبطة بمدينة معينة
     [HttpGet("{hotelId}/GetImages")]
     public async Task<IActionResult> GetImages(int hotelId)
     {
-        try
-        {
-            var images = await _imageRepository.GetImagesAsync("Hotel", hotelId);
-            if (!images.Any())
-            {
-                return NotFound("No images found.");
-            }
-
-            var result = images.Select(img => new
-            {
-                img.EntityType,
-                img.EntityId,
-                ImageData = Convert.ToBase64String(img.FileData)
-            });
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
+        var images = await _imageService.GetImagesAsync("Hotel", hotelId);
+        return Ok(images);
     }
 
-    // حذف صورة معينة لمدينة معينة
     [HttpDelete("{hotelId}/DeleteImage")]
-    public async Task<IActionResult> DeleteImage(int hotelId, string imageName)
+    public async Task<IActionResult> DeleteImage(int hotelId, int imageId)
     {
-        try
-        {
-            var images = await _imageRepository.GetImagesAsync("Hotel", hotelId);
-            var imageToDelete = images.FirstOrDefault(img => img.EntityId.ToString() == imageName); // Assuming imageName represents a unique identifier or filename
-
-            if (imageToDelete == null)
-            {
-                return NotFound("Image not found.");
-            }
-
-            await _imageRepository.DeleteImageAsync(hotelId);
-            return Ok("Image deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
+        await _imageService.DeleteImageAsync("Hotel", hotelId,imageId);
+        return Ok("Image deleted successfully.");
     }
 
-    // حذف جميع الصور لمدينة معينة
     [HttpDelete("{hotelId}/DeleteAllImages")]
     public async Task<IActionResult> DeleteAllImages(int hotelId)
     {
-        try
-        {
-            await _imageRepository.DeleteImagesAsync("Hotel", hotelId);
-            return Ok("All images deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
+        await _imageService.DeleteAllImagesAsync("Hotel", hotelId);
+        return Ok("All images deleted successfully.");
     }
+
 }

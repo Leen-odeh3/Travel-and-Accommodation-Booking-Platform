@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Enums;
-namespace HotelBookingPlatform.Domain.Entities;
+﻿namespace HotelBookingPlatform.Domain.Entities;
 public class Image
 {
     public int Id { get; set; }
