@@ -1,14 +1,19 @@
 ﻿using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Abstracts;
+using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Implementation;
+using Microsoft.AspNetCore.Identity;
 namespace HotelBookingPlatform.Infrastructure;
 public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {
     private readonly AppDbContext _context;
-    public UnitOfWork(AppDbContext context)
+    private readonly UserManager<LocalUser> _userManager;
+    public UnitOfWork(AppDbContext context, UserManager<LocalUser> userManager)
     {
         _context = context;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+
         HotelRepository = new HotelRepository(_context);
         BookingRepository = new BookingRepository(_context);
         RoomClasseRepository = new RoomClassRepository(_context);
@@ -20,7 +25,7 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         InvoiceRecordRepository =new InvoiceRecordRepository(_context);
         AmenityRepository = new AmenityRepository(_context);
         ImageRepository= new ImageRepository(_context);
-        UserRepository =new UserRepository(_context);
+        UserRepository = new UserRepository(_userManager);
     }
     public IHotelRepository HotelRepository { get; set;}
     public IBookingRepository BookingRepository { get; set;}

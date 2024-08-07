@@ -1,22 +1,26 @@
 ﻿using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Abstracts;
 using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class UserRepository : IUserRepository
 {
-    private readonly AppDbContext _context;
-    public UserRepository(AppDbContext context)
+    private readonly UserManager<LocalUser> _userManager;
+
+    public UserRepository(UserManager<LocalUser> userManager)
     {
-        _context = context;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
-    public async Task<LocalUser> GetByEmailAsync(string email)
+    public async Task<LocalUser> GetUserByEmailAsync(string email)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-    }
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Invalid email", nameof(email));
+        }
 
+        return await _userManager.FindByEmailAsync(email);
+    }
 
 }

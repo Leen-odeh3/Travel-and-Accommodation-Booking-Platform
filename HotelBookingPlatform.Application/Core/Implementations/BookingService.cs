@@ -17,7 +17,7 @@ public class BookingService : BaseService<Booking>, IBookingService
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking == null)
+        if (booking is null)
         {
             throw new NotFoundException("Booking not found.");
         }
@@ -25,69 +25,38 @@ public class BookingService : BaseService<Booking>, IBookingService
         var bookingDto = _mapper.Map<BookingDto>(booking);
         return bookingDto;
     }
-    public async Task<string> GetUserIdByEmailAsync(string email)
-    {
-        var user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
-        if (user == null)
-        {
-            throw new BadRequestException("User not found.");
-        }
-        return user.Id;
-    }
-
     public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string email)
     {
-        // التحقق من صحة التواريخ
+        var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+        if (user is null)
+        {
+            throw new NotFoundException("User not found.");
+        }
+
         if (request.CheckInDateUtc >= request.CheckOutDateUtc)
         {
-            throw new BadRequestException("Check-out date must be after check-in date.");
+            throw new BadRequestException("Check-out date must be greater than check-in date.");
         }
+        var totalPrice = await CalculateTotalPriceAsync((List<int>)request.RoomIds, request.CheckInDateUtc, request.CheckOutDateUtc);
 
-        // الحصول على UserId من البريد الإلكتروني
-        var userId = await _unitOfWork.UserRepository.GetByEmailAsync(email);
-        if (userId == null)
-        {
-            throw new BadRequestException("User not found.");
-        }
-
-        // تحقق من وجود الفندق
-        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
-        if (hotel == null)
-        {
-            throw new BadRequestException("Hotel not found.");
-        }
-
-        // إنشاء كيان الحجز
         var booking = new Booking
         {
-            UserId = userId,
+            UserId = user.Id,
+            User = user,
+            confirmationNumber = GenerateConfirmationNumber(),
+            TotalPrice = totalPrice,
+            BookingDateUtc = DateTime.UtcNow,
+            PaymentMethod = request.PaymentMethod,
             HotelId = request.HotelId,
             CheckInDateUtc = request.CheckInDateUtc,
             CheckOutDateUtc = request.CheckOutDateUtc,
-            PaymentMethod = request.PaymentMethod,
-            BookingDateUtc = DateTime.UtcNow,
-            confirmationNumber = GenerateConfirmationNumber(),
-            TotalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc),
-            Rooms = new List<Room>(),
-            Invoice = new List<InvoiceRecord>()
+            Status = BookingStatus.Pending,
+            Rooms = new List<Room>()
         };
 
-        // تحقق من وجود الغرف وإضافتها إلى الحجز
-        foreach (var roomId in request.RoomIds)
-        {
-            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            if (room == null)
-            {
-                throw new BadRequestException($"Room with ID {roomId} not found.");
-            }
-            booking.Rooms.Add(room);
-        }
-
-        // إضافة الحجز إلى قاعدة البيانات
         await _unitOfWork.BookingRepository.CreateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        // تحويل كيان الحجز إلى DTO وإعادته
         var bookingDto = _mapper.Map<BookingDto>(booking);
         return bookingDto;
     }
@@ -101,10 +70,9 @@ public class BookingService : BaseService<Booking>, IBookingService
         }
 
         booking.Status = newStatus;
-        await _unitOfWork.BookingRepository.UpdateAsync(bookingId,booking);
+        await _unitOfWork.BookingRepository.UpdateAsync(bookingId, booking);
         await _unitOfWork.SaveChangesAsync();
     }
-
     private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
         decimal totalPrice = 0m;

@@ -4,14 +4,12 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Enums;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [ResponseCache(CacheProfileName = "DefaultCache")]
-[Authorize]
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
@@ -40,7 +38,7 @@ public class BookingController : ControllerBase
     public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
     {
         var userEmail = User.FindFirst(ClaimTypes.Email)?.Value; 
-        if (userEmail == null)
+        if (userEmail is null)
         {
             return Unauthorized("User email not found in token.");
         }

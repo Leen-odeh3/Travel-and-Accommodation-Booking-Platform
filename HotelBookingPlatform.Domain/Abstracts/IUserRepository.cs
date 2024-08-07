@@ -2,6 +2,6 @@
 namespace HotelBookingPlatform.Domain.Abstracts;
 public interface IUserRepository
 {
-    Task<LocalUser> GetByEmailAsync(string email);
+    Task<LocalUser> GetUserByEmailAsync(string email);
 
 }

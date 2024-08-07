@@ -3,5 +3,6 @@ public class RoomDto
 {
     public int RoomId { get; set; }
     public string RoomType { get; set; }
+    public string Number {  get; set; }
     public decimal PricePerNight { get; set; }
 }
