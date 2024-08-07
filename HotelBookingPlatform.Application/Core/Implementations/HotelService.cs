@@ -122,7 +122,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         if (request.CheckInDate != default && request.CheckOutDate != default)
         {
-            query = query.Where(h => !h.Bookings.Any(b => b.CheckOutDate > request.CheckInDate && b.CheckInDate < request.CheckOutDate));
+            query = query.Where(h => !h.Bookings.Any(b => b.CheckOutDateUtc > request.CheckInDate && b.CheckInDateUtc < request.CheckOutDate));
         }
         var hotels = await query
             .Include(h => h.City)

@@ -6,11 +6,15 @@ using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Enums;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [ResponseCache(CacheProfileName = "DefaultCache")]
+[Authorize]
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
@@ -40,12 +44,17 @@ public class BookingController : ControllerBase
         if (!ModelState.IsValid)
             throw new BadRequestException("Invalid data provided.");
 
-        var bookingDto = await _bookingService.CreateBookingAsync(request);
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            throw new UnauthorizedAccessException("User must be logged in to create a booking.");
 
-        return bookingDto is not null
-         ? Ok(bookingDto)
-         : throw new BadRequestException("Booking creation failed.");
+        var bookingDto = await _bookingService.CreateBookingAsync(request, userId);
+
+        return Ok(bookingDto);
     }
+
+
+
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] BookingStatus newStatus)
     {
@@ -63,30 +72,5 @@ public class BookingController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-        /* [HttpPut("{id}")]
-         [SwaggerOperation(Summary = "Update an existing booking.")]
-         public async Task<IActionResult> UpdateBooking(int id, [FromBody] Booking booking)
-         {
-             if (!ModelState.IsValid)
-                 return BadRequest("Invalid data provided.");
+}
 
-             var response = await _bookingService.UpdateBookingAsync(id, booking);
-             if (!response.Succeeded)
-                 return response.Succeeded ? Ok(response) : BadRequest(response);
-
-             return Ok(response);
-         }
-
-         [HttpDelete("{id}")]
-         [SwaggerOperation(Summary = "Delete a booking by its unique identifier.")]
-         public async Task<IActionResult> DeleteBooking(int id)
-         {
-             var response = await _bookingService.DeleteBookingAsync(id);
-             if (!response.Succeeded)
-             {
-                 return NotFound(response);
-             }
-
-             return Ok(response);
-         }*/
-    }
