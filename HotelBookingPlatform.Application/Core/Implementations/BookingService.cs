@@ -5,7 +5,6 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Enums;
-using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class BookingService : BaseService<Booking>, IBookingService
@@ -18,7 +17,7 @@ public class BookingService : BaseService<Booking>, IBookingService
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking is null)
+        if (booking == null)
         {
             throw new NotFoundException("Booking not found.");
         }
@@ -26,73 +25,89 @@ public class BookingService : BaseService<Booking>, IBookingService
         var bookingDto = _mapper.Map<BookingDto>(booking);
         return bookingDto;
     }
-
-    public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string userId)
+    public async Task<string> GetUserIdByEmailAsync(string email)
     {
-        try
+        var user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+        if (user == null)
         {
-            // التحقق من صحة التواريخ
-            if (request.CheckInDateUtc >= request.CheckOutDateUtc)
-            {
-                throw new BadRequestException("Check-out date must be after check-in date.");
-            }
-
-            // إنشاء كيان الحجز
-            var booking = new Booking
-            {
-                UserId = userId,
-                HotelId = request.HotelId,
-                CheckInDateUtc = request.CheckInDateUtc,
-                CheckOutDateUtc = request.CheckOutDateUtc,
-                PaymentMethod = request.PaymentMethod,
-                BookingDateUtc = DateTime.UtcNow, // تعيين تاريخ الحجز الحالي
-                confirmationNumber = GenerateConfirmationNumber(), // قم بإنشاء رقم التأكيد
-                TotalPrice = await CalculateTotalPriceAsync((List<int>)request.RoomIds, request.CheckInDateUtc, request.CheckOutDateUtc), // احسب السعر الإجمالي
-                Rooms = new List<Room>(), // تهيئة مجموعة الغرف
-                Invoice = new List<InvoiceRecord>() // تهيئة مجموعة الفواتير
-            };
-
-            // تحقق من وجود الفندق
-            var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
-            if (hotel == null)
-            {
-                throw new BadRequestException("Hotel not found.");
-            }
-            booking.Hotel = hotel;
-
-            // تحقق من وجود الغرف
-            foreach (var roomId in request.RoomIds)
-            {
-                var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-                if (room == null)
-                {
-                    throw new BadRequestException($"Room with ID {roomId} not found.");
-                }
-                booking.Rooms.Add(room);
-            }
-
-            await _unitOfWork.BookingRepository.CreateAsync(booking);
-            await _unitOfWork.SaveChangesAsync();
-
-            var bookingDto = _mapper.Map<BookingDto>(booking);
-            return bookingDto;
+            throw new BadRequestException("User not found.");
         }
-        catch (Exception ex)
+        return user.Id;
+    }
+
+    public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string email)
+    {
+        // التحقق من صحة التواريخ
+        if (request.CheckInDateUtc >= request.CheckOutDateUtc)
         {
-            // التعامل مع الاستثناءات وتسجيل الأخطاء
-            var innerExceptionMessage = ex.InnerException?.Message ?? "No inner exception";
-            throw new BadRequestException($"An error occurred while creating the booking: {ex.Message}. Inner exception: {innerExceptionMessage}");
+            throw new BadRequestException("Check-out date must be after check-in date.");
         }
+
+        // الحصول على UserId من البريد الإلكتروني
+        var userId = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+        if (userId == null)
+        {
+            throw new BadRequestException("User not found.");
+        }
+
+        // تحقق من وجود الفندق
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
+        if (hotel == null)
+        {
+            throw new BadRequestException("Hotel not found.");
+        }
+
+        // إنشاء كيان الحجز
+        var booking = new Booking
+        {
+            UserId = userId,
+            HotelId = request.HotelId,
+            CheckInDateUtc = request.CheckInDateUtc,
+            CheckOutDateUtc = request.CheckOutDateUtc,
+            PaymentMethod = request.PaymentMethod,
+            BookingDateUtc = DateTime.UtcNow,
+            confirmationNumber = GenerateConfirmationNumber(),
+            TotalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc),
+            Rooms = new List<Room>(),
+            Invoice = new List<InvoiceRecord>()
+        };
+
+        // تحقق من وجود الغرف وإضافتها إلى الحجز
+        foreach (var roomId in request.RoomIds)
+        {
+            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
+            if (room == null)
+            {
+                throw new BadRequestException($"Room with ID {roomId} not found.");
+            }
+            booking.Rooms.Add(room);
+        }
+
+        // إضافة الحجز إلى قاعدة البيانات
+        await _unitOfWork.BookingRepository.CreateAsync(booking);
+        await _unitOfWork.SaveChangesAsync();
+
+        // تحويل كيان الحجز إلى DTO وإعادته
+        var bookingDto = _mapper.Map<BookingDto>(booking);
+        return bookingDto;
     }
 
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
-        await _unitOfWork.BookingRepository.UpdateBookingStatusAsync(bookingId, newStatus);
+        var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
+        if (booking == null)
+        {
+            throw new NotFoundException("Booking not found.");
+        }
+
+        booking.Status = newStatus;
+        await _unitOfWork.BookingRepository.UpdateAsync(bookingId,booking);
+        await _unitOfWork.SaveChangesAsync();
     }
+
     private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
         decimal totalPrice = 0m;
-
         foreach (var roomId in roomIds)
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
@@ -107,6 +122,7 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         return totalPrice;
     }
+
     private string GenerateConfirmationNumber()
     {
         return Guid.NewGuid().ToString();

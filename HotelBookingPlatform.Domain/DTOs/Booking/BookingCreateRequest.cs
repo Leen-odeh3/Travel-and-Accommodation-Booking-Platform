@@ -2,7 +2,6 @@
 namespace HotelBookingPlatform.Domain.DTOs.Booking;
 public class BookingCreateRequest
 {
-    public string Email { get; set; }
     public int HotelId { get; set; } 
     public DateTime CheckInDateUtc { get; set; }
     public DateTime CheckOutDateUtc { get; set; }
