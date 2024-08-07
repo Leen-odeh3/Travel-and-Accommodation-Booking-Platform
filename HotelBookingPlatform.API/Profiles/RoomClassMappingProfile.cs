@@ -6,9 +6,9 @@ public class RoomClassMappingProfile :Profile
 {
     public RoomClassMappingProfile()
     {
+     
         CreateMap<RoomClass, RoomClassResponseDto>()
-            .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name)); 
-           
+      .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name));
 
         CreateMap<RoomClassRequestDto, RoomClass>()
             .ForMember(dest => dest.Rooms, opt => opt.Ignore())

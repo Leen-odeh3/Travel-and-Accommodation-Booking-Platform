@@ -85,6 +85,11 @@ public class Program
             FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "uploads", "City")),
             RequestPath = "/uploads/Hotel"
         });
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "uploads", "City")),
+            RequestPath = "/uploads/RoomClass"
+        });
 
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();

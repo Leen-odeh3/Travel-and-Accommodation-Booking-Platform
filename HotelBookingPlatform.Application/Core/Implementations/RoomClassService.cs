@@ -7,24 +7,18 @@ using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 {
     public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper) { }
-
     public async Task<RoomClassResponseDto> CreateRoomClass(RoomClassRequestDto request)
     {
         ValidationHelper.ValidateRequest(request);
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
 
         if (hotel is null)
-        {
             throw new NotFoundException("No hotels found with the provided ID.");
-        }
 
         var roomClass = _mapper.Map<RoomClass>(request);
         roomClass.HotelId = request.HotelId;
@@ -34,7 +28,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
-
     public async Task<RoomClassResponseDto> GetRoomClassById(int id)
     {
         ValidationHelper.ValidateId(id);
@@ -42,7 +35,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
-
     public async Task<RoomClassResponseDto> UpdateRoomClass(int id, RoomClassRequestDto request)
     {
         var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
@@ -56,73 +48,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
-    public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, AmenityCreateRequest request)
-    {
-        var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
-
-        if (roomClass is null)
-            return new NotFoundObjectResult(new { message = "RoomClass not found." });
-
-        var amenity = new Amenity
-        {
-            Name = request.Name,
-            Description = request.Description
-        };
-        roomClass.Amenities.Add(amenity);
-
-        try
-        {
-            await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
-            await _unitOfWork.SaveChangesAsync();
-
-            return new OkObjectResult(new { message = "Amenity added successfully." });
-        }
-        catch (Exception ex)
-        {
-            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        }
-    }
-
-    public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByRoomClassIdAsync(int roomClassId)
-    {
-        var roomClass = await _unitOfWork.RoomClasseRepository.GetRoomClassWithAmenitiesAsync(roomClassId);
-
-        if (roomClass is null)
-            throw new NotFoundException("Room class not found.");
-
-        if (roomClass.Amenities is null || !roomClass.Amenities.Any())
-            throw new NotFoundException("No amenities found for the specified room class.");
-
-        var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(roomClass.Amenities);
-
-        return amenitiesDto;
-    }
-    public async Task DeleteAmenityFromRoomClassAsync(int roomClassId, int amenityId)
-    {
-        var roomClass = await _unitOfWork.RoomClasseRepository.GetRoomClassWithAmenitiesAsync(roomClassId);
-
-        if (roomClass is null)
-           throw new NotFoundException("Room class not found.");
-
-        var amenity = roomClass.Amenities.FirstOrDefault(a => a.AmenityID == amenityId);
-
-        if (amenity is null) 
-            throw new NotFoundException("Amenity not found.");
-
-
-        roomClass.Amenities.Remove(amenity);
-
-        try
-        {
-            await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
-            await _unitOfWork.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred while updating the room class: {ex.Message}");
-            throw new ApplicationException("An error occurred while updating the room class.");
-        }
-    }
     public async Task<RoomResponseDto> AddRoomToRoomClassAsync(int roomClassId, RoomCreateRequest request)
     {
         var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
@@ -133,10 +58,13 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         var room = new Room
         {
             Number = request.Number,
-            RoomClassID = roomClassId
+            RoomClassID = roomClassId,
+            AdultsCapacity = request.AdultsCapacity,
+            ChildrenCapacity = request.ChildrenCapacity,
+            PricePerNight = request.PricePerNight
         };
 
-        if (roomClass.Rooms == null)
+        if (roomClass.Rooms is null)
             roomClass.Rooms = new List<Room>();
         
 
@@ -196,29 +124,63 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
             throw new ApplicationException("An error occurred while updating the room class.");
         }
     }
-    public async Task AddAmenityToRoomClassAsync(int roomClassId, AmenityCreateRequest request)
+    public async Task<AmenityResponseDto> AddAmenityToRoomClassAsync(int roomClassId, AmenityCreateDto request)
     {
+        ValidationHelper.ValidateRequest(request);
+
         var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
-        if (roomClass == null)
+        if (roomClass is null)
+            throw new NotFoundException("Room class not found.");
+
+        var amenity = await _unitOfWork.AmenityRepository.GetByIdAsync(request.AmenityId);
+        if (amenity is null || amenity.HotelId != roomClass.HotelId)
+            throw new NotFoundException("Amenity not found or does not belong to the same hotel.");
+
+        if (!roomClass.Amenities.Contains(amenity))
         {
-            throw new NotFoundException("RoomClass not found");
+            roomClass.Amenities.Add(amenity);
+            await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        var amenity = new Amenity
+        return _mapper.Map<AmenityResponseDto>(amenity);
+    }
+    public async Task DeleteAmenityFromRoomClassAsync(int roomClassId, int amenityId)
+    {
+        var roomClass = await _unitOfWork.RoomClasseRepository.GetRoomClassWithAmenitiesAsync(roomClassId);
+        if (roomClass is null)
+            throw new NotFoundException("Room class not found.");
+
+        var amenity = roomClass.Amenities.FirstOrDefault(a => a.AmenityID == amenityId);
+        if (amenity is null)
+            throw new NotFoundException("Amenity not found.");
+
+        roomClass.Amenities.Remove(amenity);
+
+        try
         {
-            // Map properties from request to amenity
-            Name = request.Name,
-            Description = request.Description
-        };
-
-        await _unitOfWork.AmenityRepository.CreateAsync(amenity);
-        roomClass.Amenities.Add(amenity);
-
-        await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred while updating the room class: {ex.Message}");
+            throw new ApplicationException("An error occurred while updating the room class.");
+        }
     }
 
+    public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByRoomClassIdAsync(int roomClassId)
+    {
+        var roomClass = await _unitOfWork.RoomClasseRepository.GetRoomClassWithAmenitiesAsync(roomClassId);
+        if (roomClass is null)
+            throw new NotFoundException("Room class not found.");
 
+        if (roomClass.Amenities == null || !roomClass.Amenities.Any())
+            return Enumerable.Empty<AmenityResponseDto>();
 
+        var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(roomClass.Amenities);
+        return amenitiesDto;
+    }
 
 }
 

@@ -7,6 +7,4 @@ public interface IBookingService
     Task<BookingDto> CreateBookingAsync(BookingCreateRequest request);
     Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus);
 
-    // Task<string> UpdateBookingAsync(int id, Booking booking);
-    // Task<string> DeleteBookingAsync(int id);
 }

@@ -1,9 +1,7 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.Core.Implementations;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
-using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +21,7 @@ public class RoomClassController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<RoomClassResponseDto>> CreateRoomClass(RoomClassRequestDto request)
     {
  
@@ -40,7 +39,7 @@ public class RoomClassController : ControllerBase
     public async Task<ActionResult<RoomClassResponseDto>> GetRoomClass(int id)
     {
 
-            var roomClass = await _roomClassService.GetRoomClassById(id);
+        var roomClass = await _roomClassService.GetRoomClassById(id);
 
         if (roomClass is null)
             throw new NotFoundException("RoomClass not found");
@@ -49,27 +48,24 @@ public class RoomClassController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoomClass(int id, RoomClassRequestDto request)
     {
             var updatedRoomClass = await _roomClassService.UpdateRoomClass(id, request);
             return Ok(updatedRoomClass);
     }
 
-
     [HttpPost("{roomClassId}/addamenity")]
-    public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, [FromBody] AmenityCreateRequest request)
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, [FromBody] AmenityCreateDto request)
     {
-        var result = await _roomClassService.AddAmenityToRoomClass(roomClassId, request);
-
-        if (result is ObjectResult objectResult)
-        {
-            return StatusCode(objectResult.StatusCode.Value, objectResult.Value);
-        }
+        await _roomClassService.AddAmenityToRoomClassAsync(roomClassId, request);
 
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
     [HttpDelete("{roomClassId}/amenities/{amenityId}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenityFromRoomClass(int roomClassId, int amenityId)
     {
 
@@ -85,9 +81,9 @@ public class RoomClassController : ControllerBase
     }
 
     [HttpPost("{roomClassId}/rooms")]
-    [SwaggerOperation(
-            Summary = "Add a new room to a specific room class",
-            Description = "Adds a new room to the room class identified by the specified roomClassId. The request body should include the room's number and any other necessary details."
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add a new room to a specific room class",
+                     Description = "Adds a new room to the room class identified by the specified roomClassId. The request body should include the room's number and any other necessary details."
         )]
     public async Task<ActionResult<RoomResponseDto>> AddRoomToRoomClass(int roomClassId, [FromBody] RoomCreateRequest request)
     {
@@ -116,6 +112,7 @@ public class RoomClassController : ControllerBase
 
 
     [HttpDelete("{roomClassId}/rooms/{roomId}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(
         Summary = "Delete a specific room from a room class",
         Description = "Deletes a specific room from the room class identified by the specified roomClassId. If the room or room class is not found, returns a 404 Not Found response. On successful deletion, returns a 204 No Content response."
@@ -125,7 +122,7 @@ public class RoomClassController : ControllerBase
         try
         {
             await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
-            return Ok(new { message = "Room deleted successfully." }); // 200 OK with a message
+            return Ok(new { message = "Room deleted successfully." }); 
         }
         catch (NotFoundException ex)
         {
@@ -134,11 +131,8 @@ public class RoomClassController : ControllerBase
       
     }
 
-
-
-
     [HttpPost("{RoomClassId}/uploadImages")]
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload images for a specific city.")]
     public async Task<IActionResult> UploadImages(int RoomClassId, IList<IFormFile> files)
     {
@@ -153,7 +147,6 @@ public class RoomClassController : ControllerBase
         var images = await _imageService.GetImagesAsync("RoomClass", RoomClassId);
         return Ok(images);
     }
-
 
     [HttpDelete("{cityId}/DeleteImage")]
     [SwaggerOperation(Summary = "Delete a specific image associated with a city.")]

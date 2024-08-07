@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using Swashbuckle.AspNetCore.Annotations;
+using HotelBookingPlatform.Domain.Exceptions;
+using HotelBookingPlatform.Domain.DTOs.Amenity;
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -110,6 +112,66 @@ public class HotelController : ControllerBase
     {
         await _imageService.DeleteAllImagesAsync("Hotel", hotelId);
         return Ok("All images deleted successfully.");
+    }
+
+    [HttpGet("{hotelId}/rooms")]
+    public async Task<IActionResult> GetRoomsByHotelIdAsync(int hotelId)
+    {
+        try
+        {
+            var rooms = await _hotelService.GetRoomsByHotelIdAsync(hotelId);
+            return Ok(rooms);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("{hotelId}/amenities")]
+    public async Task<IActionResult> AddAmenityToHotel(int hotelId, [FromBody] AmenityCreateRequest request)
+    {
+        try
+        {
+            var amenityDto = await _hotelService.AddAmenityToHotelAsync(hotelId, request);
+            return CreatedAtAction(nameof(GetAmenitiesByHotelId), new { hotelId = hotelId }, amenityDto);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+
+
+    [HttpGet("{hotelId}/amenities")]
+    public async Task<IActionResult> GetAmenitiesByHotelId(int hotelId)
+    {
+        try
+        {
+            var amenities = await _hotelService.GetAmenitiesByHotelIdAsync(hotelId);
+            return Ok(amenities);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+
+
+    [HttpDelete("{hotelId}/amenities/{amenityId}")]
+    public async Task<IActionResult> DeleteAmenityFromHotel(int hotelId, int amenityId)
+    {
+        try
+        {
+            await _hotelService.DeleteAmenityFromHotelAsync(hotelId, amenityId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
 }

@@ -11,6 +11,7 @@ using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using Microsoft.EntityFrameworkCore;
 using HotelBookingPlatform.Application.HelperMethods;
+using HotelBookingPlatform.Domain.DTOs.Room;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
@@ -126,7 +127,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var hotels = await query
             .Include(h => h.City)
             .Include(h => h.RoomClasses)
-            .ThenInclude(rc => rc.Amenities)
             .ToListAsync();
 
         var hotelSearchResults = hotels.Select(hotel => new HotelSearchResultDto
@@ -159,6 +159,63 @@ public class HotelService : BaseService<Hotel>, IHotelService
             Hotels = hotelSearchResults
         };
     }
+    public async Task<IEnumerable<RoomResponseDto>> GetRoomsByHotelIdAsync(int hotelId)
+    {
+        ValidationHelper.ValidateId(hotelId);
+
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithRoomClassesAndRoomsAsync(hotelId);
+
+        if (hotel is null)
+            throw new NotFoundException("Hotel not found");
+
+        var rooms = hotel.RoomClasses.SelectMany(rc => rc.Rooms);
+
+        var roomDtos = _mapper.Map<IEnumerable<RoomResponseDto>>(rooms);
+
+        return roomDtos;
+    }
+    public async Task<AmenityResponseDto> AddAmenityToHotelAsync(int hotelId, AmenityCreateRequest request)
+    {
+        ValidationHelper.ValidateRequest(request);
+
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
+        if (hotel is null)
+            throw new NotFoundException("Hotel not found.");
+
+        var amenity = _mapper.Map<Amenity>(request);
+        hotel.Amenities.Add(amenity);
+
+        await _unitOfWork.HotelRepository.UpdateAsync(hotelId, hotel);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<AmenityResponseDto>(amenity);
+    }
+    public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelIdAsync(int hotelId)
+    {
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId);
+        if (hotel is null)
+            throw new NotFoundException("Hotel not found.");
+
+        var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(hotel.Amenities);
+        return amenitiesDto;
+    }
+
+    public async Task DeleteAmenityFromHotelAsync(int hotelId, int amenityId)
+    {
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId);
+        if (hotel is null)
+            throw new NotFoundException("Hotel not found.");
+
+        var amenity = hotel.Amenities.FirstOrDefault(a => a.AmenityID == amenityId);
+        if (amenity is null)
+            throw new NotFoundException("Amenity not found.");
+
+        hotel.Amenities.Remove(amenity);
+
+        await _unitOfWork.HotelRepository.UpdateAsync(hotelId, hotel);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
 }
 
 

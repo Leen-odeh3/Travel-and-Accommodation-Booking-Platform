@@ -1,10 +1,8 @@
 ﻿using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Booking;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Enums;
 using HotelBookingPlatform.Infrastructure.Data;
 using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository

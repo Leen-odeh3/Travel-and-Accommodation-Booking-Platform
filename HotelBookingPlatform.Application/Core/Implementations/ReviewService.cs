@@ -4,7 +4,6 @@ using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Application.HelperMethods;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 

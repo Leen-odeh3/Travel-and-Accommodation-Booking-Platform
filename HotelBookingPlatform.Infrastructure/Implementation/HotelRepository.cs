@@ -11,6 +11,7 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
     {
         _context = context;
     }
+
     private IQueryable<Hotel> GetHotelsWithIncludes()
     {
         return _context.Hotels
@@ -18,6 +19,7 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Include(h => h.Owner)
             .Include(h => h.Reviews);
     }
+
     public async Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1)
     {
         return await GetHotelsWithIncludes()
@@ -26,6 +28,14 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+    }
+
+    public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)
+    {
+        return await _context.Hotels
+            .Include(h => h.RoomClasses)
+                .ThenInclude(rc => rc.Rooms)
+            .FirstOrDefaultAsync(h => h.HotelId == hotelId);
     }
 
     public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
@@ -45,7 +55,8 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
     public async Task<Hotel> GetHotelByNameAsync(string name)
     {
         return await _context.Hotels
-            .Include(h => h.RoomClasses).ThenInclude(xx => xx.Amenities)
+            .Include(h => h.RoomClasses)
+                .ThenInclude(rc => rc.Amenities)
             .FirstOrDefaultAsync(h => h.Name == name);
     }
 
@@ -54,5 +65,12 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
         return await _context.Hotels
             .Where(h => h.CityID == cityId)
             .ToListAsync();
+    }
+
+    public async Task<Hotel> GetHotelWithAmenitiesAsync(int hotelId)
+    {
+        return await _context.Hotels
+            .Include(h => h.Amenities)
+            .FirstOrDefaultAsync(h => h.HotelId == hotelId);
     }
 }
