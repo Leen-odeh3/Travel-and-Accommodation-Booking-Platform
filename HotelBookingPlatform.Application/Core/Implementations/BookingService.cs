@@ -17,27 +17,30 @@ public class BookingService : BaseService<Booking>, IBookingService
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking is null)
+        if (booking == null)
         {
             throw new NotFoundException("Booking not found.");
         }
 
+        // Log the data for debugging purposes
+        Console.WriteLine($"Hotel: {booking.Hotel?.Name}");
+        Console.WriteLine($"Rooms: {string.Join(", ", booking.Rooms.Select(r => r.Number))}");
+
         var bookingDto = _mapper.Map<BookingDto>(booking);
         return bookingDto;
     }
+
+
     public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string email)
     {
         var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
         if (user is null)
-        {
             throw new NotFoundException("User not found.");
-        }
 
         if (request.CheckInDateUtc >= request.CheckOutDateUtc)
-        {
             throw new BadRequestException("Check-out date must be greater than check-in date.");
-        }
-        var totalPrice = await CalculateTotalPriceAsync((List<int>)request.RoomIds, request.CheckInDateUtc, request.CheckOutDateUtc);
+
+        var totalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
 
         var booking = new Booking
         {
@@ -54,11 +57,21 @@ public class BookingService : BaseService<Booking>, IBookingService
             Rooms = new List<Room>()
         };
 
+        foreach (var roomId in request.RoomIds)
+        {
+            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
+            if (room != null)
+            {
+                booking.Rooms.Add(room);
+            }
+        }
+
+        // Ensure the booking is added and changes are saved
         await _unitOfWork.BookingRepository.CreateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        var bookingDto = _mapper.Map<BookingDto>(booking);
-        return bookingDto;
+        // Return the mapping of the booking to DTO
+        return _mapper.Map<BookingDto>(booking);
     }
 
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)

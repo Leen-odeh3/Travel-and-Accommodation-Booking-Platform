@@ -30,5 +30,14 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
         _appDbContext.Bookings.Update(booking);
         await _appDbContext.SaveChangesAsync();
     }
+
+    public async Task<Booking> GetByIdAsync(int id)
+    {
+        return await _appDbContext.Bookings
+            .Include(b => b.Hotel)
+            .Include(b => b.Rooms)
+            .Include(b => b.User)
+            .FirstOrDefaultAsync(b => b.BookingID == id);
+    }
 }
 

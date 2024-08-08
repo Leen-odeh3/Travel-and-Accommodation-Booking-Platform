@@ -12,6 +12,7 @@ public class BookingDto
     public string HotelName { get; set; }
     public DateTime CheckInDateUtc { get; set; }
     public DateTime CheckOutDateUtc { get; set; }
-    public string Status { get; set; } 
-    public List<RoomDto> Rooms { get; set; }
+    public string Status { get; set; }
+    public List<string> Numbers { get; set; }
+
 }

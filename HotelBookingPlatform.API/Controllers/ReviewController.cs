@@ -2,8 +2,6 @@
 using HotelBookingPlatform.Domain.DTOs.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 
 namespace HotelBookingPlatform.API.Controllers;
 
@@ -18,39 +16,31 @@ public class ReviewController : ControllerBase
     {
         _reviewService = reviewService;
     }
-
-    // POST: api/Review
     [HttpPost]
-    public async Task<ActionResult<ReviewResponseDto>> CreateReview([FromBody] ReviewCreateRequest request)
+    public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
     {
         await _reviewService.CreateReviewAsync(request);
-        return Ok(new { Message = "Review created successfully." });
+        return Ok();
     }
 
-    // GET: api/Review/5
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Get a review by ID", Description = "Retrieves a specific review by its ID.")]
-    public async Task<ActionResult<ReviewResponseDto>> GetReview(int id)
+    public async Task<IActionResult> GetReview(int id)
     {
         var review = await _reviewService.GetReviewAsync(id);
         return Ok(review);
     }
 
-    // PUT: api/Review/5
     [HttpPut("{id}")]
-    [SwaggerOperation(Summary = "Update an existing review", Description = "Updates an existing review specified by its ID.")]
-    public async Task<ActionResult<ReviewResponseDto>> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
+    public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
-        var updatedReview = await _reviewService.UpdateReviewAsync(id, request);
-        return Ok(updatedReview);
+        var review = await _reviewService.UpdateReviewAsync(id, request);
+        return Ok(review);
     }
 
-    // DELETE: api/Review/5
     [HttpDelete("{id}")]
-    [SwaggerOperation(Summary = "Delete a review", Description = "Deletes a review specified by its ID.")]
     public async Task<IActionResult> DeleteReview(int id)
     {
         await _reviewService.DeleteReviewAsync(id);
-        return Ok(new { Message = "Review deleted successfully." });
+        return NoContent();
     }
 }

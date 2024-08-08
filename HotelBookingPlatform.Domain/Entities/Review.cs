@@ -1,7 +1,7 @@
 ﻿namespace HotelBookingPlatform.Domain.Entities;
 public class Review 
 {
-  public int ReviewID {  get; set; }
+    public int ReviewID { get; set; }
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
     public string Content { get; set; }
