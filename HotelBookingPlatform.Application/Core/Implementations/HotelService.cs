@@ -12,6 +12,7 @@ using HotelBookingPlatform.Domain.DTOs.Amenity;
 using Microsoft.EntityFrameworkCore;
 using HotelBookingPlatform.Application.HelperMethods;
 using HotelBookingPlatform.Domain.DTOs.Room;
+using HotelBookingPlatform.Domain.DTOs.Review;
 
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
@@ -214,6 +215,29 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         await _unitOfWork.HotelRepository.UpdateAsync(hotelId, hotel);
         await _unitOfWork.SaveChangesAsync();
+    }
+
+
+
+
+    public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
+    {
+        ValidationHelper.ValidateId(hotelId);
+
+        var reviews = await _unitOfWork.ReviewRepository.GetReviewsByHotelIdAsync(hotelId);
+
+        if (reviews == null || !reviews.Any())
+            throw new NotFoundException("No reviews found for the specified hotel.");
+
+        var averageRating = reviews.Average(r => r.Rating);
+
+        var reviewRatingDto = new ReviewRatingDto
+        {
+            HotelId = hotelId,
+            AverageRating = averageRating
+        };
+
+        return reviewRatingDto;
     }
 
 }

@@ -1,75 +1,53 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts;
+using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBookingPlatform.API.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
-public class InvoiceRecordController : ControllerBase
+[Route("api/[controller]")]
+public class InvoiceController : ControllerBase
 {
-    private readonly IInvoiceRecordService _invoiceRecordService;
+    private readonly IInvoiceRecordService _invoiceService;
 
-    public InvoiceRecordController(IInvoiceRecordService invoiceRecordService)
+    public InvoiceController(IInvoiceRecordService invoiceService)
     {
-        _invoiceRecordService = invoiceRecordService;
+        _invoiceService = invoiceService;
     }
-} 
-/* 
-    // GET: api/InvoiceRecord/5
-  [HttpGet("{id}")]
-    public async Task<IActionResult> GetByIdAsync(int id)
-    {
-        var response = await _invoiceRecordService.GetByIdAsync(id);
 
-        return response.StatusCode switch
-        {
-            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
-            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
-            _ => Ok(response.Data)
-        };
-    }*
-
-    // POST: api/InvoiceRecord
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] InvoiceRecordDto invoiceRecordDto)
+    public async Task<IActionResult> CreateInvoice([FromBody] InvoiceCreateRequest request)
     {
-        var response = await _invoiceRecordService.CreateAsync(invoiceRecordDto);
-
-        return response.StatusCode switch
-        {
-            System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(GetByIdAsync), new { id = response.Data.InvoiceRecordId }, response.Data),
-            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
-            _ => StatusCode((int)response.StatusCode, response.Message)
-        };
+        await _invoiceService.CreateInvoiceAsync(request);
+        return Ok();
     }
 
-    // PUT: api/InvoiceRecord/5
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetInvoice(int id)
+    {
+        var invoice = await _invoiceService.GetInvoiceAsync(id);
+        return Ok(invoice);
+    }
+
+    [HttpGet("by-booking/{bookingId}")]
+    public async Task<IActionResult> GetInvoicesByBooking(int bookingId)
+    {
+        var invoices = await _invoiceService.GetInvoicesByBookingAsync(bookingId);
+        return Ok(invoices);
+    }
+
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsync(int id, [FromBody] InvoiceRecordDto invoiceRecordDto)
+    public async Task<IActionResult> UpdateInvoice(int id, [FromBody] InvoiceCreateRequest request)
     {
-        var response = await _invoiceRecordService.UpdateAsync(id, invoiceRecordDto);
-
-        return response.StatusCode switch
-        {
-            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
-            System.Net.HttpStatusCode.BadRequest => BadRequest(response.Message),
-            System.Net.HttpStatusCode.NoContent => NoContent(),
-            _ => StatusCode((int)response.StatusCode, response.Message)
-        };
+        await _invoiceService.UpdateInvoiceAsync(id, request);
+        return Ok();
     }
 
-    // DELETE: api/InvoiceRecord/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(int id)
+    public async Task<IActionResult> DeleteInvoice(int id)
     {
-        var response = await _invoiceRecordService.DeleteAsync(id);
-
-        return response.StatusCode switch
-        {
-            System.Net.HttpStatusCode.NotFound => NotFound(response.Message),
-            _ => Ok(response.Message)
-        };
+        await _invoiceService.DeleteInvoiceAsync(id);
+        return Ok();
     }
-   }*/
+}

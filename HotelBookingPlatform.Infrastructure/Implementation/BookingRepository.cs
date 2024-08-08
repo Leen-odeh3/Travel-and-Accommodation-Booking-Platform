@@ -39,5 +39,13 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
             .Include(b => b.User)
             .FirstOrDefaultAsync(b => b.BookingID == id);
     }
+
+
+    public async Task<Booking> GetBookingByUserAndHotelAsync(string userId, int hotelId)
+    {
+        return await _appDbContext.Bookings
+            .Where(b => b.UserId == userId && b.HotelId == hotelId)
+            .FirstOrDefaultAsync();
+    }
 }
 

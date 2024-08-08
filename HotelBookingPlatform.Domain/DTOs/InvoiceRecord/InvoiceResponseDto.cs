@@ -1,6 +1,5 @@
-﻿
-namespace HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
-public class InvoiceRecordDto
+﻿namespace HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
+public class InvoiceResponseDto
 {
     public int InvoiceRecordId { get; set; }
     public int BookingID { get; set; }

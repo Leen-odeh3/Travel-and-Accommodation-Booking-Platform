@@ -174,4 +174,20 @@ public class HotelController : ControllerBase
         }
     }
 
+
+
+    [HttpGet("{id}/rating")]
+    public async Task<IActionResult> GetHotelReviewRating(int id)
+    {
+        try
+        {
+            var ratingDto = await _hotelService.GetHotelReviewRatingAsync(id);
+            return Ok(ratingDto);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
 }

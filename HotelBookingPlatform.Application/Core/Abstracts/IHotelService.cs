@@ -1,6 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.DTOs.Review;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using Microsoft.AspNetCore.Mvc;
 namespace HotelBookingPlatform.Application.Core.Abstracts;
@@ -16,7 +17,6 @@ public interface IHotelService
     Task<IEnumerable<RoomResponseDto>> GetRoomsByHotelIdAsync(int hotelId);
     Task<AmenityResponseDto> AddAmenityToHotelAsync(int hotelId, AmenityCreateRequest request);
     Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelIdAsync(int hotelId);
-
+    Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId);
     Task DeleteAmenityFromHotelAsync(int hotelId, int amenityId);
-
 }
