@@ -15,6 +15,7 @@ public static class ModuleInfrastructureDependencies
         var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetService<IConfiguration>();
 
+
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
         );
@@ -23,6 +24,8 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
         services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
 
         return services;
     }

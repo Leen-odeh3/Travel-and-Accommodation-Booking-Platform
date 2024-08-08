@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using HotelBookingPlatform.Domain.Entities;
 
 namespace HotelBookingPlatform.API.Profiles;
@@ -9,16 +8,15 @@ public class AmenityMappingProfile : Profile
 {
     public AmenityMappingProfile()
     {
-        /*  CreateMap<Amenity, AmenityResponseDto>()
-              .ForMember(dest => dest.RoomClasses, opt => opt.MapFrom(src => src.RoomClasses.Select(rc => new RoomClassAmenityDto
-              {
-                  RoomClassID = rc.RoomClassID,
-                  Name = rc.Name,
-                  RoomType = rc.RoomType.ToString()
-              })));
-        */
+        CreateMap<AmenityResponseDto, Amenity>();
         CreateMap<Amenity, AmenityResponseDto>();
         CreateMap<AmenityCreateRequest, Amenity>();
+
+        CreateMap<AmenityCreateDto, Amenity>()
+       .ForMember(dest => dest.AmenityID, opt => opt.MapFrom(src => src.AmenityId))
+       .ForMember(dest => dest.Name, opt => opt.Ignore())      
+       .ForMember(dest => dest.Description, opt => opt.Ignore());
+
 
         CreateMap<AmenityCreateRequest, Amenity>()
             .ForMember(dest => dest.AmenityID, opt => opt.Ignore());

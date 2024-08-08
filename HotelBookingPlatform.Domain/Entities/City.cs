@@ -9,6 +9,6 @@ public class City
     public string Country { get; set; }
     public string PostOffice { get; set; }
     public ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
-    public DateTime CreatedAtUtc { get; set; }
-    public int VisitCount { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+    public int VisitCount { get; set; } // I mean Trending search
 }

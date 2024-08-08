@@ -2,8 +2,9 @@
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IInvoiceRecordService
 {
-    Task<InvoiceRecordDto> GetByIdAsync(int id);
-    Task<InvoiceRecordDto> CreateAsync(InvoiceRecordDto invoiceRecordDto);
-    Task<InvoiceRecordDto> UpdateAsync(int id, InvoiceRecordDto invoiceRecordDto);
-    Task<string> DeleteAsync(int id);
+    Task CreateInvoiceAsync(InvoiceCreateRequest request);
+    Task<InvoiceResponseDto> GetInvoiceAsync(int id);
+    Task<IEnumerable<InvoiceResponseDto>> GetInvoicesByBookingAsync(int bookingId);
+    Task UpdateInvoiceAsync(int id, InvoiceCreateRequest request);
+    Task DeleteInvoiceAsync(int id);
 }

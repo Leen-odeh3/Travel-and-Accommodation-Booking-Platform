@@ -7,6 +7,6 @@ public class InvoiceRecordProfile : Profile
 {
     public InvoiceRecordProfile()
     {
-        CreateMap<InvoiceRecord, InvoiceRecordDto>().ReverseMap();
+        CreateMap<InvoiceRecord, InvoiceCreateRequest>().ReverseMap();
     }
 }

@@ -1,14 +1,18 @@
-﻿using HotelBookingPlatform.Domain.Enums;
+﻿using HotelBookingPlatform.Domain.DTOs.Hotel;
+using HotelBookingPlatform.Domain.DTOs.Room;
 namespace HotelBookingPlatform.Domain.DTOs.Booking;
 public class BookingDto
 {
+    public int BookingId { get; set; }
     public string UserName { get; set; }
-    public string HotelName { get; set; }
+    public string ConfirmationNumber { get; set; }
     public decimal TotalPrice { get; set; }
-    public string RoomNumber { get; set; }
-    public string RoomType { get; set; }
     public DateTime BookingDateUtc { get; set; }
-    public PaymentMethod PaymentMethod { get; set; }
-    public string confirmationNumber { get; set; }
-    public BookingStatus Status { get; set; }
+    public string PaymentMethod { get; set; }
+    public string HotelName { get; set; }
+    public DateTime CheckInDateUtc { get; set; }
+    public DateTime CheckOutDateUtc { get; set; }
+    public string Status { get; set; }
+    public List<string> Numbers { get; set; }
+
 }

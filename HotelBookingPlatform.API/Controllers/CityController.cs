@@ -3,11 +3,7 @@ using HotelBookingPlatform.Domain.DTOs.City;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.Exceptions;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Infrastructure.Implementation;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -15,12 +11,23 @@ namespace HotelBookingPlatform.API.Controllers;
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
-    private readonly IImageRepository _imageRepository;
+    private readonly IImageService _imageService;
 
-    public CityController(ICityService cityService, IImageRepository imageRepository)
+    public CityController(ICityService cityService,IImageService imageService)
     {
         _cityService = cityService;
-        _imageRepository = imageRepository;
+        _imageService = imageService;
+    }
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add a new city.")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddCity([FromBody] CityCreateRequest request)
+    {
+        var cityResponse = await _cityService.AddCityAsync(request);
+        return CreatedAtAction(nameof(GetCity), new { id = cityResponse.CityID }, cityResponse);
     }
 
     [HttpGet]
@@ -32,9 +39,6 @@ public class CityController : ControllerBase
         [FromQuery] int pageNumber = 1)
     {
         var cities = await _cityService.GetCities(CityName, Description, pageSize, pageNumber);
-        if (cities is null || !cities.Any())
-            throw new NotFoundException("No Cities Found");
-
         return Ok(cities);
     }
 
@@ -43,13 +47,8 @@ public class CityController : ControllerBase
     public async Task<ActionResult<object>> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
         var city = await _cityService.GetCity(id, includeHotels);
-        if (city is null)
-            throw new NotFoundException("No Cities Found");
-
         return Ok(city);
     }
-
-
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
@@ -57,35 +56,16 @@ public class CityController : ControllerBase
     public async Task<ActionResult<CityResponseDto>> UpdateCity(int id, [FromForm] CityCreateRequest request)
     {
         var updatedCity = await _cityService.UpdateCity(id, request);
-        if (updatedCity is null)
-
-            throw new NotFoundException("City not found");
-
         return Ok(updatedCity);
     }
+
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCity(int id)
     {
-        try
-        {
             await _cityService.DeleteAsync(id);
             return Ok(new { Message = "City deleted successfully." });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { Message = ex.Message });
-        }
     }
-
-    /// <summary>
-    /// Gets a list of hotels for a specified city.
-    /// </summary>
-    /// <param name="cityId">The ID of the city to retrieve hotels for.</param>
-    /// <returns>A list of hotels in the specified city.</returns>
-    /// <response code="200">Returns the list of hotels.</response>
-    /// <response code="404">If no hotels are found for the specified city.</response>
-    /// <response code="500">If there is an error processing the request.</response>
-
 
     [HttpGet("{cityId}/hotels")]
     public async Task<IActionResult> GetHotelsForCity(int cityId)
@@ -94,9 +74,8 @@ public class CityController : ControllerBase
             return Ok(hotels);
     }
 
-
     [HttpPost("{cityId}/hotel")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add a hotel to a specific city.")]
     public async Task<IActionResult> AddHotelToCity(int cityId, [FromBody] HotelCreateRequest hotelRequest)
     {
@@ -109,126 +88,43 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Remove a hotel from a specific city.")]
     public async Task<IActionResult> DeleteHotelFromCity(int cityId, int hotelId)
     {
-        try
-        {
             await _cityService.DeleteHotelFromCityAsync(cityId, hotelId);
-            return Ok(new { Message = "Hotel removed from city successfully." });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { Message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request.", Details = ex.Message });
-        }
+            return Ok(new { Message = "Hotel removed from city successfully." });   
     }
-
-
-
-
-    /////////////
-    ///
 
     [HttpPost("{cityId}/uploadImages")]
+   // [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Upload images for a specific city.")]
     public async Task<IActionResult> UploadImages(int cityId, IList<IFormFile> files)
     {
-        // تحديد نوع الكائن كـ "City"
-        var entityType = "City";
-
-        if (files == null || files.Count == 0)
-        {
-            return BadRequest("No files uploaded.");
-        }
-
-        var imageDataList = new List<byte[]>();
-
-        foreach (var file in files)
-        {
-            if (file.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    imageDataList.Add(memoryStream.ToArray());
-                }
-            }
-        }
-
-        try
-        {
-            await _imageRepository.SaveImagesAsync(entityType, cityId, imageDataList);
+            await _imageService.UploadImagesAsync("City", cityId, files);
             return Ok("Images uploaded successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-        }
     }
 
-
-    // استرجاع الصور المرتبطة بمدينة معينة
     [HttpGet("{cityId}/GetImages")]
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific city.")]
     public async Task<IActionResult> GetImages(int cityId)
     {
-        try
-        {
-            var images = await _imageRepository.GetImagesAsync("City", cityId);
-            if (!images.Any())
-            {
-                return NotFound("No images found.");
-            }
-
-            var result = images.Select(img => new
-            {
-                img.EntityType,
-                img.EntityId,
-                ImageData = Convert.ToBase64String(img.FileData)
-            });
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
+        var images = await _imageService.GetImagesAsync("City", cityId);
+        return Ok(images);
     }
 
-    // حذف صورة معينة لمدينة معينة
+
     [HttpDelete("{cityId}/DeleteImage")]
-    public async Task<IActionResult> DeleteImage(int cityId, string imageName)
+    [SwaggerOperation(Summary = "Delete a specific image associated with a city.")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteImage(int cityId, int imageId)
     {
-        try
-        {
-            var images = await _imageRepository.GetImagesAsync("City", cityId);
-            var imageToDelete = images.FirstOrDefault(img => img.EntityId.ToString() == imageName); // Assuming imageName represents a unique identifier or filename
-
-            if (imageToDelete == null)
-            {
-                return NotFound("Image not found.");
-            }
-
-            await _imageRepository.DeleteImageAsync(cityId);
+            await _imageService.DeleteImageAsync("City", cityId, imageId);
             return Ok("Image deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
     }
 
-    // حذف جميع الصور لمدينة معينة
     [HttpDelete("{cityId}/DeleteAllImages")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Delete all images associated with a specific city.")]
     public async Task<IActionResult> DeleteAllImages(int cityId)
     {
-        try
-        {
-            await _imageRepository.DeleteImagesAsync("City", cityId);
+            await _imageService.DeleteAllImagesAsync("City", cityId);
             return Ok("All images deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
-        }
     }
 }

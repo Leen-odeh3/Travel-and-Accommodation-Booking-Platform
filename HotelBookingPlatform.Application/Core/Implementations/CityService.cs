@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.Services;
+using HotelBookingPlatform.Application.HelperMethods;
 using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Abstracts;
 using HotelBookingPlatform.Domain.DTOs.City;
 using HotelBookingPlatform.Domain.DTOs.Hotel;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Helpers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
@@ -20,6 +16,16 @@ public class CityService : BaseService<City>, ICityService
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper)
     {
+    }
+    public async Task<CityResponseDto> AddCityAsync(CityCreateRequest request)
+    {
+        ValidationHelper.ValidateRequest(request);
+        var city = _mapper.Map<City>(request);
+
+        await _unitOfWork.CityRepository.CreateAsync(city);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<CityResponseDto>(city);
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
     {
@@ -39,9 +45,10 @@ public class CityService : BaseService<City>, ICityService
             city.VisitCount += 1;
             await _unitOfWork.CityRepository.UpdateAsync(city.CityID, city);
         }
+        if (cities is null || !cities.Any())
+            throw new NotFoundException("No Cities Found");
 
         await _unitOfWork.SaveChangesAsync();
-
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
     }
@@ -53,7 +60,6 @@ public class CityService : BaseService<City>, ICityService
 
         city.VisitCount += 1;
 
-        // تحديث المدينة في قاعدة البيانات
         await _unitOfWork.CityRepository.UpdateAsync(id, city);
         await _unitOfWork.SaveChangesAsync();
 
@@ -78,6 +84,7 @@ public class CityService : BaseService<City>, ICityService
     }
     public async Task<CityResponseDto> UpdateCity(int id, CityCreateRequest request)
     {
+        ValidationHelper.ValidateRequest(request);
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
         if (existingCity is null)
             throw new KeyNotFoundException("City not found.");
@@ -92,9 +99,7 @@ public class CityService : BaseService<City>, ICityService
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
         if (city is null)
-        {
             throw new KeyNotFoundException($"City with ID {id} not found.");
-        }
 
         await _unitOfWork.CityRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
@@ -106,9 +111,7 @@ public class CityService : BaseService<City>, ICityService
             var hotels = await _unitOfWork.HotelRepository.GetHotelsForCityAsync(cityId);
 
             if (hotels is null)
-            {
                 throw new InvalidOperationException("Hotels not found for the specified city.");
-            }
 
             return _mapper.Map<IEnumerable<HotelBasicResponseDto>>(hotels);
         }
@@ -120,9 +123,10 @@ public class CityService : BaseService<City>, ICityService
     public async Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
+        if (city is null)
             throw new KeyNotFoundException("City not found.");
 
+        ValidationHelper.ValidateRequest(hotelRequest);
         var hotel = _mapper.Map<Hotel>(hotelRequest);
         hotel.CityID = cityId;
 
@@ -134,7 +138,7 @@ public class CityService : BaseService<City>, ICityService
     public async Task DeleteHotelFromCityAsync(int cityId, int hotelId)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
-        if (city == null)
+        if (city is null)
             throw new KeyNotFoundException("City not found.");
 
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
@@ -148,28 +152,13 @@ public class CityService : BaseService<City>, ICityService
     }
     public async Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount)
     {
-        // Assume we have a method in repository to get cities sorted by visit count
         var cities = await _unitOfWork.CityRepository.GetTopVisitedCitiesAsync(topCount);
 
-        if (cities == null || !cities.Any())
-        {
+        if (cities is null || !cities.Any())
             throw new NotFoundException("No cities found.");
-        }
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
     }
-
-
-    //////////////////////////
-
-
-
-    ////
-    ///
-
-   
-
-
 }
 
 

@@ -12,9 +12,6 @@ public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.Property(h => h.ReviewsRating)
-            .IsRequired();
-
         builder.Property(h => h.StarRating)
             .IsRequired();
 

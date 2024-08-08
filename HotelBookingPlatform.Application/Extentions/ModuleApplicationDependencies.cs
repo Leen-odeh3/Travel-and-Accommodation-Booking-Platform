@@ -1,10 +1,10 @@
-﻿using FluentValidation.AspNetCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using HotelBookingPlatform.Application.Core.Abstracts;
 using HotelBookingPlatform.Application.Core.Implementations;
-using HotelBookingPlatform.Application.Services;
 using HotelBookingPlatform.Application.Validator;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Infrastructure.Implementation;
+using HotelBookingPlatform.Domain.DTOs.Hotel;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -19,6 +19,7 @@ public static class ModuleApplicationDependencies
         {
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
+        services.AddScoped<IValidator<HotelCreateRequest>, HotelCreateRequestValidator>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRoomClassService, RoomClassService>();
@@ -30,6 +31,7 @@ public static class ModuleApplicationDependencies
         services.AddScoped<IHotelAmenitiesService, HotelAmenitiesService>();
         services.AddScoped<IOwnerService, OwnerService>();
         services.AddScoped<IInvoiceRecordService, InvoiceRecordService>();
+        services.AddScoped<IImageService, ImageService>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

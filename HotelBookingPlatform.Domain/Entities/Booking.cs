@@ -12,8 +12,8 @@ public class Booking
     public PaymentMethod PaymentMethod { get; set; }
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }
-    public DateTime CheckInDate { get; set; }
-    public DateTime CheckOutDate { get; set; }
+    public DateTime CheckInDateUtc { get; set; }
+    public DateTime CheckOutDateUtc { get; set; }
     public ICollection<Room> Rooms {  get; set; }
     public ICollection<InvoiceRecord> Invoice { get; set; } = new List<InvoiceRecord>();
 }

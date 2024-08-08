@@ -11,5 +11,11 @@ public class ReviewConfiguration: IEntityTypeConfiguration<Review>
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(r => r.Hotel)
+       .WithMany(h => h.Reviews)
+       .HasForeignKey(r => r.HotelId)
+       .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

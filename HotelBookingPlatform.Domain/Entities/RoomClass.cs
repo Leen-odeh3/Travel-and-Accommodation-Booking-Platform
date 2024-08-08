@@ -6,9 +6,6 @@ public class RoomClass
     public RoomType RoomType { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }
-    public int AdultsCapacity { get; set; }
-    public int ChildrenCapacity { get; set; }
-    public decimal PricePerNight { get; set; }
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public int HotelId { get; set; }
     public Hotel Hotel { get; set; }

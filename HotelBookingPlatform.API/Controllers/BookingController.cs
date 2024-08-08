@@ -4,8 +4,7 @@ using HotelBookingPlatform.Application.Core.Abstracts;
 using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Domain.Exceptions;
 using HotelBookingPlatform.Domain.Enums;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+using System.Security.Claims;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -24,29 +23,44 @@ public class BookingController : ControllerBase
     [SwaggerOperation(Summary = "Retrieve a booking by its unique identifier.")]
     public async Task<IActionResult> GetBooking(int id)
     {
-        var response = await _bookingService.GetBookingAsync(id);
-        if (response is null)
+        try
         {
-            throw new NotFoundException("Booking not found.");
+            var response = await _bookingService.GetBookingAsync(id);
+            return Ok(response);
         }
-
-        return Ok(response);
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
-
     [HttpPost]
-    [SwaggerOperation(Summary = "Create a new booking.")]
+    [Route("create")]
     public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
     {
-        if (!ModelState.IsValid)
-            throw new BadRequestException("Invalid data provided.");
+        var userEmail = User.FindFirst(ClaimTypes.Email)?.Value; 
+        if (userEmail is null)
+        {
+            return Unauthorized("User email not found in token.");
+        }
 
-        var bookingDto = await _bookingService.CreateBookingAsync(request);
-
-        return bookingDto is not null
-         ? Ok(bookingDto)
-         : throw new BadRequestException("Booking creation failed.");
+        try
+        {
+            var booking = await _bookingService.CreateBookingAsync(request, userEmail);
+            return Ok(booking);
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
+
+
     [HttpPut("{id}/status")]
+    [SwaggerOperation(Summary = "Update the status of a booking.")]
     public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] BookingStatus newStatus)
     {
         try
@@ -54,39 +68,15 @@ public class BookingController : ControllerBase
             await _bookingService.UpdateBookingStatusAsync(id, newStatus);
             return NoContent();
         }
-        catch (KeyNotFoundException ex)
+        catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
         }
-        catch (InvalidOperationException ex)
+        catch (BadRequestException ex)
         {
             return BadRequest(ex.Message);
         }
     }
-        /* [HttpPut("{id}")]
-         [SwaggerOperation(Summary = "Update an existing booking.")]
-         public async Task<IActionResult> UpdateBooking(int id, [FromBody] Booking booking)
-         {
-             if (!ModelState.IsValid)
-                 return BadRequest("Invalid data provided.");
+}
 
-             var response = await _bookingService.UpdateBookingAsync(id, booking);
-             if (!response.Succeeded)
-                 return response.Succeeded ? Ok(response) : BadRequest(response);
 
-             return Ok(response);
-         }
-
-         [HttpDelete("{id}")]
-         [SwaggerOperation(Summary = "Delete a booking by its unique identifier.")]
-         public async Task<IActionResult> DeleteBooking(int id)
-         {
-             var response = await _bookingService.DeleteBookingAsync(id);
-             if (!response.Succeeded)
-             {
-                 return NotFound(response);
-             }
-
-             return Ok(response);
-         }*/
-    }

@@ -1,4 +1,5 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Room;
+﻿using HotelBookingPlatform.Domain.DTOs.Amenity;
+using HotelBookingPlatform.Domain.DTOs.Room;
 
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IRoomService
