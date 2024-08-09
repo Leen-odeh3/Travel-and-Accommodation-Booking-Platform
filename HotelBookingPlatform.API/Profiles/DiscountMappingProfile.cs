@@ -6,9 +6,11 @@ public class DiscountMappingProfile : Profile
 {
     public DiscountMappingProfile()
     {
-        CreateMap<Discount, DiscountDto>()
-                 .ForMember(dest => dest.RoomClassName, opt => opt.MapFrom(src => src.RoomClass.Name));
 
-        CreateMap<DiscountCreateRequest, Discount>();
+        CreateMap<Discount, DiscountDto>();
+
+        CreateMap<DiscountCreateRequest, Discount>()
+            .ForMember(dest => dest.RoomID, opt => opt.MapFrom(src => src.RoomID)) 
+            .ForMember(dest => dest.CreatedAtUtc, opt => opt.Ignore());
     }
 }

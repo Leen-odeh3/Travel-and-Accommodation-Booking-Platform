@@ -12,5 +12,4 @@ public class RoomClass
     public ICollection<Room> Rooms { get; set; } = new List<Room>();
     public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
     public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
-
 }

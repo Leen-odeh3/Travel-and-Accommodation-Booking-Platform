@@ -56,7 +56,7 @@ public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepo
 
     public async Task<RoomClass> GetByIdAsync(int id)
     {
-        return await ApplyIncludes(_appDbContext.RoomClasses, includeDiscounts: true, includeAmenities: false, includeRooms: false, includeHotel: true)
+        return await ApplyIncludes(_appDbContext.RoomClasses, includeDiscounts: false, includeAmenities: false, includeRooms: false, includeHotel: true)
             .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
     }
 
@@ -71,7 +71,6 @@ public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepo
         return await ApplyIncludes(_appDbContext.RoomClasses, includeDiscounts: false, includeAmenities: false, includeRooms: true, includeHotel: false)
             .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
     }
-
 }
 
 

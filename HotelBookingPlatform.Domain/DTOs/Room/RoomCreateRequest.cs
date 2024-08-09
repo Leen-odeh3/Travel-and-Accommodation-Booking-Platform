@@ -5,5 +5,4 @@ public class RoomCreateRequest
     public int AdultsCapacity { get; set; }
     public int ChildrenCapacity { get; set; }
     public decimal PricePerNight { get; set; }
-
 }
