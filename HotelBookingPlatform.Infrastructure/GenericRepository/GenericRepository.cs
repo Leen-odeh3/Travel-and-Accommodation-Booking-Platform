@@ -1,5 +1,6 @@
 ﻿using HotelBookingPlatform.Domain.IRepositories;
 using HotelBookingPlatform.Infrastructure.Data;
+using HotelBookingPlatform.Infrastructure.HelperMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 namespace HotelBookingPlatform.Infrastructure.Repositories;
@@ -12,12 +13,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
     public async Task<T> CreateAsync(T entity)
     {
+        ValidationHelper.ValidateRequest(entity);
         await _appDbContext.Set<T>().AddAsync(entity);
         await _appDbContext.SaveChangesAsync();
         return entity;
     }
     public async Task<string> DeleteAsync(int id)
     {
+        ValidationHelper.ValidateId(id);
         var entity = await _appDbContext.Set<T>().FindAsync(id);
 
         if (entity is null)    
@@ -47,16 +50,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
     public async Task<T> GetByIdAsync(int id)
     {
+        ValidationHelper.ValidateId(id);
         return await _appDbContext.Set<T>().FindAsync(id);
     }
     public async Task<T> UpdateAsync(int id, T entity)
     {
+        ValidationHelper.ValidateId(id);
+        ValidationHelper.ValidateRequest(entity);
         var existingEntity = await _appDbContext.Set<T>().FindAsync(id);
 
         if (existingEntity is null)
-        {
-           throw new DirectoryNotFoundException(nameof(existingEntity));
-        }
+            throw new KeyNotFoundException($"Entity with ID {id} not found.");
+
         _appDbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
 
         await _appDbContext.SaveChangesAsync();

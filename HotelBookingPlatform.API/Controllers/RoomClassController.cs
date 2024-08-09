@@ -2,7 +2,6 @@
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
-using HotelBookingPlatform.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -38,12 +37,7 @@ public class RoomClassController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<RoomClassResponseDto>> GetRoomClass(int id)
     {
-
         var roomClass = await _roomClassService.GetRoomClassById(id);
-
-        if (roomClass is null)
-            throw new NotFoundException("RoomClass not found");
-
         return Ok(roomClass);   
     }
 
@@ -59,16 +53,14 @@ public class RoomClassController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, [FromBody] AmenityCreateDto request)
     {
-        await _roomClassService.AddAmenityToRoomClassAsync(roomClassId, request);
-
-        return StatusCode(StatusCodes.Status204NoContent);
+        var addedAmenity = await _roomClassService.AddAmenityToRoomClassAsync(roomClassId, request);
+        return Ok(addedAmenity);
     }
 
     [HttpDelete("{roomClassId}/amenities/{amenityId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenityFromRoomClass(int roomClassId, int amenityId)
     {
-
             await _roomClassService.DeleteAmenityFromRoomClassAsync(roomClassId, amenityId);
             return Ok(new { message = "Amenity deleted successfully." });          
     }
@@ -99,15 +91,8 @@ public class RoomClassController : ControllerBase
 )]
     public async Task<IActionResult> GetRoomsByRoomClassId(int roomClassId)
     {
-        try
-        {
             var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
-            return Ok(rooms);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }     
+            return Ok(rooms); 
     }
 
 
@@ -119,16 +104,8 @@ public class RoomClassController : ControllerBase
     )]
     public async Task<IActionResult> DeleteRoomFromRoomClass(int roomClassId, int roomId)
     {
-        try
-        {
             await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
-            return Ok(new { message = "Room deleted successfully." }); 
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
-      
+            return Ok(new { message = "Room deleted successfully." });      
     }
 
     [HttpPost("{RoomClassId}/uploadImages")]

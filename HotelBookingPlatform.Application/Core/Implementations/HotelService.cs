@@ -10,7 +10,7 @@ using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundE
 using HotelBookingPlatform.Domain.DTOs.HomePage;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using Microsoft.EntityFrameworkCore;
-using HotelBookingPlatform.Application.HelperMethods;
+using HotelBookingPlatform.Infrastructure.HelperMethods;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.Review;
 

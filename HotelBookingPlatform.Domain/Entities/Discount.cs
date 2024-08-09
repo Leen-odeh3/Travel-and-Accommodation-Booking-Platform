@@ -7,5 +7,5 @@ public class Discount
     public decimal Percentage { get; set; }
     public DateTime StartDateUtc { get; set; }
     public DateTime EndDateUtc { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
+    public DateTime CreatedAtUtc = DateTime.UtcNow;
 }

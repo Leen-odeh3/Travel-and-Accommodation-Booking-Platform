@@ -12,7 +12,6 @@ public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
     private readonly IImageService _imageService;
-
     public CityController(ICityService cityService,IImageService imageService)
     {
         _cityService = cityService;
@@ -93,7 +92,7 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("{cityId}/uploadImages")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload images for a specific city.")]
     public async Task<IActionResult> UploadImages(int cityId, IList<IFormFile> files)
     {
