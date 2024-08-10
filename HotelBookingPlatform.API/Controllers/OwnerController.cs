@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class OwnerController : ControllerBase

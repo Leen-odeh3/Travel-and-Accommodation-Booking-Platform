@@ -7,10 +7,6 @@ public class OwnerService : BaseService<Owner>, IOwnerService
     public async Task<OwnerDto> GetOwnerAsync(int id)
     {
         var owner = await _unitOfWork.OwnerRepository.GetByIdAsync(id);
-
-        if (owner is null)
-            throw new NotFoundException($"Owner with ID {id} not found.");
-
         return _mapper.Map<OwnerDto>(owner);
     }
     public async Task<OwnerDto> CreateOwnerAsync(OwnerCreateDto request)

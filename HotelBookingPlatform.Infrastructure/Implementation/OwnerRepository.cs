@@ -4,10 +4,10 @@ public class OwnerRepository :GenericRepository<Owner> ,IOwnerRepository
     public OwnerRepository(AppDbContext context) : base(context)
     {
     }
-    public async Task<List<Owner>> GetAllAsync()
+    public override async Task<IEnumerable<Owner>> GetAllAsync()
     {
         return await _appDbContext.Set<Owner>()
-            .Include(o => o.Hotels) 
+            .Include(h => h.Hotels) 
             .ToListAsync();
     }
 }

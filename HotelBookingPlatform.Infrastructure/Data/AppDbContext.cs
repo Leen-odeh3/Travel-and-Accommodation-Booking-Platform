@@ -2,6 +2,11 @@
 public class AppDbContext : IdentityDbContext<LocalUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> option) : base(option) { }
+
+    public AppDbContext()
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

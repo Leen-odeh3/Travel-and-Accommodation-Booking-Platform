@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.Infrastructure.Repositories;
+﻿namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     protected readonly AppDbContext _appDbContext;
@@ -27,7 +26,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         return "Entity deleted successfully.";
     }
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _appDbContext.Set<T>().ToListAsync();
     }
@@ -47,7 +46,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task<T> GetByIdAsync(int id)
     {
         ValidationHelper.ValidateId(id);
-        return await _appDbContext.Set<T>().FindAsync(id);
+        var entity = await _appDbContext.Set<T>().FindAsync(id);
+
+        if (entity is null)
+            throw new KeyNotFoundException($"Entity with ID {id} not found.");
+
+        return entity;
     }
     public async Task<T> UpdateAsync(int id, T entity)
     {
