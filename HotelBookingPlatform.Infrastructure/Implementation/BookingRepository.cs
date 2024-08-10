@@ -1,14 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Booking;
-using HotelBookingPlatform.Domain.DTOs.Room;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Enums;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository
 {
     public BookingRepository(AppDbContext context):base(context)

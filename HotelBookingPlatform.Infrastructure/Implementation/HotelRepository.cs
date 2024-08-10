@@ -1,9 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 {
     private readonly AppDbContext _context;

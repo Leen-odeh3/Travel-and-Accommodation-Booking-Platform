@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Amenity;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IHotelAmenitiesService
 {
     Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelNameAsync(string hotelName, int pageSize, int pageNumber);

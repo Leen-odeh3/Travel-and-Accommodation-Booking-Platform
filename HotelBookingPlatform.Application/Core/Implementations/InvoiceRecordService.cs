@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.Exceptions;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class InvoiceRecordService : BaseService<InvoiceRecord>, IInvoiceRecordService
 {
     public InvoiceRecordService(IUnitOfWork<InvoiceRecord> unitOfWork, IMapper mapper)

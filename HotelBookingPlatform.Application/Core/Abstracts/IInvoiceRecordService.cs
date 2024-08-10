@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IInvoiceRecordService
 {
     Task CreateInvoiceAsync(InvoiceCreateRequest request);

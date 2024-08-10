@@ -1,7 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Helpers;
-using System.IdentityModel.Tokens.Jwt;
-namespace HotelBookingPlatform.Domain.IServices;
+﻿namespace HotelBookingPlatform.Domain.IServices;
 public interface ITokenService
 {
     Task<JwtSecurityToken> CreateJwtToken(LocalUser user);

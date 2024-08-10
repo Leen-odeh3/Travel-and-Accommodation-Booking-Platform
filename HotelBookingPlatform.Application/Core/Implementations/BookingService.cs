@@ -1,12 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Booking;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Enums;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class BookingService : BaseService<Booking>, IBookingService
 {
     public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper)

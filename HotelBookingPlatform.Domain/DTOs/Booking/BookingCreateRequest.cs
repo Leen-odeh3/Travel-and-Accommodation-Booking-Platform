@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Enums;
-namespace HotelBookingPlatform.Domain.DTOs.Booking;
+﻿namespace HotelBookingPlatform.Domain.DTOs.Booking;
 public class BookingCreateRequest
 {
     public int HotelId { get; set; } 

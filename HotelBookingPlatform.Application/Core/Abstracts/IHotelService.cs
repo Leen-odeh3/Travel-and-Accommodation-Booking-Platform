@@ -1,10 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.DTOs.HomePage;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.DTOs.Review;
-using HotelBookingPlatform.Domain.DTOs.Room;
-using Microsoft.AspNetCore.Mvc;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IHotelService
 {
     Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber);

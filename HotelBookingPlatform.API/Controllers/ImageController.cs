@@ -1,11 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Abstracts;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HotelBookingPlatform.API.Controllers
+﻿namespace HotelBookingPlatform.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

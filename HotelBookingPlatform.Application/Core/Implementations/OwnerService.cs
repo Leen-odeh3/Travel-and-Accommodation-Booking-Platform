@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Owner;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Exceptions;
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class OwnerService : BaseService<Owner>, IOwnerService
 {
     public OwnerService(IUnitOfWork<Owner> unitOfWork, IMapper mapper)

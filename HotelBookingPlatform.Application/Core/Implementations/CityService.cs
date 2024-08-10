@@ -1,16 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Infrastructure.HelperMethods;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.DTOs.City;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Exceptions;
-using System.Linq.Expressions;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)

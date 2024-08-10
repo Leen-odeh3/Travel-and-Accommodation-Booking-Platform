@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IImageService
 {
     Task UploadImagesAsync(string entityType, int entityId, IList<IFormFile> files);

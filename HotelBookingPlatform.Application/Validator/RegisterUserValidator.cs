@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using HotelBookingPlatform.Domain.Helpers;
-namespace HotelBookingPlatform.Application.Validator;
+﻿namespace HotelBookingPlatform.Application.Validator;
 public class RegisterUserValidator : AbstractValidator<RegisterModel>
 {
     public RegisterUserValidator()

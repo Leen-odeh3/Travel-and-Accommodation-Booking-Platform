@@ -1,12 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Exceptions;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
 {
     public HotelAmenitiesService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)

@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Exceptions;
-using System.Net;
-using System.Text.Json;
+﻿
 namespace HotelBookingPlatform.API.Middlewares;
 public class GlobalExceptionHandling
 {

@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace HotelBookingPlatform.API.Controllers;
 
 [ApiController]

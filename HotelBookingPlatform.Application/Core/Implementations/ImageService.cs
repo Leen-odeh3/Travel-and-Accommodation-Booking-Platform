@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : BaseService<Image> ,IImageService
 {
     private readonly IConfiguration _configuration;

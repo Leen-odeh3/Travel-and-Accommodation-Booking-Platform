@@ -1,7 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Room;
-using Microsoft.AspNetCore.Mvc;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using Microsoft.AspNetCore.Authorization;
+﻿
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]

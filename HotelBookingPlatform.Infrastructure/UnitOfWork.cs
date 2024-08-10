@@ -1,10 +1,4 @@
-﻿using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.Implementation;
-using Microsoft.AspNetCore.Identity;
-namespace HotelBookingPlatform.Infrastructure;
+﻿namespace HotelBookingPlatform.Infrastructure;
 public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {
     private readonly AppDbContext _context;

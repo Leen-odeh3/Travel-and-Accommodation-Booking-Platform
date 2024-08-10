@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Discount;
-using HotelBookingPlatform.Domain.Entities;
-namespace HotelBookingPlatform.API.Profiles;
+﻿namespace HotelBookingPlatform.API.Profiles;
 public class DiscountMappingProfile : Profile
 {
     public DiscountMappingProfile()

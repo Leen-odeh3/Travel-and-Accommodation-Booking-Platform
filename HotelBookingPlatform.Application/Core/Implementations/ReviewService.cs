@@ -1,17 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Review;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Abstracts;
-using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
-using Microsoft.EntityFrameworkCore;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
-
-namespace HotelBookingPlatform.Application.Core.Implementations
+﻿namespace HotelBookingPlatform.Application.Core.Implementations
 {
     public class ReviewService : BaseService<Review>, IReviewService
     {
@@ -24,14 +11,12 @@ namespace HotelBookingPlatform.Application.Core.Implementations
 
         public async Task CreateReviewAsync(ReviewCreateRequest request)
         {
-            // التحقق من وجود الفندق
             var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
             if (hotel == null)
             {
                 throw new NotFoundException("Hotel not found.");
             }
 
-            // البحث عن المستخدم باستخدام البريد الإلكتروني
             var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
             if (user == null)
             {
@@ -45,14 +30,13 @@ namespace HotelBookingPlatform.Application.Core.Implementations
                 throw new BadRequestException("User must have a booking in the hotel to leave a review.");
             }
 
-            // إنشاء المراجعة
             var review = new Review
             {
                 HotelId = request.HotelId,
                 Content = request.Content,
                 Rating = request.Rating,
                 CreatedAtUtc = DateTime.UtcNow,
-                UserId = user.Id // تعيين UserId بناءً على المستخدم الذي تم العثور عليه
+                UserId = user.Id 
             };
 
             await _unitOfWork.ReviewRepository.CreateAsync(review);
@@ -67,11 +51,9 @@ namespace HotelBookingPlatform.Application.Core.Implementations
                 throw new NotFoundException("Review not found.");
             }
 
-            // تحميل المعلومات الإضافية
             var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(review.HotelId);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
 
-            // إعداد DTO مع المعلومات الإضافية
             var reviewDto = new ReviewResponseDto
             {
                 ReviewID = review.ReviewID,

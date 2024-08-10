@@ -1,19 +1,4 @@
-﻿using HotelBookingPlatform.Application.Services;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using HotelBookingPlatform.Infrastructure.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
-using System.Text;
-using HotelBookingPlatform.API.Profiles;
-using Microsoft.Extensions.Configuration;
-
-namespace HotelBookingPlatform.API.Extentions;
+﻿namespace HotelBookingPlatform.API.Extentions;
 public static class ModulePresentationDependencies
 {
     public static IServiceCollection AddPresentationDependencies(this IServiceCollection services, IConfiguration configuration)

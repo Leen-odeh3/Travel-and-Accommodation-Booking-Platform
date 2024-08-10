@@ -1,9 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Authentication;
-
+﻿
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/auth")]

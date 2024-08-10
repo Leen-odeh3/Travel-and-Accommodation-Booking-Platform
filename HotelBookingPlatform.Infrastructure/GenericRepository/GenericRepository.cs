@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Domain.IRepositories;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.HelperMethods;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿
 namespace HotelBookingPlatform.Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {

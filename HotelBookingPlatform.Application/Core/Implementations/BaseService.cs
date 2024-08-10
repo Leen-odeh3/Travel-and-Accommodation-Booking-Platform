@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain;
-using AutoMapper;
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public abstract class BaseService<TEntity> where TEntity : class
 {
     protected readonly IUnitOfWork<TEntity> _unitOfWork;

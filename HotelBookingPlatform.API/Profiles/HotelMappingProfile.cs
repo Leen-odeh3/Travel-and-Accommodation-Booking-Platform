@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.DTOs.Review;
-using HotelBookingPlatform.Domain.Entities;
-
-namespace HotelBookingPlatform.API.Profiles;
+﻿namespace HotelBookingPlatform.API.Profiles;
 public class HotelMappingProfile : Profile
 {
     public HotelMappingProfile()

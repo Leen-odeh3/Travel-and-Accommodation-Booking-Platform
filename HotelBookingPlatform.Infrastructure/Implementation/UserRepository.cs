@@ -1,11 +1,4 @@
-﻿using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class UserRepository : GenericRepository<LocalUser>, IUserRepository
 {
     private readonly UserManager<LocalUser> _userManager;

@@ -1,7 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Infrastructure.Configuration;
+﻿namespace HotelBookingPlatform.Infrastructure.Configuration;
 public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
 {
     public void Configure(EntityTypeBuilder<Hotel> builder)
@@ -24,10 +21,6 @@ public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
 
         builder.Property(h => h.CreatedAtUtc)
             .IsRequired();
-
-       /* builder.HasMany(h => h.Bookings)
-            .WithOne(b => b.Hotel)
-            .HasForeignKey(b => b.HotelId);*/
 
         builder.HasMany(h => h.RoomClasses)
             .WithOne(rc => rc.Hotel)

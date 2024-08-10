@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-namespace HotelBookingPlatform.Application.Validator;
+﻿namespace HotelBookingPlatform.Application.Validator;
 public class HotelCreateRequestValidator : AbstractValidator<HotelCreateRequest>
 {
     public HotelCreateRequestValidator()

@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Booking;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.DTOs.Room;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Enums;
+﻿
 namespace HotelBookingPlatform.API.Profiles;
 public class BookingMappingProfile :Profile
 {

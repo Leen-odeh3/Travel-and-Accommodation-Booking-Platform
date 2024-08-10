@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Infrastructure.Configuration;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Infrastructure.Data;
+﻿namespace HotelBookingPlatform.Infrastructure.Data;
 public class AppDbContext : IdentityDbContext<LocalUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> option) : base(option) { }

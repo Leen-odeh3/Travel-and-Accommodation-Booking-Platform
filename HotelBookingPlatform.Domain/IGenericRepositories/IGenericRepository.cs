@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-namespace HotelBookingPlatform.Domain.IRepositories;
+﻿namespace HotelBookingPlatform.Domain.IRepositories;
 public interface IGenericRepository<T> where T : class
 {
      Task<IEnumerable<T>> GetAllAsyncPagenation(Expression<Func<T,bool>> filter,int PageSize=10 , int PageNumber=1);

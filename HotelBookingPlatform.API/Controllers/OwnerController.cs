@@ -1,9 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Owner;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.Exceptions;
-using Microsoft.AspNetCore.Authorization;
+﻿
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
