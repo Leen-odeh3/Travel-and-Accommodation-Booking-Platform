@@ -3,7 +3,6 @@ public class UserService : IUserService
 {
     private readonly UserManager<LocalUser> _userManager;
     private readonly ITokenService _tokenService;
-
     public UserService(UserManager<LocalUser> userManager, ITokenService tokenService)
     {
         _userManager = userManager;

@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/auth")]
 [ApiController]
 public class RoleController : ControllerBase
@@ -17,12 +16,12 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            throw new BadRequestException("Invalid model state");
 
         var result = await _roleService.AddRoleAsync(model);
 
         if (!string.IsNullOrEmpty(result))
-            return BadRequest(result);
+            throw new BadRequestException(result);
 
         return Ok(new { Message = result });
     }

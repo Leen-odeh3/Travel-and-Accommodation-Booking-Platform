@@ -1,13 +1,10 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class TokenController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
     public TokenController(ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
     {
         _tokenService = tokenService;
