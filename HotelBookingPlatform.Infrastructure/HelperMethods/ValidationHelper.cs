@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-namespace HotelBookingPlatform.Application.HelperMethods;
+﻿namespace HotelBookingPlatform.Infrastructure.HelperMethods;
 public static class ValidationHelper
 {
     public static void ValidateId(int id)

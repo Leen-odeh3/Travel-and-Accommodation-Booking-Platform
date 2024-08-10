@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.HelperMethods;
+using HotelBookingPlatform.Infrastructure.HelperMethods;
 using HotelBookingPlatform.Domain;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
 using HotelBookingPlatform.Domain.DTOs.Room;
 using HotelBookingPlatform.Domain.DTOs.RoomClass;
 using HotelBookingPlatform.Domain.Entities;
 using HotelBookingPlatform.Domain.Exceptions;
+using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 {
@@ -14,7 +15,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         : base(unitOfWork, mapper) { }
     public async Task<RoomClassResponseDto> CreateRoomClass(RoomClassRequestDto request)
     {
-        ValidationHelper.ValidateRequest(request);
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
 
         if (hotel is null)
@@ -24,15 +24,12 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         roomClass.HotelId = request.HotelId;
 
         await _unitOfWork.RoomClasseRepository.CreateAsync(roomClass);
-        await _unitOfWork.SaveChangesAsync();
 
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
     public async Task<RoomClassResponseDto> GetRoomClassById(int id)
     {
-        ValidationHelper.ValidateId(id);
         var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(id);
-
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
     public async Task<RoomClassResponseDto> UpdateRoomClass(int id, RoomClassRequestDto request)
@@ -44,7 +41,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 
         _mapper.Map(request, roomClass);
         _unitOfWork.RoomClasseRepository.UpdateAsync(id,roomClass); 
-        await _unitOfWork.SaveChangesAsync();
 
         return _mapper.Map<RoomClassResponseDto>(roomClass);
     }
@@ -67,13 +63,11 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         if (roomClass.Rooms is null)
             roomClass.Rooms = new List<Room>();
         
-
         roomClass.Rooms.Add(room);
 
         try
         {
             await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
-            await _unitOfWork.SaveChangesAsync();
 
             var roomDto = _mapper.Map<RoomResponseDto>(room);
             return roomDto;
@@ -90,11 +84,10 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         if (roomClass is null)
             throw new NotFoundException("Room class not found.");
  
-        if (roomClass.Rooms == null || !roomClass.Rooms.Any())
-            return Enumerable.Empty<RoomResponseDto>();
+        if (roomClass.Rooms is null || !roomClass.Rooms.Any())
+            throw new InvalidOperationException($"No rooms found for RoomClass with ID {roomClassId}.");
 
         var roomsDto = _mapper.Map<IEnumerable<RoomResponseDto>>(roomClass.Rooms);
-
         return roomsDto;
     }
     public async Task DeleteRoomFromRoomClassAsync(int roomClassId, int roomId)
@@ -107,16 +100,13 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         var room = roomClass.Rooms.FirstOrDefault(r => r.RoomID == roomId);
 
         if (room is null)
-        {
             throw new NotFoundException("Room not found.");
-        }
 
         roomClass.Rooms.Remove(room);
 
         try
         {
             await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
-            await _unitOfWork.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -140,7 +130,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
         {
             roomClass.Amenities.Add(amenity);
             await _unitOfWork.RoomClasseRepository.UpdateAsync(roomClassId, roomClass);
-            await _unitOfWork.SaveChangesAsync();
         }
 
         return _mapper.Map<AmenityResponseDto>(amenity);
@@ -168,7 +157,6 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
             throw new ApplicationException("An error occurred while updating the room class.");
         }
     }
-
     public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByRoomClassIdAsync(int roomClassId)
     {
         var roomClass = await _unitOfWork.RoomClasseRepository.GetRoomClassWithAmenitiesAsync(roomClassId);
@@ -176,7 +164,7 @@ public class RoomClassService : BaseService<RoomClass>, IRoomClassService
             throw new NotFoundException("Room class not found.");
 
         if (roomClass.Amenities == null || !roomClass.Amenities.Any())
-            return Enumerable.Empty<AmenityResponseDto>();
+            throw new InvalidOperationException($"No amenities found for RoomClass with ID {roomClassId}.");
 
         var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(roomClass.Amenities);
         return amenitiesDto;

@@ -1,8 +1,7 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Room;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-
+using Microsoft.AspNetCore.Authorization;
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
@@ -23,15 +22,11 @@ public class RoomController : ControllerBase
     public async Task<ActionResult<RoomResponseDto>> GetRoom(int id)
     {
         var room = await _roomService.GetRoomAsync(id);
-        if (room == null)
-        {
-            return NotFound(new { message = "Room not found." });
-        }
-
         return Ok(room);
     }
 
     [HttpPost("{roomId}/uploadImages")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UploadImages(int roomId, IList<IFormFile> files)
     {
         await _imageService.UploadImagesAsync("Room", roomId, files);
@@ -46,6 +41,7 @@ public class RoomController : ControllerBase
     }
 
     [HttpDelete("{roomId}/DeleteImage")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteImage(int roomId, int imageId)
     {
         await _imageService.DeleteImageAsync("Room", roomId,imageId);
@@ -53,6 +49,7 @@ public class RoomController : ControllerBase
     }
 
     [HttpDelete("{roomId}/DeleteAllImages")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAllImages(int roomId)
     {
         await _imageService.DeleteAllImagesAsync("Room", roomId);

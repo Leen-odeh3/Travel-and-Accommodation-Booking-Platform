@@ -1,85 +1,48 @@
 ﻿using HotelBookingPlatform.Domain.DTOs.Discount;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using HotelBookingPlatform.Application.Core.Abstracts;
-
-namespace HotelBookingPlatform.API.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-[ResponseCache(CacheProfileName = "DefaultCache")]
-public class DiscountController : ControllerBase
+using Microsoft.AspNetCore.Authorization;
+namespace HotelBookingPlatform.API.Controllers
 {
-    private readonly IDiscountService _discountService;
-
-    public DiscountController(IDiscountService discountService)
+    [Route("api/[controller]")]
+    [ApiController]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
+    public class DiscountController : ControllerBase
     {
-        _discountService = discountService;
-    }
+        private readonly IDiscountService _discountService;
+        private readonly ILogger<DiscountController> _logger;
 
-    // GET: api/Discount/5
-    [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Get detailed information about a discount by its unique identifier.")]
-    public async Task<ActionResult<DiscountDto>> GetDiscount(int id)
-    {
-        var discount = await _discountService.GetDiscountAsync(id);
-        if (discount == null)
+        public DiscountController(IDiscountService discountService, ILogger<DiscountController> logger)
         {
-            return NotFound(new { message = "Discount not found." });
+            _discountService = discountService;
+            _logger = logger;
         }
 
-        return Ok(discount);
-    }
-
-    // POST: api/Discount
-    [HttpPost]
-    [SwaggerOperation(Summary = "Create a new discount.")]
-    public async Task<ActionResult<DiscountDto>> CreateDiscount([FromBody] DiscountCreateRequest request)
-    {
-        if (!ModelState.IsValid)
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddDiscount([FromBody] DiscountCreateRequest request)
         {
-            return BadRequest("Invalid data provided.");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = "Invalid request parameters." });
+            }
+
+            try
+            {
+                var discountDto = await _discountService.AddDiscountToRoomAsync(
+                    request.RoomID,
+                    request.Percentage,
+                    request.StartDateUtc,
+                    request.EndDateUtc
+                );
+
+                return Ok(new { Message = "Discount added successfully.", Discount = discountDto });
+            }
+            catch (Exception ex)
+            {
+                // Log exception details if necessary
+                return StatusCode(500, new { Message = "An unexpected error occurred.", Details = ex.Message });
+            }
         }
-
-        var createdDiscount = await _discountService.CreateDiscountAsync(request);
-        return CreatedAtAction(nameof(GetDiscount), new { id = createdDiscount.DiscountID }, createdDiscount);
-    }
-
-    // PUT: api/Discount/5
-    [HttpPut("{id}")]
-    [SwaggerOperation(Summary = "Update an existing discount.")]
-    public async Task<ActionResult<DiscountDto>> UpdateDiscount(int id, [FromBody] DiscountDto request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Invalid data provided.");
-        }
-
-        if (id != request.DiscountID)
-        {
-            return BadRequest("ID mismatch.");
-        }
-
-        var updatedDiscount = await _discountService.UpdateDiscountAsync(id, request);
-        if (updatedDiscount == null)
-        {
-            return NotFound(new { message = "Discount not found." });
-        }
-
-        return Ok(updatedDiscount);
-    }
-
- /*   // DELETE: api/Discount/5
-    [HttpDelete("{id}")]
-    [SwaggerOperation(Summary = "Delete an existing discount.")]
-    public async Task<ActionResult> DeleteDiscount(int id)
-    {
-        var discount = await _discountService.DeleteDiscountAsync(id);
-        if (!discount)
-        {
-            return NotFound(new { message = "Discount not found." });
-        }
-
-        return Ok(new { message = "Discount successfully deleted." });
-    }*/
+ }
 }
