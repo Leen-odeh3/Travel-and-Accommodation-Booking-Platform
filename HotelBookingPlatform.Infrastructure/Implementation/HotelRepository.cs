@@ -12,7 +12,7 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
         return _context.Hotels
             .Include(h => h.City)
             .Include(h => h.Owner)
-            .Include(h => h.Reviews);
+            .Include(h => h.Reviews).AsSplitQuery();
     }
 
     public async Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1)

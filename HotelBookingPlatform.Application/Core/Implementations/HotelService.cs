@@ -118,7 +118,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         {
             HotelId = hotel.HotelId,
             HotelName = hotel.Name,
-            StarRating = hotel.StarRating,          
+            StarRating = hotel.StarRating,
             RoomType = hotel.RoomClasses.Any()
                 ? hotel.RoomClasses.First().RoomType.ToString()
                 : "Unknown",
@@ -200,10 +200,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         await _unitOfWork.HotelRepository.UpdateAsync(hotelId, hotel);
         await _unitOfWork.SaveChangesAsync();
     }
-
-
-
-
     public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
     {
         ValidationHelper.ValidateId(hotelId);

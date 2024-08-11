@@ -1,4 +1,4 @@
-﻿namespace HotelBookingPlatformApplication.Test.ServicesTest;
+﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.OwnerServiceTest;
 
 public class OwnerServiceTest
 {
@@ -53,7 +53,7 @@ public class OwnerServiceTest
     [Fact]
     public async Task DeleteOwnerAsync_ForOwnerIdIsInvalid_ThrowsArgumentException()
     {
-        var invalidOwnerId = -1; 
+        var invalidOwnerId = -1;
 
         _unitOfWorkMock
             .Setup(u => u.OwnerRepository.DeleteAsync(It.IsAny<int>()))
