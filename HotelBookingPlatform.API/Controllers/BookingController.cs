@@ -1,6 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [ResponseCache(CacheProfileName = "DefaultCache")]
@@ -53,23 +51,14 @@ public class BookingController : ControllerBase
     }
 
 
-    [HttpPut("{id}/status")]
+    [HttpPut("{id}/Update_status")]
+    [Authorize(Roles="User")]
     [SwaggerOperation(Summary = "Update the status of a booking.")]
     public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] BookingStatus newStatus)
     {
-        try
-        {
+
             await _bookingService.UpdateBookingStatusAsync(id, newStatus);
             return NoContent();
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (BadRequestException ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 }
 

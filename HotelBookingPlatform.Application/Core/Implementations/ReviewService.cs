@@ -1,101 +1,98 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
+public class ReviewService : BaseService<Review>, IReviewService
 {
-    public class ReviewService : BaseService<Review>, IReviewService
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        : base(unitOfWork, mapper)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-            : base(unitOfWork, mapper)
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task CreateReviewAsync(ReviewCreateRequest request)
+    {
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
+        if (hotel is null)
         {
-            _httpContextAccessor = httpContextAccessor;
+            throw new NotFoundException("Hotel not found.");
         }
 
-        public async Task CreateReviewAsync(ReviewCreateRequest request)
+        var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
+        if (user == null)
         {
-            var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
-            if (hotel == null)
-            {
-                throw new NotFoundException("Hotel not found.");
-            }
-
-            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
-            if (user == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
-
-            var booking = await _unitOfWork.BookingRepository.GetBookingByUserAndHotelAsync(user.Id, request.HotelId);
-
-            if (booking == null)
-            {
-                throw new BadRequestException("User must have a booking in the hotel to leave a review.");
-            }
-
-            var review = new Review
-            {
-                HotelId = request.HotelId,
-                Content = request.Content,
-                Rating = request.Rating,
-                CreatedAtUtc = DateTime.UtcNow,
-                UserId = user.Id 
-            };
-
-            await _unitOfWork.ReviewRepository.CreateAsync(review);
-            await _unitOfWork.SaveChangesAsync();
+            throw new NotFoundException("User not found.");
         }
 
-        public async Task<ReviewResponseDto> GetReviewAsync(int id)
+        var booking = await _unitOfWork.BookingRepository.GetBookingByUserAndHotelAsync(user.Id, request.HotelId);
+
+        if (booking == null)
         {
-            var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-            if (review == null)
-            {
-                throw new NotFoundException("Review not found.");
-            }
-
-            var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(review.HotelId);
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
-
-            var reviewDto = new ReviewResponseDto
-            {
-                ReviewID = review.ReviewID,
-                HotelName = hotel?.Name,
-                Content = review.Content,
-                Rating = review.Rating,
-                CreatedAtUtc = review.CreatedAtUtc,
-                ModifiedAtUtc = review.ModifiedAtUtc,
-                UserName = user?.UserName
-            };
-
-            return reviewDto;
+            throw new BadRequestException("User must have a booking in the hotel to leave a review.");
         }
 
-        public async Task<ReviewResponseDto> UpdateReviewAsync(int id, ReviewCreateRequest request)
+        var review = new Review
         {
-            var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-            if (review == null)
-            {
-                throw new NotFoundException("Review not found.");
-            }
+            HotelId = request.HotelId,
+            Content = request.Content,
+            Rating = request.Rating,
+            CreatedAtUtc = DateTime.UtcNow,
+            UserId = user.Id 
+        };
 
-            review.Content = request.Content;
-            review.Rating = request.Rating;
-            review.ModifiedAtUtc = DateTime.UtcNow;
-
-            await _unitOfWork.ReviewRepository.UpdateAsync(id, review);
-            await _unitOfWork.SaveChangesAsync();
-
-            return _mapper.Map<ReviewResponseDto>(review);
+        await _unitOfWork.ReviewRepository.CreateAsync(review);
+        await _unitOfWork.SaveChangesAsync();
+    }
+    public async Task<ReviewResponseDto> GetReviewAsync(int id)
+    {
+        var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
+        if (review == null)
+        {
+            throw new NotFoundException("Review not found.");
         }
 
-        public async Task DeleteReviewAsync(int id)
-        {
-            var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-            if (review == null)
-            {
-                throw new NotFoundException("Review not found.");
-            }
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(review.HotelId);
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
 
-            await _unitOfWork.ReviewRepository.DeleteAsync(id);
-            await _unitOfWork.SaveChangesAsync();
+        var reviewDto = new ReviewResponseDto
+        {
+            ReviewID = review.ReviewID,
+            HotelName = hotel?.Name,
+            Content = review.Content,
+            Rating = review.Rating,
+            CreatedAtUtc = review.CreatedAtUtc,
+            ModifiedAtUtc = review.ModifiedAtUtc,
+            UserName = user?.UserName
+        };
+
+        return reviewDto;
+    }
+
+    public async Task<ReviewResponseDto> UpdateReviewAsync(int id, ReviewCreateRequest request)
+    {
+        var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
+        if (review is null)
+        {
+            throw new NotFoundException("Review not found.");
         }
+
+        review.Content = request.Content;
+        review.Rating = request.Rating;
+        review.ModifiedAtUtc = DateTime.UtcNow;
+
+        await _unitOfWork.ReviewRepository.UpdateAsync(id, review);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<ReviewResponseDto>(review);
+    }
+
+    public async Task DeleteReviewAsync(int id)
+    {
+        var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
+        if (review == null)
+        {
+            throw new NotFoundException("Review not found.");
+        }
+
+        await _unitOfWork.ReviewRepository.DeleteAsync(id);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

@@ -1,6 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]

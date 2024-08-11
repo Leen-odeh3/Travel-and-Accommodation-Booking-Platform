@@ -6,6 +6,11 @@ public class Discount
     public decimal Percentage { get; set; }
     public DateTime StartDateUtc { get; set; }
     public DateTime EndDateUtc { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
+    public Room Room { get; set; }
 
-    public DateTime CreatedAtUtc = DateTime.UtcNow;
+    public Discount()
+    {
+        CreatedAtUtc = DateTime.UtcNow;
+    }
 }
