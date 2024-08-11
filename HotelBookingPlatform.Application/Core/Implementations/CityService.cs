@@ -17,6 +17,9 @@ public class CityService : BaseService<City>, ICityService
         if (pageSize <= 0 || pageNumber <= 0)
             throw new ArgumentException("Page size and page number must be greater than zero.");
 
+        if (string.IsNullOrEmpty(cityName) || string.IsNullOrEmpty(description))
+            throw new ArgumentException("At least one of cityName or description must be provided.");
+
         Expression<Func<City, bool>> filter = null;
 
         if (!string.IsNullOrEmpty(cityName) || !string.IsNullOrEmpty(description))

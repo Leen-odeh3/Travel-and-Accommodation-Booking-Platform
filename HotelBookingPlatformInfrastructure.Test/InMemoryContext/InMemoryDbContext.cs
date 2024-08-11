@@ -1,5 +1,4 @@
 ﻿namespace HotelBookingPlatformInfrastructure.Test.InMemoryContext;
-
 public class InMemoryDbContext : AppDbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

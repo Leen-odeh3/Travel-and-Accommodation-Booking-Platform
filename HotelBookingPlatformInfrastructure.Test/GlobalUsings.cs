@@ -6,3 +6,4 @@ global using Microsoft.EntityFrameworkCore;
 global using HotelBookingPlatform.Domain.Entities;
 global using HotelBookingPlatform.Domain.Enums;
 global using HotelBookingPlatformInfrastructure.Test.InMemoryContext;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
