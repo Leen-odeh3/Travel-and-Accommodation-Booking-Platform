@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Implementations;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using Moq;
-using HotelBookingPlatform.Domain.DTOs.Owner;
-
-namespace HotelBookingPlatformApplication.Test.ServicesTest;
+﻿namespace HotelBookingPlatformApplication.Test.ServicesTest;
 
 public class OwnerServiceTest
 {
@@ -67,5 +60,61 @@ public class OwnerServiceTest
             .ReturnsAsync("Owner deleted successfully");
 
         Assert.ThrowsAsync<ArgumentNullException>(() => _ownerService.DeleteOwnerAsync(invalidOwnerId));
+    }
+    [Fact]
+    public async Task UpdateOwnerAsync_ValidRequest_UpdatesOwnerAndReturnsDto()
+    {
+        // Arrange
+        var ownerId = 1;
+        var ownerCreateDto = new OwnerCreateDto
+        {
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leenodeh287@example.com",
+            PhoneNumber = "1234567890"
+        };
+
+        var existingOwner = new Owner
+        {
+            OwnerID = ownerId,
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leen@example.com",
+            PhoneNumber = "0987654321"
+        };
+
+        var updatedOwnerDto = new OwnerDto
+        {
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leenodeh287@example.com",
+            PhoneNumber = "1234567890"
+        };
+
+        _unitOfWorkMock
+            .Setup(u => u.OwnerRepository.GetByIdAsync(ownerId))
+            .ReturnsAsync(existingOwner);
+
+        _mapperMock
+            .Setup(m => m.Map(ownerCreateDto, existingOwner))
+            .Verifiable();
+
+        _unitOfWorkMock
+            .Setup(u => u.OwnerRepository.UpdateAsync(ownerId, existingOwner))
+              .ReturnsAsync(existingOwner);
+
+        _mapperMock
+            .Setup(m => m.Map<OwnerDto>(existingOwner))
+            .Returns(updatedOwnerDto);
+
+        // Act
+        var result = await _ownerService.UpdateOwnerAsync(ownerId, ownerCreateDto);
+
+        // Assert
+        _unitOfWorkMock.Verify(u => u.OwnerRepository.GetByIdAsync(ownerId), Times.Once);
+        _mapperMock.Verify(m => m.Map(ownerCreateDto, existingOwner), Times.Once);
+        _unitOfWorkMock.Verify(u => u.OwnerRepository.UpdateAsync(ownerId, existingOwner), Times.Once);
+        _mapperMock.Verify(m => m.Map<OwnerDto>(existingOwner), Times.Once);
+        Assert.Equal(updatedOwnerDto, result);
     }
 }

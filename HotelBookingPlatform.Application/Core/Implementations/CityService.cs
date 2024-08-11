@@ -55,7 +55,9 @@ public class CityService : BaseService<City>, ICityService
                 PostOffice = city.PostOffice,
                 CreatedAtUtc = city.CreatedAtUtc,
                 Description = city.Description,
-                Hotels = _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
+                Hotels = includeHotels
+            ? _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
+            : new List<HotelResponseDto>()
             };
             return cityWithHotelsDto;
         }

@@ -47,24 +47,28 @@ public class OwnerRepoTest
         Assert.Equal(owner.Email, createdOwner.Email);
     }
 
-    [Fact]
-    public async Task UpdateOwner_ShouldCorrectlyUpdateOwnerEmail()
+    [Theory]
+    [InlineData(1, "John", "Doe", "john.doe@example.com", "123-456-7890", "john.new@example.com", "Jane", "Doe", "jane.doe@example.com")]
+    [InlineData(2, "Leen", "Odeh", "leen@info.com", "123-456-7890", "leen33@info.com", "Leen", "Odeh", "leen@info.com")]
+    [InlineData(3, "Alice", "Johnson", "alice.johnson@example.com", "234-567-8901", "alice.j.new@example.com", "Alice", "Johnson", "alice.johnson@example.com")]
+    [InlineData(4, "Bob", "Smith", "bob.smith@example.com", "345-678-9012", "bob.smith@newdomain.com", "Bob", "Smith", "bob.smith@example.com")]
+    public async Task UpdateOwner_ShouldCorrectlyUpdateOwner(int id, string initialFirstName, string initialLastName, string initialEmail, string initialPhoneNumber, string updatedEmail, string updatedFirstName, string updatedLastName, string updatedEmail2)
     {
         // Arrange
-        var oldOwner = GetSampleOwner(1, "Leen", "Odeh", "leen@info.com", "123-456-7890");
+        var oldOwner = GetSampleOwner(id, initialFirstName, initialLastName, initialEmail, initialPhoneNumber);
         await _sut.CreateAsync(oldOwner);
 
-        var updatedOwner = GetSampleOwner(1, "Leen", "Odeh", "leen33@info.com", "123-456-7890");
+        var updatedOwner = GetSampleOwner(id, updatedFirstName, updatedLastName, updatedEmail, initialPhoneNumber);
 
         // Act
-        await _sut.UpdateAsync(oldOwner.OwnerID, updatedOwner);
-        var resultOwner = await _sut.GetByIdAsync(oldOwner.OwnerID);
+        await _sut.UpdateAsync(id, updatedOwner);
+        var resultOwner = await _sut.GetByIdAsync(id);
 
         // Assert
         Assert.NotNull(resultOwner);
-        Assert.Equal(updatedOwner.Email, resultOwner.Email);
-        Assert.Equal(updatedOwner.FirstName, resultOwner.FirstName);
-        Assert.Equal(updatedOwner.LastName, resultOwner.LastName);
+        Assert.Equal(updatedFirstName, resultOwner.FirstName);
+        Assert.Equal(updatedLastName, resultOwner.LastName);
+        Assert.Equal(updatedEmail, resultOwner.Email);
     }
 
     [Fact]
@@ -82,7 +86,7 @@ public class OwnerRepoTest
 
         // Assert
         Assert.NotNull(resultOwners);
-        Assert.Equal(owners.Count,2);
+        Assert.Equal(owners.Count, resultOwners.Count());
     }
 
     [Fact]
@@ -104,7 +108,7 @@ public class OwnerRepoTest
         var ownerList = owners.ToList();
 
         Assert.Equal("John", ownerList[0].FirstName);
-        Assert.Single(ownerList[0].Hotels); 
+        Assert.Single(ownerList[0].Hotels);
         Assert.Equal("Sydney Coastal Retreat", ownerList[0].Hotels.First().Name);
         Assert.Equal("Riverside Retreat", ownerList[1].Hotels.First().Name);
     }
