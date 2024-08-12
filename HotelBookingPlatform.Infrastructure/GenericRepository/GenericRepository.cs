@@ -18,7 +18,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         ValidationHelper.ValidateId(id);
         var entity = await _appDbContext.Set<T>().FindAsync(id);
 
-        if (entity is null)    
+        if (entity is null)
             throw new KeyNotFoundException($"Entity with ID {id} not found.");
 
         _appDbContext.Set<T>().Remove(entity);
@@ -30,16 +30,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _appDbContext.Set<T>().ToListAsync();
     }
-    public async Task<IEnumerable<T>> GetAllAsyncPagenation(Expression<Func<T,bool>> filter=null,int pageSize = 10, int pageNumber = 1)
+    public async Task<IEnumerable<T>> GetAllAsyncPagenation(Expression<Func<T, bool>> filter = null, int pageSize = 10, int pageNumber = 1)
     {
         if (pageSize <= 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
         if (pageNumber <= 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
 
         IQueryable<T> query = _appDbContext.Set<T>();
 
-        if (filter is not null)      
+        if (filter is not null)
             query = query.Where(filter);
-        
+
         query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         return await query.ToListAsync();
     }
