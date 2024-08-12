@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.CityServiceTest;
+﻿using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+
+namespace HotelBookingPlatformApplication.Test.ServicesTest.CityServiceTest;
 public class CityServiceTest
 {
     private readonly Mock<IUnitOfWork<City>> _mockUnitOfWork;

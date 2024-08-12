@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Exceptions;
-
-namespace HotelBookingPlatformAPI.Test.OwnerAPITest;
+﻿namespace HotelBookingPlatformAPI.Test.OwnerAPITest;
 public class OwnerControllerTests
 {
     private readonly IFixture _fixture;

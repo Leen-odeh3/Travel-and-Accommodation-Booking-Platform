@@ -7,3 +7,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using Moq;
 global using FluentAssertions;
 global using AutoFixture;
+global using HotelBookingPlatform.Domain.Exceptions;
+global using HotelBookingPlatform.Domain.DTOs.City;
+global using HotelBookingPlatform.Domain.DTOs.Hotel;
+global using Microsoft.AspNetCore.Http;

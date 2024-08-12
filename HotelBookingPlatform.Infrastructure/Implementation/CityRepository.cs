@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class CityRepository :GenericRepository<City> , ICityRepository
 {
     public CityRepository(AppDbContext context) : base(context)
@@ -21,5 +23,13 @@ public class CityRepository :GenericRepository<City> , ICityRepository
             .OrderByDescending(c => c.VisitCount) 
             .Take(topCount)
             .ToListAsync();
+    }
+    public async Task CreateAsync(City city)
+    {
+        if (await _appDbContext.Cities.AnyAsync(c => c.Name == city.Name))
+            throw new InvalidOperationException("City with the same name already exists.");
+
+        _appDbContext.Cities.Add(city);
+        await _appDbContext.SaveChangesAsync();
     }
 }
