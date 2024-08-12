@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class OwnerRepository :GenericRepository<Owner> ,IOwnerRepository
 {
     public OwnerRepository(AppDbContext context) : base(context)
@@ -7,13 +6,8 @@ public class OwnerRepository :GenericRepository<Owner> ,IOwnerRepository
     }
     public override async Task<IEnumerable<Owner>> GetAllAsync()
     {
-        return await _appDbContext.Set<Owner>()
+        return await _appDbContext.owners
             .Include(h => h.Hotels) 
             .ToListAsync();
-    }
-
-    public static implicit operator OwnerRepository(HotelRepository v)
-    {
-        throw new NotImplementedException();
     }
 }

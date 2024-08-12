@@ -1,5 +1,4 @@
 ﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.OwnerServiceTest;
-
 public class OwnerServiceTest
 {
     private readonly Mock<IUnitOfWork<Owner>> _unitOfWorkMock;
@@ -116,5 +115,62 @@ public class OwnerServiceTest
         _unitOfWorkMock.Verify(u => u.OwnerRepository.UpdateAsync(ownerId, existingOwner), Times.Once);
         _mapperMock.Verify(m => m.Map<OwnerDto>(existingOwner), Times.Once);
         Assert.Equal(updatedOwnerDto, result);
+    }
+    [Fact]
+    public async Task DeleteOwnerAsync_WhenOwnerDoesNotExist_ShouldThrowKeyNotFoundException()
+    {
+        var ownerId = 999;
+
+        _unitOfWorkMock
+            .Setup(u => u.OwnerRepository.DeleteAsync(ownerId))
+            .ThrowsAsync(new KeyNotFoundException("Owner not found"));
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => _ownerService.DeleteOwnerAsync(ownerId));
+    }
+    [Fact]
+    public async Task CreateOwnerAsync_WithValidData_ReturnsCreatedOwnerDto()
+    {
+        // Arrange
+        var ownerCreateDto = new OwnerCreateDto
+        {
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leenodeh287@example.com",
+            PhoneNumber = "1234567890"
+        };
+
+        var createdOwner = new Owner
+        {
+            OwnerID = 1,
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leenodeh287@example.com",
+            PhoneNumber = "1234567890"
+        };
+
+        var createdOwnerDto = new OwnerDto
+        {
+            FirstName = "leen",
+            LastName = "odeh",
+            Email = "leenodeh287@example.com",
+            PhoneNumber = "1234567890"
+        };
+
+        _unitOfWorkMock
+            .Setup(u => u.OwnerRepository.CreateAsync(It.IsAny<Owner>()))
+            .ReturnsAsync(createdOwner);
+
+        _mapperMock
+            .Setup(m => m.Map<OwnerDto>(createdOwner))
+            .Returns(createdOwnerDto);
+
+        // Act
+        var result = await _ownerService.CreateOwnerAsync(ownerCreateDto);
+
+        // Assert
+        Assert.Equal(createdOwnerDto, result);
+        _unitOfWorkMock.Verify(u => u.OwnerRepository.CreateAsync(It.IsAny<Owner>()), Times.Once);
+        _mapperMock.Verify(m => m.Map<OwnerDto>(createdOwner), Times.Once);
     }
 }

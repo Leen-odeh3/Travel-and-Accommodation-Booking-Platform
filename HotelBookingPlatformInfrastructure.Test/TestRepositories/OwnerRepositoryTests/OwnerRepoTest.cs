@@ -112,4 +112,14 @@ public class OwnerRepoTest
         Assert.Equal("Sydney Coastal Retreat", ownerList[0].Hotels.First().Name);
         Assert.Equal("Riverside Retreat", ownerList[1].Hotels.First().Name);
     }
+
+    [Fact]
+    public async Task GetByIdAsync_WhenOwnerDoesNotExist_ShouldThrowKeyNotFoundException()
+    {
+        // Arrange
+        var nonExistentId = 999;
+
+        await Assert.ThrowsAsync<HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException>(
+            () => _sut.GetByIdAsync(nonExistentId));
+    }
 }
