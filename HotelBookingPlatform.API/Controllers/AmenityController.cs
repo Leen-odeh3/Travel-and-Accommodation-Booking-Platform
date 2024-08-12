@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AmenityController : ControllerBase

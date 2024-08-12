@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Application.Core.Abstracts;
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class AmenityService : BaseService<Amenity>, IAmenityService
 {
     public AmenityService(IUnitOfWork<Amenity> unitOfWork, IMapper mapper)

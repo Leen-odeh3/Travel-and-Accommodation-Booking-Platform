@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Room;
-
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IRoomService
 {
     Task<RoomResponseDto> GetRoomAsync(int id);

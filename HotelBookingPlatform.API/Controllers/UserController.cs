@@ -1,18 +1,10 @@
-﻿using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Authentication;
-
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/auth")]
 [ApiController]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly ITokenService _tokenService;
-
     public UserController(IUserService userService, ITokenService tokenService)
     {
         _userService = userService;
@@ -20,11 +12,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    [SwaggerOperation(Summary = "Create New Account")]
+    [SwaggerOperation(Summary = "Create New Account",
+    Description = "This endpoint allows a user to create a new account by providing the necessary details such as username, password, and email.")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            throw new BadRequestException("Invalid model state");
 
         var result = await _userService.RegisterAsync(model);
 
@@ -42,12 +35,12 @@ public class UserController : ControllerBase
     public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            throw new BadRequestException("Invalid model state");
 
         var result = await _userService.LoginAsync(model);
 
         if (!result.IsAuthenticated)
-            return BadRequest(result.Message);
+            throw new InvalidOperationException(result.Message);
 
         if (!string.IsNullOrEmpty(result.RefreshToken))
            _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);

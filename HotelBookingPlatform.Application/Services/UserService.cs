@@ -1,18 +1,8 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Enums;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Identity;
-using System.IdentityModel.Tokens.Jwt;
-using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
-
-namespace HotelBookingPlatform.Application.Services;
+﻿namespace HotelBookingPlatform.Application.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<LocalUser> _userManager;
     private readonly ITokenService _tokenService;
-
     public UserService(UserManager<LocalUser> userManager, ITokenService tokenService)
     {
         _userManager = userManager;

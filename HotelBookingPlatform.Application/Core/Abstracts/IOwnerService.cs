@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Owner;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IOwnerService
 {
     Task<List<OwnerDto>> GetAllAsync();

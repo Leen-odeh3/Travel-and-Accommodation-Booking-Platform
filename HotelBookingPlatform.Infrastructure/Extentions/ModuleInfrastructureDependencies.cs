@@ -1,13 +1,4 @@
-﻿using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.IRepositories;
-using HotelBookingPlatform.Infrastructure.Data;
-using HotelBookingPlatform.Infrastructure.Implementation;
-using HotelBookingPlatform.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-namespace HotelBookingPlatform.Infrastructure.Extentions;
+﻿namespace HotelBookingPlatform.Infrastructure.Extentions;
 public static class ModuleInfrastructureDependencies
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services)

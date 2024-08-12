@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Review;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IReviewService
 {
     Task CreateReviewAsync(ReviewCreateRequest request);

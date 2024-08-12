@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Review;
-
-namespace HotelBookingPlatform.Domain.DTOs.Hotel;
+﻿namespace HotelBookingPlatform.Domain.DTOs.Hotel;
 public class HotelResponseDto
 {
     public int HotelId { get; set; }

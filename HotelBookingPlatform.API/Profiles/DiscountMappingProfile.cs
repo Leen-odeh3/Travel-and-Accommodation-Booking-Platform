@@ -1,16 +1,12 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Discount;
-using HotelBookingPlatform.Domain.Entities;
-namespace HotelBookingPlatform.API.Profiles;
+﻿namespace HotelBookingPlatform.API.Profiles;
 public class DiscountMappingProfile : Profile
 {
     public DiscountMappingProfile()
     {
 
-        CreateMap<Discount, DiscountDto>();
+        CreateMap<Discount, DiscountDto>()
+           .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Room.Number));
 
-        CreateMap<DiscountCreateRequest, Discount>()
-            .ForMember(dest => dest.RoomID, opt => opt.MapFrom(src => src.RoomID)) 
-            .ForMember(dest => dest.CreatedAtUtc, opt => opt.Ignore());
+        CreateMap<DiscountCreateRequest, Discount>();
     }
 }

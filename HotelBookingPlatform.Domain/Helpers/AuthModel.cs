@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-namespace HotelBookingPlatform.Domain.Helpers;
+﻿namespace HotelBookingPlatform.Domain.Helpers;
 public class AuthModel
 {
     public string? Message { get; set; }

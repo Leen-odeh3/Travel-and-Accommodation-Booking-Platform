@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using HotelBookingPlatform.Domain.DTOs.City;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
+﻿
 namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]

@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.DTOs.Room;
-namespace HotelBookingPlatform.Domain.DTOs.Booking;
+﻿namespace HotelBookingPlatform.Domain.DTOs.Booking;
 public class BookingDto
 {
     public int BookingId { get; set; }

@@ -1,10 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-namespace HotelBookingPlatform.Application.Services;
+﻿namespace HotelBookingPlatform.Application.Services;
 public class RoleService : IRoleService
 {
     private readonly UserManager<LocalUser> _userManager;
@@ -37,6 +31,4 @@ public class RoleService : IRoleService
 
         return "Role added successfully.";
     }
-
-
 }

@@ -1,17 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-namespace HotelBookingPlatform.Application.Services;
+﻿namespace HotelBookingPlatform.Application.Services;
 public class TokenService : ITokenService
 {
     private readonly UserManager<LocalUser> _userManager;

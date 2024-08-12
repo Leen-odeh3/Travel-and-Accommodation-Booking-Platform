@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Domain.DTOs.Review;
-using HotelBookingPlatform.Domain.Entities;
-
-namespace HotelBookingPlatform.API.Profiles;
+﻿namespace HotelBookingPlatform.API.Profiles;
 public class ReviewMappingProfile : Profile
 {
     public ReviewMappingProfile()
@@ -11,6 +7,8 @@ public class ReviewMappingProfile : Profile
              .ForMember(dest => dest.CreatedAtUtc, opt => opt.Ignore())
              .ForMember(dest => dest.ModifiedAtUtc, opt => opt.Ignore());
 
-        CreateMap<Review, ReviewResponseDto>();
+        CreateMap<Review, ReviewResponseDto>()
+               .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel.Name))
+               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
     }
 }

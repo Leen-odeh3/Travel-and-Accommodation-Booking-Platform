@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
-namespace HotelBookingPlatform.Infrastructure.Configuration;
+﻿namespace HotelBookingPlatform.Infrastructure.Configuration;
 public class ReviewConfiguration: IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)

@@ -1,20 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using System.Linq.Expressions;
-using HotelBookingPlatform.Domain.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-using HotelBookingPlatform.Domain.DTOs.HomePage;
-using HotelBookingPlatform.Domain.DTOs.Amenity;
-using Microsoft.EntityFrameworkCore;
-using HotelBookingPlatform.Infrastructure.HelperMethods;
-using HotelBookingPlatform.Domain.DTOs.Room;
-using HotelBookingPlatform.Domain.DTOs.Review;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
 {
     public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
@@ -134,7 +118,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         {
             HotelId = hotel.HotelId,
             HotelName = hotel.Name,
-            StarRating = hotel.StarRating,          
+            StarRating = hotel.StarRating,
             RoomType = hotel.RoomClasses.Any()
                 ? hotel.RoomClasses.First().RoomType.ToString()
                 : "Unknown",
@@ -216,10 +200,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         await _unitOfWork.HotelRepository.UpdateAsync(hotelId, hotel);
         await _unitOfWork.SaveChangesAsync();
     }
-
-
-
-
     public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
     {
         ValidationHelper.ValidateId(hotelId);

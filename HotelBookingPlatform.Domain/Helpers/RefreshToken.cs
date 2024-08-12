@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Domain.Helpers;
-
+﻿namespace HotelBookingPlatform.Domain.Helpers;
 [Owned]
 public class RefreshToken
 {

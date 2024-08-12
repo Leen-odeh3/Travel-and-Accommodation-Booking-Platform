@@ -1,16 +1,4 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Infrastructure.HelperMethods;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.DTOs.City;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain.Exceptions;
-using System.Linq.Expressions;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
-using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
     public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
@@ -28,6 +16,9 @@ public class CityService : BaseService<City>, ICityService
     {
         if (pageSize <= 0 || pageNumber <= 0)
             throw new ArgumentException("Page size and page number must be greater than zero.");
+
+        if (string.IsNullOrEmpty(cityName) || string.IsNullOrEmpty(description))
+            throw new ArgumentException("At least one of cityName or description must be provided.");
 
         Expression<Func<City, bool>> filter = null;
 
@@ -67,7 +58,9 @@ public class CityService : BaseService<City>, ICityService
                 PostOffice = city.PostOffice,
                 CreatedAtUtc = city.CreatedAtUtc,
                 Description = city.Description,
-                Hotels = _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
+                Hotels = includeHotels
+            ? _mapper.Map<IEnumerable<HotelResponseDto>>(city.Hotels)
+            : new List<HotelResponseDto>()
             };
             return cityWithHotelsDto;
         }

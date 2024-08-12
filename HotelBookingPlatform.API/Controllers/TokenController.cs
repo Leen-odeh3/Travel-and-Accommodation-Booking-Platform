@@ -1,19 +1,10 @@
-﻿using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Helpers;
-using HotelBookingPlatform.Domain.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
-
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class TokenController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
     public TokenController(ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
     {
         _tokenService = tokenService;

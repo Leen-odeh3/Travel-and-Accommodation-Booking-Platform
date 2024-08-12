@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.Booking;
-using HotelBookingPlatform.Domain.Enums;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IBookingService
 {
     Task<BookingDto> GetBookingAsync(int id);

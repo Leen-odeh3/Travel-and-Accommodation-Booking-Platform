@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Helpers;
-namespace HotelBookingPlatform.Domain.IServices;
+﻿namespace HotelBookingPlatform.Domain.IServices;
 public interface IUserService
 {
     Task<AuthModel> RegisterAsync(RegisterModel model);

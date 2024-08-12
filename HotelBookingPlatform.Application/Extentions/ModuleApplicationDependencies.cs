@@ -1,14 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Application.Core.Implementations;
-using HotelBookingPlatform.Application.Validator;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-
-namespace HotelBookingPlatform.Application.Extentions;
+﻿namespace HotelBookingPlatform.Application.Extentions;
 public static class ModuleApplicationDependencies
 {
     public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)

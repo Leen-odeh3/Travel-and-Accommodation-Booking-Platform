@@ -1,8 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Abstracts;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class ImageRepository : IImageRepository
 {
     private readonly AppDbContext _context;

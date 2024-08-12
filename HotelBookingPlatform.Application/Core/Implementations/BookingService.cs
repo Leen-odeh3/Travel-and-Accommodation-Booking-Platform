@@ -1,19 +1,8 @@
-﻿using AutoMapper;
-using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Booking;
-using HotelBookingPlatform.Domain.Entities;
-using HotelBookingPlatform.Domain;
-using HotelBookingPlatform.Domain.Exceptions;
-using HotelBookingPlatform.Domain.Enums;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class BookingService : BaseService<Booking>, IBookingService
 {
     public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper)
-    {
-    }
-
+        : base(unitOfWork, mapper) { }
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
@@ -22,7 +11,6 @@ public class BookingService : BaseService<Booking>, IBookingService
             throw new NotFoundException("Booking not found.");
         }
 
-        // Log the data for debugging purposes
         Console.WriteLine($"Hotel: {booking.Hotel?.Name}");
         Console.WriteLine($"Rooms: {string.Join(", ", booking.Rooms.Select(r => r.Number))}");
 
@@ -60,24 +48,21 @@ public class BookingService : BaseService<Booking>, IBookingService
         foreach (var roomId in request.RoomIds)
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            if (room != null)
+            if (room is not null)
             {
                 booking.Rooms.Add(room);
             }
         }
-
-        // Ensure the booking is added and changes are saved
         await _unitOfWork.BookingRepository.CreateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        // Return the mapping of the booking to DTO
         return _mapper.Map<BookingDto>(booking);
     }
 
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
-        if (booking == null)
+        if (booking is null)
         {
             throw new NotFoundException("Booking not found.");
         }

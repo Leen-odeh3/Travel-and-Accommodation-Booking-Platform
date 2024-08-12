@@ -1,10 +1,4 @@
-﻿using HotelBookingPlatform.Application.Core.Abstracts;
-using HotelBookingPlatform.Domain.DTOs.Review;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]

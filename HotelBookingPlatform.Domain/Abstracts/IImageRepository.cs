@@ -1,5 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-namespace HotelBookingPlatform.Domain.Abstracts;
+﻿namespace HotelBookingPlatform.Domain.Abstracts;
 public interface IImageRepository
 {
     Task<IEnumerable<Image>> GetImagesAsync(string entityType, int entityId);
