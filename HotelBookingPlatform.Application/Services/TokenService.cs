@@ -86,7 +86,7 @@ public class TokenService : ITokenService
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
-        if (user == null)
+        if (user is null)
             return false;
 
         var refreshToken = user.RefreshTokens.Single(t => t.Token == token);

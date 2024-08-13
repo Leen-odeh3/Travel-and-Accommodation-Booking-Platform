@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.Domain.Entities;
+﻿namespace HotelBookingPlatform.Domain.Entities;
 public class LocalUser : IdentityUser
 {
     public string FirstName { get; set; }

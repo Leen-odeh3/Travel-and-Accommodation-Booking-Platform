@@ -11,20 +11,16 @@ public class ReviewService : BaseService<Review>, IReviewService
     public async Task CreateReviewAsync(ReviewCreateRequest request)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
-        if (hotel is null)
-        {
-            throw new NotFoundException("Hotel not found.");
-        }
 
         var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.Email);
-        if (user == null)
+        if (user is null)
         {
             throw new NotFoundException("User not found.");
         }
 
         var booking = await _unitOfWork.BookingRepository.GetBookingByUserAndHotelAsync(user.Id, request.HotelId);
 
-        if (booking == null)
+        if (booking is null)
         {
             throw new BadRequestException("User must have a booking in the hotel to leave a review.");
         }
@@ -35,7 +31,7 @@ public class ReviewService : BaseService<Review>, IReviewService
             Content = request.Content,
             Rating = request.Rating,
             CreatedAtUtc = DateTime.UtcNow,
-            UserId = user.Id 
+            UserId = user.Id
         };
 
         await _unitOfWork.ReviewRepository.CreateAsync(review);
@@ -44,11 +40,6 @@ public class ReviewService : BaseService<Review>, IReviewService
     public async Task<ReviewResponseDto> GetReviewAsync(int id)
     {
         var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (review == null)
-        {
-            throw new NotFoundException("Review not found.");
-        }
-
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(review.HotelId);
         var user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
 
@@ -69,10 +60,6 @@ public class ReviewService : BaseService<Review>, IReviewService
     public async Task<ReviewResponseDto> UpdateReviewAsync(int id, ReviewCreateRequest request)
     {
         var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (review is null)
-        {
-            throw new NotFoundException("Review not found.");
-        }
 
         review.Content = request.Content;
         review.Rating = request.Rating;
@@ -87,10 +74,6 @@ public class ReviewService : BaseService<Review>, IReviewService
     public async Task DeleteReviewAsync(int id)
     {
         var review = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
-        if (review == null)
-        {
-            throw new NotFoundException("Review not found.");
-        }
 
         await _unitOfWork.ReviewRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();

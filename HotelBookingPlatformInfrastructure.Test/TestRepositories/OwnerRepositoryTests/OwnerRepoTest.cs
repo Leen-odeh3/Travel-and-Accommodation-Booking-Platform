@@ -9,6 +9,7 @@ public class OwnerRepoTest
         _context = new InMemoryDbContext();
         _sut = new OwnerRepository(_context);
     }
+
     private Owner GetSampleOwner(int id, string firstName, string lastName, string email, string phoneNumber, List<Hotel> hotels = null)
     {
         return new Owner
@@ -111,5 +112,15 @@ public class OwnerRepoTest
         Assert.Single(ownerList[0].Hotels);
         Assert.Equal("Sydney Coastal Retreat", ownerList[0].Hotels.First().Name);
         Assert.Equal("Riverside Retreat", ownerList[1].Hotels.First().Name);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_WhenOwnerDoesNotExist_ShouldThrowKeyNotFoundException()
+    {
+        // Arrange
+        var nonExistentId = 999;
+
+        await Assert.ThrowsAsync<HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException>(
+            () => _sut.GetByIdAsync(nonExistentId));
     }
 }

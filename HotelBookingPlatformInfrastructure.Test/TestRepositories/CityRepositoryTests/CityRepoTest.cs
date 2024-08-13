@@ -98,4 +98,31 @@ public class CityRepoTest
         Assert.NotNull(result); 
         Assert.Empty(result);   
     }
+
+    [Fact]
+    public async Task CreateCityAsync_WithDuplicateCityName_ShouldThrowException()
+    {
+        // Arrange
+        var cityName = "New York"; 
+        var city1 = new City
+        {
+            Name = cityName,
+            Description = "The largest city in the USA, known for its skyscrapers and cultural diversity.",
+            Country = "USA",
+            PostOffice = "10001",
+            VisitCount = 1000
+        };
+        var city2 = new City
+        {
+            Name = cityName, 
+            Description = "The largest city in the USA",
+            Country = "USA",
+            PostOffice = "10002",
+            VisitCount = 500
+        };
+        await _sut.CreateAsync(city1);
+
+        var exception = await Assert.ThrowsAsync<HotelBookingPlatform.Domain.Exceptions.InvalidOperationException>(() => _sut.CreateAsync(city2));
+        Assert.Equal("City with the same name already exists.", exception.Message);
+    }
 }

@@ -6,18 +6,18 @@ public class BookingService : BaseService<Booking>, IBookingService
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
-        if (booking == null)
+
+        if (booking is null)
         {
-            throw new NotFoundException("Booking not found.");
+            throw new NotFoundException($"Booking with ID {id} not found.");
         }
 
-        Console.WriteLine($"Hotel: {booking.Hotel?.Name}");
-        Console.WriteLine($"Rooms: {string.Join(", ", booking.Rooms.Select(r => r.Number))}");
-
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(booking.UserId); 
         var bookingDto = _mapper.Map<BookingDto>(booking);
+        bookingDto.UserName = user?.UserName; 
+
         return bookingDto;
     }
-
 
     public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string email)
     {
@@ -58,15 +58,9 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         return _mapper.Map<BookingDto>(booking);
     }
-
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
-        if (booking is null)
-        {
-            throw new NotFoundException("Booking not found.");
-        }
-
         booking.Status = newStatus;
         await _unitOfWork.BookingRepository.UpdateAsync(bookingId, booking);
         await _unitOfWork.SaveChangesAsync();
@@ -74,22 +68,26 @@ public class BookingService : BaseService<Booking>, IBookingService
     private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
         decimal totalPrice = 0m;
+        int numberOfNights = (checkOutDate - checkInDate).Days;
+
         foreach (var roomId in roomIds)
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            if (room == null)
+            var discount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
+
+            decimal roomPrice = room.PricePerNight * numberOfNights;
+            if (discount is not null)
             {
-                throw new BadRequestException($"Room with ID {roomId} not found.");
+                decimal discountAmount = (discount.Percentage / 100) * roomPrice;
+                roomPrice -= discountAmount;
             }
 
-            int numberOfNights = (checkOutDate - checkInDate).Days;
-            totalPrice += room.PricePerNight * numberOfNights;
+            totalPrice += roomPrice;
         }
 
         return totalPrice;
     }
-
-    private string GenerateConfirmationNumber()
+    public string GenerateConfirmationNumber()
     {
         return Guid.NewGuid().ToString();
     }

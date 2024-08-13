@@ -23,7 +23,7 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
         return await _appDbContext.Bookings
             .Include(b => b.Hotel) 
             .Include(b => b.Rooms)
-            .Include(b => b.User)
+            .Include(b => b.User).AsSplitQuery()
             .FirstOrDefaultAsync(b => b.BookingID == id);
     }
     public async Task<Booking> GetBookingByUserAndHotelAsync(string userId, int hotelId)

@@ -22,6 +22,8 @@ public class OwnerController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new owner.")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateOwner([FromBody] OwnerCreateDto request)
     {
         if (!ModelState.IsValid)
@@ -35,6 +37,8 @@ public class OwnerController : ControllerBase
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update an existing owner.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerCreateDto request)
     {
         var ownerDto = await _ownerService.UpdateOwnerAsync(id, request);
@@ -45,6 +49,8 @@ public class OwnerController : ControllerBase
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete an existing owner.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteOwner(int id)
     {
         await _ownerService.DeleteOwnerAsync(id);
@@ -54,6 +60,7 @@ public class OwnerController : ControllerBase
     // GET: api/Owner
     [HttpGet]
     [SwaggerOperation(Summary = "Retrieve all owners.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllOwners()
     {
         var owners = await _ownerService.GetAllAsync();

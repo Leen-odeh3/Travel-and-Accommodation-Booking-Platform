@@ -34,3 +34,8 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.IdentityModel.Tokens;
 global using System.Text;
+global using HotelBookingPlatform.API.Extentions;
+global using HotelBookingPlatform.API.Middlewares;
+global using HotelBookingPlatform.Application.Extentions;
+global using HotelBookingPlatform.Infrastructure.Extentions;
+global using Microsoft.Extensions.FileProviders;

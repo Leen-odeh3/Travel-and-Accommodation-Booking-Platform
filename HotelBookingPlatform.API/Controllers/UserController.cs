@@ -43,7 +43,7 @@ public class UserController : ControllerBase
             throw new InvalidOperationException(result.Message);
 
         if (!string.IsNullOrEmpty(result.RefreshToken))
-           _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
         return Ok(result);
     }

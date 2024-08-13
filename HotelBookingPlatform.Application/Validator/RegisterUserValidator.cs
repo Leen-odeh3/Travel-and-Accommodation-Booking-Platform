@@ -5,7 +5,6 @@ public class RegisterUserValidator : AbstractValidator<RegisterModel>
     {
         ApplyValidationRoles();
     }
-
     public void ApplyValidationRoles()
     {
         RuleFor(x => x.FirstName)
