@@ -23,4 +23,5 @@ global using FluentAssertions;
 global using HotelBookingPlatform.Application.Validator;
 global using HotelBookingPlatform.Domain.IServices;
 global using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exceptions.UnauthorizedAccessException;
-
+global using HotelBookingPlatform.Domain.DTOs.Booking;
+global using HotelBookingPlatform.Domain.Enums;

@@ -28,4 +28,13 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
             await _appDbContext.SaveChangesAsync();
         }
     }
+    public async Task<Discount> GetActiveDiscountForRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)
+    {
+        return await _appDbContext.Discounts
+            .Where(d => d.RoomID == roomId
+                && d.StartDateUtc <= checkInDate
+                && d.EndDateUtc >= checkOutDate)
+            .FirstOrDefaultAsync();
+    }
+
 }

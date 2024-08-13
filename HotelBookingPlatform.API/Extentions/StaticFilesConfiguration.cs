@@ -8,21 +8,21 @@ public static class StaticFilesExtensions
             FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "uploads", "City")),
             RequestPath = "/uploads/City"
         });
-        app.UseStaticFiles(new StaticFileOptions
+      /*  app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "uploads", "Hotel")),
             RequestPath = "/uploads/Hotel"
-        });
+        });*/
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "uploads", "RoomClass")),
             RequestPath = "/uploads/RoomClass"
         });
-        app.UseStaticFiles(new StaticFileOptions
+      /*  app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "uploads", "Room")),
             RequestPath = "/uploads/Room"
-        });
+        });*/
 
         return app;
     }
