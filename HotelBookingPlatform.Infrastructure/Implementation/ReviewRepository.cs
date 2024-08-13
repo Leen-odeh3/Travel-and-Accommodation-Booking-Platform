@@ -6,9 +6,8 @@ public class ReviewRepository : GenericRepository<Review>, IReviewRepository
     {
         return await _appDbContext.Reviews
             .Include(r => r.User) 
-            .Include(r => r.Hotel)
+            .Include(r => r.Hotel).AsSplitQuery()
             .Where(r => r.HotelId == hotelId)
             .ToListAsync();
     }
-
 }

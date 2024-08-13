@@ -2,19 +2,10 @@
 public class DiscountService : BaseService<Discount>, IDiscountService
 {
     public DiscountService(IUnitOfWork<Discount> unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper)
-    {
-    }
-
+        : base(unitOfWork, mapper) { }
     public async Task<DiscountDto> AddDiscountToRoomAsync(int roomId, decimal percentage, DateTime startDateUtc, DateTime endDateUtc)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-
-        if (room is null)
-        {
-            throw new Exception("Room not found.");
-        }
-
         var discount = new Discount
         {
             RoomID = roomId,
@@ -39,34 +30,19 @@ public class DiscountService : BaseService<Discount>, IDiscountService
     public async Task<DiscountDto> GetDiscountByIdAsync(int id)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id, query => query.Include(d => d.Room));
-        if (discount == null)
-        {
-            throw new Exception("Discount not found.");
-        }
-
         return _mapper.Map<DiscountDto>(discount);
     }
 
     public async Task DeleteDiscountAsync(int id)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id);
-        if (discount == null)
-        {
-            throw new Exception("Discount not found.");
-        }
-
         await _unitOfWork.DiscountRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
 
-
     public async Task<DiscountDto> UpdateDiscountAsync(int id, UpdateDiscountRequest request)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id);
-        if (discount is null)
-        {
-            throw new Exception("Discount not found.");
-        }
         if (request.Percentage.HasValue)
         {
             discount.Percentage = request.Percentage.Value;
@@ -81,8 +57,6 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         }
 
         _unitOfWork.DiscountRepository.UpdateAsync(id,discount);
-        await _unitOfWork.SaveChangesAsync();
-
         return _mapper.Map<DiscountDto>(discount);
     }
 

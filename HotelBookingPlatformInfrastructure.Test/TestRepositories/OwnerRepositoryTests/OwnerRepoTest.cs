@@ -9,6 +9,7 @@ public class OwnerRepoTest
         _context = new InMemoryDbContext();
         _sut = new OwnerRepository(_context);
     }
+
     private Owner GetSampleOwner(int id, string firstName, string lastName, string email, string phoneNumber, List<Hotel> hotels = null)
     {
         return new Owner

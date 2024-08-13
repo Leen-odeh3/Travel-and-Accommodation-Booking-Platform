@@ -5,15 +5,14 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
 
     public async Task<IEnumerable<Discount>> GetAllAsync(Expression<Func<IQueryable<Discount>, IQueryable<Discount>>> include = null)
     {
-        var query = _appDbContext.Set<Discount>().AsQueryable();
+        var query = _appDbContext.Discounts.AsQueryable();
         query = query.Include(d => d.Room);
 
         return await query.ToListAsync();
     }
-
     public async Task<Discount> GetByIdAsync(int id, Expression<Func<IQueryable<Discount>, IQueryable<Discount>>> include = null)
     {
-        var query = _appDbContext.Set<Discount>().AsQueryable();
+        var query = _appDbContext.Discounts.AsQueryable();
         query = query.Include(d => d.Room);   
 
         return await query.FirstOrDefaultAsync(d => d.DiscountID == id);
@@ -21,10 +20,10 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
 
     public async Task DeleteAsync(int id)
     {
-        var discount = await _appDbContext.Set<Discount>().FindAsync(id);
-        if (discount != null)
+        var discount = await _appDbContext.Discounts.FindAsync(id);
+        if (discount is not null)
         {
-            _appDbContext.Set<Discount>().Remove(discount);
+            _appDbContext.Discounts.Remove(discount);
             await _appDbContext.SaveChangesAsync();
         }
     }
@@ -36,5 +35,4 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
                 && d.EndDateUtc >= checkOutDate)
             .FirstOrDefaultAsync();
     }
-
 }
