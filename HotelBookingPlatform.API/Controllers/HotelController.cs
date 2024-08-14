@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class HotelController : ControllerBase
@@ -14,6 +13,7 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel
     [HttpGet]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
     [SwaggerOperation(Summary = "Get a list of hotels", Description = "Retrieves a list of hotels based on optional filters and pagination.")]
     public async Task<ActionResult<IEnumerable<HotelResponseDto>>> GetHotels(
         [FromQuery] string hotelName,
@@ -27,6 +27,7 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
     [SwaggerOperation(Summary = "Get a hotel by ID", Description = "Retrieves the details of a specific hotel by its ID.")]
     public async Task<ActionResult<HotelResponseDto>> GetHotel(int id)
     {
@@ -36,7 +37,7 @@ public class HotelController : ControllerBase
 
     // POST: api/Hotel
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Create a new hotel", Description = "Creates a new hotel based on the provided hotel creation request.")]
     public async Task<ActionResult<HotelResponseDto>> CreateHotel([FromBody] HotelCreateRequest request)
     {
@@ -46,7 +47,7 @@ public class HotelController : ControllerBase
 
     // PUT: api/Hotel/5
     [HttpPut("{id}")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update an existing hotel", Description = "Updates the details of an existing hotel specified by its ID.")]
     public async Task<ActionResult<HotelResponseDto>> UpdateHotel(int id, [FromBody] HotelResponseDto request)
     {
@@ -56,7 +57,7 @@ public class HotelController : ControllerBase
 
     // DELETE: api/Hotel/5
     [HttpDelete("{id}")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete a hotel", Description = "Deletes a hotel specified by its ID.")]
     public async Task<ActionResult> DeleteHotel(int id)
     {

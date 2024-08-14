@@ -1,15 +1,18 @@
-﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.OwnerServiceTest;
+﻿using HotelBookingPlatform.Domain.ILogger;
+
+namespace HotelBookingPlatformApplication.Test.ServicesTest.OwnerServiceTest;
 public class OwnerServiceTest
 {
     private readonly Mock<IUnitOfWork<Owner>> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly OwnerService _ownerService;
-
+    private readonly Mock<ILogger> _logger;
     public OwnerServiceTest()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork<Owner>>();
         _mapperMock = new Mock<IMapper>();
-        _ownerService = new OwnerService(_unitOfWorkMock.Object, _mapperMock.Object);
+        _logger = new Mock<ILogger>();
+        _ownerService = new OwnerService(_unitOfWorkMock.Object, _mapperMock.Object,_logger.Object);
     }
     [Fact]
     public async Task GetOwnerAsync_ReturnsMappedOwnerDto()

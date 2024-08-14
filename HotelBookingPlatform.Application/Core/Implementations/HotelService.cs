@@ -1,10 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelService : BaseService<Hotel>, IHotelService
 {
-    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
-         : base(unitOfWork, mapper)
-    {
-    }
+    public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ILogger logger)
+           : base(unitOfWork, mapper, logger) { }
     public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
         Expression<Func<Hotel, bool>> filter = null;
@@ -28,7 +26,10 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         if (!hotelDtos.Any())
+        {
+            _logger.Log("No hotels found matching the criteria.", "warning");
             throw new NotFoundException("No hotels found matching the criteria.");
+        }
 
         return hotelDtos;
     }
@@ -38,7 +39,10 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
 
         if (hotel is null)
-            throw new NotFoundException("Hotel not found");
+        {
+            _logger.Log("Hotel not found.", "warning");
+            throw new NotFoundException("Hotel not found.");
+        }
 
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
         return hotelDto;
@@ -51,6 +55,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         await _unitOfWork.SaveChangesAsync();
 
         var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
+        _logger.Log($"Hotel created with ID: {createdHotelDto.HotelId}", "info");
         return new CreatedAtActionResult(nameof(GetHotel), "Hotels", new { id = createdHotelDto.HotelId }, createdHotelDto);
     }
     public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
@@ -74,7 +79,8 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
         if (hotel is null)
         {
-            throw new KeyNotFoundException("Hotel not found");
+            _logger.Log("Hotel not found.", "warning");
+            throw new KeyNotFoundException("Hotel not found.");
         }
 
         await _unitOfWork.HotelRepository.DeleteAsync(id);
@@ -165,7 +171,10 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
         if (hotel is null)
+        {
+            _logger.Log("Hotel not found.", "warning");
             throw new NotFoundException("Hotel not found.");
+        }
 
         var amenity = _mapper.Map<Amenity>(request);
         hotel.Amenities.Add(amenity);
@@ -184,7 +193,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(hotel.Amenities);
         return amenitiesDto;
     }
-
     public async Task DeleteAmenityFromHotelAsync(int hotelId, int amenityId)
     {
         var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId);
@@ -193,7 +201,10 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         var amenity = hotel.Amenities.FirstOrDefault(a => a.AmenityID == amenityId);
         if (amenity is null)
+        {
+            _logger.Log("Amenity not found.", "warning");
             throw new NotFoundException("Amenity not found.");
+        }
 
         hotel.Amenities.Remove(amenity);
 
@@ -206,7 +217,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         var reviews = await _unitOfWork.ReviewRepository.GetReviewsByHotelIdAsync(hotelId);
 
-        if (reviews == null || !reviews.Any())
+        if (reviews is null || !reviews.Any())
             throw new NotFoundException("No reviews found for the specified hotel.");
 
         var averageRating = reviews.Average(r => r.Rating);

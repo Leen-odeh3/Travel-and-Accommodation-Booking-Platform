@@ -1,12 +1,16 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿using HotelBookingPlatform.Domain.ILogger;
+
+namespace HotelBookingPlatform.Application.Core.Implementations;
 public abstract class BaseService<TEntity> where TEntity : class
 {
     protected readonly IUnitOfWork<TEntity> _unitOfWork;
     protected readonly IMapper _mapper;
+    protected readonly ILogger _logger;
 
-    protected BaseService(IUnitOfWork<TEntity> unitOfWork, IMapper mapper)
+    public BaseService(IUnitOfWork<TEntity> unitOfWork, IMapper mapper, ILogger logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _logger = logger;
     }
 }

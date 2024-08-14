@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomService : BaseService<Room>, IRoomService
 {
-    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper)
+    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper, ILogger logger)
+        : base(unitOfWork, mapper, logger)
     {
     }
     public async Task<RoomResponseDto> GetRoomAsync(int id)

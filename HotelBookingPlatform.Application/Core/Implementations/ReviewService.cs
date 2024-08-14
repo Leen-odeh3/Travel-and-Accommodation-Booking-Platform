@@ -2,8 +2,8 @@
 public class ReviewService : BaseService<Review>, IReviewService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-        : base(unitOfWork, mapper)
+    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, ILogger logger)
+        : base(unitOfWork, mapper, logger)
     {
         _httpContextAccessor = httpContextAccessor;
     }

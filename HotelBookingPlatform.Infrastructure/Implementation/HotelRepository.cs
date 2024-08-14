@@ -1,71 +1,93 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 {
-    private readonly AppDbContext _context;
-    public HotelRepository(AppDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
+    public HotelRepository(AppDbContext context) : base(context) { }
     private IQueryable<Hotel> GetHotelsWithIncludes()
     {
-        return _context.Hotels
+        return _appDbContext.Hotels
             .Include(h => h.City)
             .Include(h => h.Owner)
             .Include(h => h.Reviews).AsSplitQuery();
     }
 
-    public async Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1)
+    private async Task<IEnumerable<Hotel>> PaginateHotelsAsync(IQueryable<Hotel> query, int pageSize, int pageNumber)
     {
-        return await GetHotelsWithIncludes()
-            .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
-                        (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)))
+        return await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Hotel>> SearchCriteria(string name, string desc, int pageSize = 10, int pageNumber = 1)
+    {
+        var query = GetHotelsWithIncludes()
+            .Where(h => (string.IsNullOrEmpty(name) || h.Name.Contains(name)) &&
+                        (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)));
+
+        return await PaginateHotelsAsync(query, pageSize, pageNumber);
     }
 
     public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)
     {
-        return await _context.Hotels
+        var hotel = await _appDbContext.Hotels
             .Include(h => h.RoomClasses)
                 .ThenInclude(rc => rc.Rooms)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(h => h.HotelId == hotelId);
+
+        if (hotel is null)
+            throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
+
+        return hotel;
     }
 
     public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
     {
-        return await GetHotelsWithIncludes()
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        return await PaginateHotelsAsync(GetHotelsWithIncludes(), pageSize, pageNumber);
     }
 
     public async Task<Hotel> GetByIdAsync(int id)
     {
-        return await GetHotelsWithIncludes()
+        var hotel = await GetHotelsWithIncludes()
             .FirstOrDefaultAsync(h => h.HotelId == id);
+
+        if (hotel is null)
+            throw new KeyNotFoundException($"Hotel with ID {id} not found.");
+
+        return hotel;
     }
 
     public async Task<Hotel> GetHotelByNameAsync(string name)
     {
-        return await _context.Hotels
+        var hotel = await _appDbContext.Hotels
             .Include(h => h.RoomClasses)
                 .ThenInclude(rc => rc.Amenities)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(h => h.Name == name);
+
+        if (hotel is null)
+            throw new KeyNotFoundException($"Hotel with name '{name}' not found.");
+
+        return hotel;
     }
 
     public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
     {
-        return await _context.Hotels
+        return await _appDbContext.Hotels
             .Where(h => h.CityID == cityId)
             .ToListAsync();
     }
 
     public async Task<Hotel> GetHotelWithAmenitiesAsync(int hotelId)
     {
-        return await _context.Hotels
+        var hotel = await _appDbContext.Hotels
             .Include(h => h.Amenities)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(h => h.HotelId == hotelId);
+
+        if (hotel is null)
+            throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
+
+        return hotel;
     }
 }

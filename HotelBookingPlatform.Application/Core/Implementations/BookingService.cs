@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class BookingService : BaseService<Booking>, IBookingService
 {
-    public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper) { }
+    public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper, ILogger logger)
+        : base(unitOfWork, mapper, logger) { }
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);

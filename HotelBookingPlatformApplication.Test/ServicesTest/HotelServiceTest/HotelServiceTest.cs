@@ -1,21 +1,23 @@
-﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.HotelServiceTest;
+﻿using Castle.Core.Logging;
+
+namespace HotelBookingPlatformApplication.Test.ServicesTest.HotelServiceTest;
 public class HotelServiceTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IUnitOfWork<Hotel>> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly HotelService _hotelService;
-
+    private readonly Mock<ILogger> _logger;
     public HotelServiceTests()
     {
         _fixture = new Fixture();
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
+        _logger = new Mock<ILogger>();
         _unitOfWorkMock = new Mock<IUnitOfWork<Hotel>>();
         _mapperMock = new Mock<IMapper>();
-        _hotelService = new HotelService(_unitOfWorkMock.Object, _mapperMock.Object);
+        _hotelService = new HotelService(_unitOfWorkMock.Object, _mapperMock.Object, (HotelBookingPlatform.Domain.ILogger.ILogger)_logger.Object);
     }
 
     [Fact]

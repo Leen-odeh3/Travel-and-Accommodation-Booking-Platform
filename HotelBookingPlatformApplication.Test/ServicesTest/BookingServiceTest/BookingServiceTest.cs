@@ -1,10 +1,13 @@
-﻿namespace HotelBookingPlatformApplication.Test.ServicesTest.BookingServiceTest;
+﻿using HotelBookingPlatform.Domain.ILogger;
+
+namespace HotelBookingPlatformApplication.Test.ServicesTest.BookingServiceTest;
 public class BookingServiceTest
 {
     private readonly IFixture _fixture;
     private readonly Mock<IUnitOfWork<Booking>> _mockUnitOfWork;
     private readonly Mock<IMapper> _mockMapper;
     private readonly BookingService _service;
+    private readonly Mock<ILogger> _logger;
     public BookingServiceTest()
     {
         _fixture = new Fixture();
@@ -12,7 +15,8 @@ public class BookingServiceTest
 
         _mockUnitOfWork = new Mock<IUnitOfWork<Booking>>();
         _mockMapper = new Mock<IMapper>();
-        _service = new BookingService(_mockUnitOfWork.Object, _mockMapper.Object);
+        _logger= new Mock<ILogger>();
+        _service = new BookingService(_mockUnitOfWork.Object, _mockMapper.Object, _logger.Object);
     }
 
     [Fact]

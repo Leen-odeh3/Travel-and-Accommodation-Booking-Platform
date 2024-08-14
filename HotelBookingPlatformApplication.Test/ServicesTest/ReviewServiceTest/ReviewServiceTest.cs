@@ -1,22 +1,26 @@
-﻿namespace HotelBookingPlatformAPI.Test.ReviewServiceTest;
+﻿using HotelBookingPlatform.Domain.ILogger;
+
+namespace HotelBookingPlatformAPI.Test.ReviewServiceTest;
 public class ReviewServiceTest
 {
     private readonly Mock<IUnitOfWork<Review>> _unitOfWorkMock;
     private readonly IMapper _mapperMock;
     private readonly ReviewService _reviewService;
+    private readonly Mock<ILogger> _logger;
 
     public ReviewServiceTest()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork<Review>>();
-
         // Set up IMapper mock
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Review, ReviewResponseDto>();
         });
+        _logger = new Mock<ILogger>();
+
         _mapperMock = mapperConfig.CreateMapper();
 
-        _reviewService = new ReviewService(_unitOfWorkMock.Object, _mapperMock, null);
+        _reviewService = new ReviewService(_unitOfWorkMock.Object, _mapperMock, null,_logger.Object);
     }
 
     [Fact]

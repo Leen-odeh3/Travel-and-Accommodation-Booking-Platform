@@ -1,4 +1,5 @@
-﻿using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
+﻿using HotelBookingPlatform.Domain.ILogger;
+using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 
 namespace HotelBookingPlatformApplication.Test.ServicesTest.CityServiceTest;
 public class CityServiceTest
@@ -6,12 +7,14 @@ public class CityServiceTest
     private readonly Mock<IUnitOfWork<City>> _mockUnitOfWork;
     private readonly Mock<IMapper> _mockMapper;
     private readonly CityService _cityService;
+    private readonly Mock<ILogger> _logger;
 
     public CityServiceTest()
     {
         _mockUnitOfWork = new Mock<IUnitOfWork<City>>();
         _mockMapper = new Mock<IMapper>();
-        _cityService = new CityService(_mockUnitOfWork.Object, _mockMapper.Object);
+        _logger=new Mock<ILogger>();
+        _cityService = new CityService(_mockUnitOfWork.Object, _mockMapper.Object,_logger.Object);
     }
 
     [Fact]
