@@ -5,7 +5,6 @@ public class UserServiceTest
     private readonly Mock<UserManager<LocalUser>> _userManagerMock;
     private readonly Mock<ITokenService> _tokenServiceMock;
 
-    // بيانات ثابتة لتقليل التكرار
     private readonly string _testEmail = "leenodeh287@gmail.com";
     private readonly string _testPassword = "leenodeh287@gmail.comL";
     private readonly string _testFirstName = "leen";

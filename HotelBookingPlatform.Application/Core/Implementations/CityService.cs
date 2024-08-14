@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, ILogger logger)
-        : base(unitOfWork, mapper, logger)
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
     {
     }
     public async Task<CityResponseDto> AddCityAsync(CityCreateRequest request)

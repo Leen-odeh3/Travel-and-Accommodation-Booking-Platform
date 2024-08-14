@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
 {
-    public HotelAmenitiesService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper, ILogger logger)
-        : base(unitOfWork, mapper, logger)
+    public HotelAmenitiesService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
     {
     }
     public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelNameAsync(string hotelName, int pageSize, int pageNumber)

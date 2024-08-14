@@ -1,7 +1,13 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository
 {
-    public BookingRepository(AppDbContext context) : base(context) { }
+    private readonly ILogger _logger;
+    public BookingRepository(AppDbContext context, ILogger logger)
+        : base(context, logger)
+    {
+        _logger = logger;
+    }
+
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _appDbContext.Bookings.FindAsync(bookingId);

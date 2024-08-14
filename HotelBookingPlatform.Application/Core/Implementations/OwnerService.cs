@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class OwnerService : BaseService<Owner>, IOwnerService
 {
-    public OwnerService(IUnitOfWork<Owner> unitOfWork, IMapper mapper, ILogger logger)
-         : base(unitOfWork, mapper,logger) { }
+    public OwnerService(IUnitOfWork<Owner> unitOfWork, IMapper mapper)
+         : base(unitOfWork, mapper) { }
 
     public async Task<OwnerDto> GetOwnerAsync(int id)
     {

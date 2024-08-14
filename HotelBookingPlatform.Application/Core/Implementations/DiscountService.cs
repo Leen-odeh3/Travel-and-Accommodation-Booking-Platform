@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class DiscountService : BaseService<Discount>, IDiscountService
 {
-    public DiscountService(IUnitOfWork<Discount> unitOfWork, IMapper mapper, ILogger logger)
-        : base(unitOfWork, mapper, logger) { }
+    public DiscountService(IUnitOfWork<Discount> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper) { }
     public async Task<DiscountDto> AddDiscountToRoomAsync(int roomId, decimal percentage, DateTime startDateUtc, DateTime endDateUtc)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);

@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomClassService : BaseService<RoomClass>, IRoomClassService
 {
-    public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper, ILogger logger)
-        : base(unitOfWork, mapper,logger) { }
+    public RoomClassService(IUnitOfWork<RoomClass> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper) { }
     public async Task<RoomClassResponseDto> CreateRoomClass(RoomClassRequestDto request)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);

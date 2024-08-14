@@ -1,7 +1,12 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class AmenityRepository : GenericRepository<Amenity>, IAmenityRepository
-{    public AmenityRepository(AppDbContext context) : base(context)
+{
+    private readonly ILogger _logger;
+    public AmenityRepository(AppDbContext context, ILogger logger)
+      : base(context, logger)
     {
+        _logger = logger;
     }
+
 }
 

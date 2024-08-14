@@ -3,9 +3,13 @@
 namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class CityRepository :GenericRepository<City> , ICityRepository
 {
-    public CityRepository(AppDbContext context) : base(context)
+    private readonly ILogger _logger;
+    public CityRepository(AppDbContext context, ILogger logger)
+        : base(context, logger)
     {
+        _logger = logger;
     }
+
     public async Task<City> GetCityByIdAsync(int cityId, bool includeHotels = false)
     {
         ValidationHelper.ValidateId(cityId);

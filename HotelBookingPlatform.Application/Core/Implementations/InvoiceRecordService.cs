@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class InvoiceRecordService : BaseService<InvoiceRecord>, IInvoiceRecordService
 {
-    public InvoiceRecordService(IUnitOfWork<InvoiceRecord> unitOfWork, IMapper mapper, ILogger logger)
-        : base(unitOfWork, mapper, logger)
+    public InvoiceRecordService(IUnitOfWork<InvoiceRecord> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
     {
     }
 

@@ -1,10 +1,13 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class OwnerRepository :GenericRepository<Owner> ,IOwnerRepository
 {
-    public OwnerRepository(AppDbContext context) : base(context)
+    private readonly ILogger _logger;
+    public OwnerRepository(AppDbContext context, ILogger logger)
+        : base(context, logger)
     {
+        _logger = logger;
     }
-    public override async Task<IEnumerable<Owner>> GetAllAsync()
+    public async Task<IEnumerable<Owner>> GetAllAsync()
     {
         return await _appDbContext.owners
             .Include(h => h.Hotels) 

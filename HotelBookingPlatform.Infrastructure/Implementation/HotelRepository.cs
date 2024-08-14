@@ -1,7 +1,13 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 {
-    public HotelRepository(AppDbContext context) : base(context) { }
+    private readonly ILogger _logger;
+    public HotelRepository(AppDbContext context, ILogger logger)
+        : base(context, logger)
+    {
+        _logger = logger;
+    }
+
     private IQueryable<Hotel> GetHotelsWithIncludes()
     {
         return _appDbContext.Hotels
@@ -29,16 +35,12 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)
     {
-        var hotel = await _appDbContext.Hotels
+        return await _appDbContext.Hotels
             .Include(h => h.RoomClasses)
                 .ThenInclude(rc => rc.Rooms)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(h => h.HotelId == hotelId);
-
-        if (hotel is null)
-            throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
-
-        return hotel;
+            .FirstOrDefaultAsync(h => h.HotelId == hotelId)
+            ?? throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
     }
 
     public async Task<IEnumerable<Hotel>> GetAllAsync(int pageSize, int pageNumber)
@@ -48,27 +50,19 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<Hotel> GetByIdAsync(int id)
     {
-        var hotel = await GetHotelsWithIncludes()
-            .FirstOrDefaultAsync(h => h.HotelId == id);
-
-        if (hotel is null)
-            throw new KeyNotFoundException($"Hotel with ID {id} not found.");
-
-        return hotel;
+        return await GetHotelsWithIncludes()
+             .FirstOrDefaultAsync(h => h.HotelId == id)
+             ?? throw new KeyNotFoundException($"Hotel with ID {id} not found.");
     }
 
     public async Task<Hotel> GetHotelByNameAsync(string name)
     {
-        var hotel = await _appDbContext.Hotels
-            .Include(h => h.RoomClasses)
-                .ThenInclude(rc => rc.Amenities)
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(h => h.Name == name);
-
-        if (hotel is null)
-            throw new KeyNotFoundException($"Hotel with name '{name}' not found.");
-
-        return hotel;
+        return await _appDbContext.Hotels
+             .Include(h => h.RoomClasses)
+                 .ThenInclude(rc => rc.Amenities)
+             .AsSplitQuery()
+             .FirstOrDefaultAsync(h => h.Name == name)
+             ?? throw new KeyNotFoundException($"Hotel with name '{name}' not found.");
     }
 
     public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
@@ -80,14 +74,10 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<Hotel> GetHotelWithAmenitiesAsync(int hotelId)
     {
-        var hotel = await _appDbContext.Hotels
-            .Include(h => h.Amenities)
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(h => h.HotelId == hotelId);
-
-        if (hotel is null)
-            throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
-
-        return hotel;
+        return await _appDbContext.Hotels
+              .Include(h => h.Amenities)
+              .AsSplitQuery()
+              .FirstOrDefaultAsync(h => h.HotelId == hotelId)
+              ?? throw new KeyNotFoundException($"Hotel with ID {hotelId} not found.");
     }
 }

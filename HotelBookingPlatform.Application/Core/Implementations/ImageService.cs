@@ -3,8 +3,8 @@ public class ImageService : BaseService<Image> ,IImageService
 {
     private readonly IConfiguration _configuration;
 
-    public ImageService(IUnitOfWork<Image> unitOfWork, IMapper mapper, IConfiguration configuration, ILogger logger)
-         : base(unitOfWork, mapper, logger)
+    public ImageService(IUnitOfWork<Image> unitOfWork, IMapper mapper, IConfiguration configuration)
+         : base(unitOfWork, mapper)
     {
         _configuration = configuration;
     }

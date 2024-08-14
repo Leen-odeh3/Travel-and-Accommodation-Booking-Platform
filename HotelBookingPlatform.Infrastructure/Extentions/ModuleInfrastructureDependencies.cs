@@ -17,6 +17,8 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped<IImageRepository, ImageRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<ILogger, HotelBookingPlatform.Infrastructure.Logger.Logger>();
+
 
         return services;
     }
