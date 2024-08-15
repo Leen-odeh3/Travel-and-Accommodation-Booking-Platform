@@ -7,6 +7,15 @@ public class RoomRepository :GenericRepository<Room> ,IRoomRepository
     {
         _logger = logger;
     }
+   public async Task<IEnumerable<Room>> GetAllIncludingAsync(params Expression<Func<Room, object>>[] includeProperties)
+    {
+        IQueryable<Room> query =_appDbContext.Rooms;
 
+        foreach (var includeProperty in includeProperties)
+        {
+            query = query.Include(includeProperty);
+        }
 
+        return await query.ToListAsync();
+    }
 }

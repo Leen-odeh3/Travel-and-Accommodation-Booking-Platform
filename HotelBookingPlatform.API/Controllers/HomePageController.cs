@@ -5,12 +5,15 @@
 public class HomePageController : ControllerBase
 {
     private readonly ICityService _cityService;
-    private readonly IHotelService _hotelService; 
+    private readonly IHotelService _hotelService;
 
-    public HomePageController(ICityService cityService, IHotelService hotelService)
+    private readonly IRoomService _roomService;
+
+    public HomePageController(ICityService cityService, IHotelService hotelService, IRoomService roomService)
     {
         _cityService = cityService;
         _hotelService = hotelService;
+        _roomService = roomService;
     }
     /// <summary>
     /// Gets the top 5 most visited cities.
@@ -32,13 +35,6 @@ public class HomePageController : ControllerBase
 
         return Ok(topCities);
     }
-
-
-
-
-
-
-
 
 
     /// <summary>
@@ -69,6 +65,28 @@ public class HomePageController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request.", error = ex.Message });
         }
     }
+
+    /// <summary>
+    /// Get rooms with active discounts.
+    /// </summary>
+    /// <returns>A list of rooms with active discounts, including hotel name, country, original and discounted prices, and star ratings.</returns>
+    [HttpGet("featured-deals")]
+    [SwaggerOperation(
+        Summary = "Get rooms with active discounts",
+        Description = "Retrieves a list of rooms with active discounts, including hotel name, country, original and discounted prices, and star ratings."
+    )]
+    public async Task<ActionResult<IEnumerable<FeaturedDealDto>>> GetFeaturedDeals()
+    {
+        var roomsWithDiscounts = await _roomService.GetRoomsWithActiveDiscountsAsync(5);
+
+        if (roomsWithDiscounts == null || !roomsWithDiscounts.Any())
+        {
+            return NotFound(new { message = "No rooms with active discounts found." });
+        }
+
+        return Ok(roomsWithDiscounts);
+    }
+
 }
 
 
