@@ -20,6 +20,13 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         return _mapper.Map<DiscountDto>(discount);
     }
 
+    public async Task<List<DiscountDto>> GetActiveDiscountsAsync()
+    {
+        var now = DateTime.UtcNow;
+        var discounts = await _unitOfWork.DiscountRepository.GetAllAsync();
+        var activeDiscounts = discounts.Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now).ToList();
+        return _mapper.Map<List<DiscountDto>>(activeDiscounts);
+    }
     public async Task<List<DiscountDto>> GetAllDiscountsAsync()
     {
         var discounts = await _unitOfWork.DiscountRepository.GetAllAsync(query => query.Include(d => d.Room));

@@ -77,4 +77,29 @@ public class DiscountController : ControllerBase
         await _discountService.DeleteDiscountAsync(id);
         return NoContent();
     }
+
+    [HttpGet("active")]
+    [SwaggerOperation(
+        Summary = "Get active discounts",
+        Description = "Retrieves a list of discounts that are currently active, including details such as discount percentage, room number, and validity dates."
+    )]
+    [SwaggerResponse(200, "Active discounts retrieved successfully.", typeof(IEnumerable<DiscountDto>))]
+    [SwaggerResponse(404, "No active discounts found.")]
+    [SwaggerResponse(500, "An unexpected error occurred.")]
+    public async Task<IActionResult> GetActiveDiscounts()
+    {
+        var now = DateTime.UtcNow;
+        var activeDiscounts = await _discountService.GetAllDiscountsAsync();
+
+        var activeDiscountsFiltered = activeDiscounts
+            .Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now)
+            .ToList();
+
+        return Ok(new
+        {
+            message = "Active discounts retrieved successfully.",
+            discounts = activeDiscountsFiltered
+        });
+    }
+
 }

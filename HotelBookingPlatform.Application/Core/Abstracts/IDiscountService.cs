@@ -6,5 +6,5 @@ public interface IDiscountService
     Task<DiscountDto> GetDiscountByIdAsync(int id);
     Task DeleteDiscountAsync(int id);
     Task<DiscountDto> UpdateDiscountAsync(int id, UpdateDiscountRequest request);
-
+    Task<List<DiscountDto>> GetActiveDiscountsAsync();
 }

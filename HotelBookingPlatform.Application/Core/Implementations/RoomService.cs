@@ -1,12 +1,13 @@
-﻿using HotelBookingPlatform.Infrastructure.Data;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomService : BaseService<Room>, IRoomService
 {
-    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper)
+    private readonly Domain.ILogger.ILogger _logger;
+    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper,ILogger logger)
         : base(unitOfWork, mapper)
     {
+        _logger = logger;
     }
+
     public async Task<RoomResponseDto> GetRoomAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
@@ -37,36 +38,5 @@ public class RoomService : BaseService<Room>, IRoomService
 
         await _unitOfWork.RoomRepository.DeleteAsync(id);
     }
-
-
-
-
-
-    public async Task<IEnumerable<FeaturedDealDto>> GetRoomsWithActiveDiscountsAsync(int count)
-    {
-        var now = DateTime.UtcNow;
-        var discounts = await _unitOfWork.DiscountRepository.GetAllAsync();
-        foreach (var discount in discounts)
-        {
-            var isActive = discount.StartDateUtc <= now && discount.EndDateUtc >= now;
-            discount.UpdateIsActive(isActive);
-        }
-
-        await _unitOfWork.SaveChangesAsync();
-
-        var rooms = await _unitOfWork.RoomRepository.GetAllIncludingAsync(
-            r => r.RoomClass,
-            r => r.RoomClass.Hotel,
-            r => r.RoomClass.Discounts
-        );
-
-        var activeRooms = rooms
-            .Where(r => r.RoomClass.Discounts.Any(d => d.IsActive))
-            .Take(count)
-            .ToList();
-
-        return _mapper.Map<IEnumerable<FeaturedDealDto>>(activeRooms);
-    }
-
 }
 
