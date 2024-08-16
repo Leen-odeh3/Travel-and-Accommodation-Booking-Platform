@@ -5,7 +5,6 @@ public class HotelAmenitiesService : BaseService<Hotel>, IHotelAmenitiesService
         : base(unitOfWork, mapper)
     {
     }
-
     public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelNameAsync(string hotelName, int pageSize, int pageNumber)
     {
         var hotel = await _unitOfWork.HotelRepository.GetHotelByNameAsync(hotelName);

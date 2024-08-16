@@ -41,3 +41,6 @@ global using HotelBookingPlatform.Application.Core.Implementations;
 global using HotelBookingPlatform.Application.Validator;
 global using Microsoft.Extensions.DependencyInjection;
 global using System.Reflection;
+global using HotelBookingPlatform.Domain.ILogger;
+global using ILogger = HotelBookingPlatform.Domain.ILogger.ILog;
+

@@ -1,8 +1,8 @@
-﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿using CloudinaryDotNet.Actions;
+namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IImageService
 {
-    Task UploadImagesAsync(string entityType, int entityId, IList<IFormFile> files);
-    Task<IEnumerable<object>> GetImagesAsync(string entityType, int entityId);
-    Task DeleteImageAsync(string entityType, int entityId, int imageId);
-    Task DeleteAllImagesAsync(string entityType, int entityId);
+    Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string imageType);
+    Task<DeletionResult> DeleteImageAsync(string publicId);
+    Task<GetResourceResult> GetImageDetailsAsync(string publicId);
 }

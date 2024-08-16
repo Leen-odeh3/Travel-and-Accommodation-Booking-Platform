@@ -1,9 +1,13 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepository
 {
-    public RoomClassRepository(AppDbContext context) : base(context)
+    private readonly ILog _logger;
+    public RoomClassRepository(AppDbContext context, ILog logger)
+        : base(context, logger)
     {
+        _logger = logger;
     }
+
     private IQueryable<RoomClass> ApplyIncludes(IQueryable<RoomClass> query, bool includeDiscounts, bool includeAmenities, bool includeRooms, bool includeHotel)
     {
         if (includeDiscounts)

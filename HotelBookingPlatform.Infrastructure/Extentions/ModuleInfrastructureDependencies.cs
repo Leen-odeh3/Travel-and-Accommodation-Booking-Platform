@@ -14,10 +14,10 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped<IRoomClasseRepository, RoomClassRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-        services.AddScoped<IImageRepository, ImageRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
-
+        services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<ILog,Log>();
         return services;
     }
 }

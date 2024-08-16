@@ -19,3 +19,5 @@ global using HotelBookingPlatform.Domain.Enums;
 global using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;
 global using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 global using Microsoft.AspNetCore.Identity;
+global using HotelBookingPlatform.Domain.ILogger;
+global using HotelBookingPlatform.Infrastructure.Logger;

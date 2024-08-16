@@ -1,16 +1,20 @@
-﻿namespace HotelBookingPlatform.API.Controllers;
+﻿using AutoMapper;
+
+namespace HotelBookingPlatform.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class HomePageController : ControllerBase
 {
     private readonly ICityService _cityService;
-    private readonly IHotelService _hotelService; 
+    private readonly IHotelService _hotelService;
 
-    public HomePageController(ICityService cityService, IHotelService hotelService)
+    private readonly IRoomService _roomService;
+    public HomePageController(ICityService cityService, IHotelService hotelService, IRoomService roomService)
     {
         _cityService = cityService;
         _hotelService = hotelService;
+        _roomService = roomService;
     }
     /// <summary>
     /// Gets the top 5 most visited cities.
@@ -32,13 +36,6 @@ public class HomePageController : ControllerBase
 
         return Ok(topCities);
     }
-
-
-
-
-
-
-
 
 
     /// <summary>

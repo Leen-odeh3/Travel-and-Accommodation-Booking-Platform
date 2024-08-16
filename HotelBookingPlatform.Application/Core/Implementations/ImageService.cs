@@ -1,90 +1,60 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations;
-public class ImageService : BaseService<Image> ,IImageService
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using HotelBookingPlatform.Domain.Abstracts;
+
+namespace HotelBookingPlatform.Application.Core.Implementations;
+public class ImageService : IImageService
 {
-    private readonly IConfiguration _configuration;
+    private readonly Cloudinary _cloudinary;
+    private readonly IUnitOfWork<Image> _unitOfWork;
 
-    public ImageService(IUnitOfWork<Image> unitOfWork, IMapper mapper, IConfiguration configuration)
-         : base(unitOfWork, mapper)
+    public ImageService(Cloudinary cloudinary,IUnitOfWork<Image> unitOfWork)
     {
-        _configuration = configuration;
+        _cloudinary = cloudinary;
+        _unitOfWork = unitOfWork;
     }
-    public async Task UploadImagesAsync(string entityType, int entityId, IList<IFormFile> files)
+
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string publicId)
     {
-        if (files == null || files.Count == 0)
-            throw new ArgumentException("No files uploaded.");
+        if (file == null || file.Length == 0)
+            throw new ArgumentException("No file provided.");
 
-        var imageUrls = new List<string>();
-
-        foreach (var file in files)
+        using (var stream = file.OpenReadStream())
         {
-            if (file.Length > 0)
+            var uploadParams = new ImageUploadParams
             {
-                var fileUrl = await SaveFileAndGetUrlAsync(entityType, file);
-                imageUrls.Add(fileUrl);
-            }
-        }
+                File = new FileDescription(file.FileName, stream),
+                Folder = folderPath,
+                PublicId = publicId
+            };
 
-        await _unitOfWork.ImageRepository.SaveImagesAsync(entityType, entityId, imageUrls);
-    }
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-    private async Task<string> SaveFileAndGetUrlAsync(string entityType, IFormFile file)
-    {
-        var uploadsPath = Path.Combine("wwwroot", "uploads", entityType);
-        var fileName = Path.GetFileName(file.FileName);
-        var filePath = Path.Combine(uploadsPath, fileName);
+            // إنشاء سجل الصورة وتخزينه في قاعدة البيانات
+            var imageRecord = new Image
+            {
+                Url = uploadResult.SecureUri.ToString(),
+                PublicId = uploadResult.PublicId,
+            };
 
-        Directory.CreateDirectory(uploadsPath); 
+            await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
+            await _unitOfWork.SaveChangesAsync();
 
-        using (var fileStream = new FileStream(filePath, FileMode.Create))
-        {
-            await file.CopyToAsync(fileStream);
-        }
-        var baseUrl = _configuration["AppSettings:BaseUrl"];
-        var fileUrl = $"{baseUrl}/uploads/{entityType}/{fileName}";
-
-        return fileUrl;
-    }
-
-    public async Task<IEnumerable<object>> GetImagesAsync(string entityType, int entityId)
-    {
-        var images = await _unitOfWork.ImageRepository.GetImagesAsync(entityType, entityId);
-        if (!images.Any())
-            throw new KeyNotFoundException("Image not found.");
-
-        return images.Select(img => new
-        {
-            img.EntityType,
-            img.EntityId,
-            ImageUrl = img.ImageUrl // استخدام الرابط المباشر للصورة
-        });
-    }
-
-    public async Task DeleteImageAsync(string entityType, int entityId, int id)
-    {
-        try
-        {
-            var images = await _unitOfWork.ImageRepository.GetImagesAsync(entityType, entityId);
-            var imageToDelete = images.FirstOrDefault(img => img.Id == id);
-
-            if (imageToDelete is null)
-                throw new KeyNotFoundException("Image not found.");
-
-            await _unitOfWork.ImageRepository.DeleteImageAsync(imageToDelete.Id);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("An error occurred while deleting the image.", ex);
+            return uploadResult;
         }
     }
-    public async Task DeleteAllImagesAsync(string entityType, int entityId)
+
+    public async Task<DeletionResult> DeleteImageAsync(string publicId)
     {
-        try
-        {
-            await _unitOfWork.ImageRepository.DeleteImagesAsync(entityType, entityId);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("An error occurred while deleting all images.", ex);
-        }
+        var deleteParams = new DeletionParams(publicId);
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+        return result;
+    }
+
+    public async Task<GetResourceResult> GetImageDetailsAsync(string publicId)
+    {
+        var result = await _cloudinary.GetResourceAsync(publicId);
+        return result;
     }
 }
+

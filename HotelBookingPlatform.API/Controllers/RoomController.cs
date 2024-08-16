@@ -1,55 +1,74 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomController : ControllerBase
 {
     private readonly IRoomService _roomService;
     private readonly IImageService _imageService;
+    private readonly IResponseHandler _responseHandler;
 
-    public RoomController(IRoomService roomService,IImageService imageService)
+    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler)
     {
         _roomService = roomService;
         _imageService = imageService;
+        _responseHandler = responseHandler;
     }
 
-    // GET: api/Room/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<RoomResponseDto>> GetRoom(int id)
+    public async Task<IActionResult> GetRoom(int id)
     {
-        var room = await _roomService.GetRoomAsync(id);
-        return Ok(room);
+        var room = await _roomService.GetRoomAsync(id);     
+        return _responseHandler.Success(room);
     }
 
-    [HttpPost("{roomId}/uploadImages")]
+
+
+    [HttpPost("{roomId}/upload-image")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UploadImages(int roomId, IList<IFormFile> files)
+    [SwaggerOperation(Summary = "Upload an image for a specific room.")]
+    public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
-        await _imageService.UploadImagesAsync("Room", roomId, files);
-        return Ok("Images uploaded successfully.");
+        if (file == null || file.Length == 0)
+        {
+            return _responseHandler.BadRequest("No file uploaded.");
+        }
+
+        var uploadResult = await _imageService.UploadImageAsync(file, $"rooms/{roomId}", "room");
+
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
-    [HttpGet("{roomId}/GetImages")]
-    public async Task<IActionResult> GetImages(int roomId)
-    {
-        var images = await _imageService.GetImagesAsync("Room", roomId);
-        return Ok(images);
-    }
-
-    [HttpDelete("{roomId}/DeleteImage")]
+    [HttpDelete("{roomId}/delete-image/{publicId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteImage(int roomId, int imageId)
+    [SwaggerOperation(Summary = "Delete an image from a specific room.")]
+    public async Task<IActionResult> DeleteRoomImage(int roomId, string publicId)
     {
-        await _imageService.DeleteImageAsync("Room", roomId,imageId);
-        return Ok("Image deleted successfully.");
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var deletionResult = await _imageService.DeleteImageAsync(publicId);
+
+        if (deletionResult.Result == "ok")
+        {
+            return _responseHandler.Success("Image deleted successfully.");
+        }
+
+        return _responseHandler.BadRequest("Failed to delete image.");
     }
 
-    [HttpDelete("{roomId}/DeleteAllImages")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteAllImages(int roomId)
+    [HttpGet("{roomId}/image/{publicId}")]
+    [SwaggerOperation(Summary = "Get details of an image associated with a specific room.")]
+    public async Task<IActionResult> GetRoomImageDetails(int roomId, string publicId)
     {
-        await _imageService.DeleteAllImagesAsync("Room", roomId);
-        return Ok("All images deleted successfully.");
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        return _responseHandler.Success(imageDetails);
     }
 }
+

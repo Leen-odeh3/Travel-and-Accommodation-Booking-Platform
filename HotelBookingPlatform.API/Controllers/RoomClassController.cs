@@ -1,46 +1,43 @@
-﻿
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomClassController : ControllerBase
 {
     private readonly IRoomClassService _roomClassService;
     private readonly IImageService _imageService;
-    public RoomClassController(IRoomClassService roomClassService, IImageService imageService)
+    private readonly IResponseHandler _responseHandler;
+    public RoomClassController(IRoomClassService roomClassService, IImageService imageService, IResponseHandler responseHandler)
     {
         _roomClassService = roomClassService;
         _imageService = imageService;
+        _responseHandler = responseHandler;
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<RoomClassResponseDto>> CreateRoomClass(RoomClassRequestDto request)
+    public async Task<IActionResult> CreateRoomClass([FromBody] RoomClassRequestDto request)
     {
- 
-            var createdRoomClassDto = await _roomClassService.CreateRoomClass(request);
+        if (!ModelState.IsValid)
+            return _responseHandler.BadRequest("Invalid request data.");
 
-            return new CreatedAtActionResult(
-                nameof(GetRoomClass),
-                "RoomClass",
-                new { id = createdRoomClassDto.RoomClassID },
-                createdRoomClassDto 
-            );       
+        var createdRoomClass = await _roomClassService.CreateRoomClass(request);
+        return _responseHandler.Created(createdRoomClass, "Room class created successfully.");
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<RoomClassResponseDto>> GetRoomClass(int id)
     {
         var roomClass = await _roomClassService.GetRoomClassById(id);
-        return Ok(roomClass);   
+        return Ok(roomClass);
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoomClass(int id, RoomClassRequestDto request)
     {
-            var updatedRoomClass = await _roomClassService.UpdateRoomClass(id, request);
-            return Ok(updatedRoomClass);
+        var updatedRoomClass = await _roomClassService.UpdateRoomClass(id, request);
+        return _responseHandler.Success(updatedRoomClass, "Room class updated successfully.");
+
     }
 
     [HttpPost("{roomClassId}/addamenity")]
@@ -55,15 +52,16 @@ public class RoomClassController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenityFromRoomClass(int roomClassId, int amenityId)
     {
-            await _roomClassService.DeleteAmenityFromRoomClassAsync(roomClassId, amenityId);
-            return Ok(new { message = "Amenity deleted successfully." });          
+        await _roomClassService.DeleteAmenityFromRoomClassAsync(roomClassId, amenityId);
+        return _responseHandler.NoContent("Room class deleted successfully.");
     }
 
     [HttpGet("{roomClassId}/amenities")]
     public async Task<IActionResult> GetAmenitiesByRoomClassId(int roomClassId)
     {
-            var amenities = await _roomClassService.GetAmenitiesByRoomClassIdAsync(roomClassId);
-            return Ok(amenities);
+        var amenities = await _roomClassService.GetAmenitiesByRoomClassIdAsync(roomClassId);
+        return _responseHandler.Success(amenities);
+
     }
 
     [HttpPost("{roomClassId}/rooms")]
@@ -71,11 +69,10 @@ public class RoomClassController : ControllerBase
     [SwaggerOperation(Summary = "Add a new room to a specific room class",
                      Description = "Adds a new room to the room class identified by the specified roomClassId. The request body should include the room's number and any other necessary details."
         )]
-    public async Task<ActionResult<RoomResponseDto>> AddRoomToRoomClass(int roomClassId, [FromBody] RoomCreateRequest request)
+    public async Task<IActionResult> AddRoomToRoomClass(int roomClassId, [FromBody] RoomCreateRequest request)
     {
-       
-            var roomDto = await _roomClassService.AddRoomToRoomClassAsync(roomClassId, request);
-            return Ok(roomDto);    
+        var roomDto = await _roomClassService.AddRoomToRoomClassAsync(roomClassId, request);
+        return _responseHandler.Created(roomDto, "Room added successfully.");
     }
 
     [HttpGet("{roomClassId}/rooms")]
@@ -85,8 +82,8 @@ public class RoomClassController : ControllerBase
 )]
     public async Task<IActionResult> GetRoomsByRoomClassId(int roomClassId)
     {
-            var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
-            return Ok(rooms); 
+        var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
+        return _responseHandler.Success(rooms);
     }
 
 
@@ -98,45 +95,63 @@ public class RoomClassController : ControllerBase
     )]
     public async Task<IActionResult> DeleteRoomFromRoomClass(int roomClassId, int roomId)
     {
-            await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
-            return Ok(new { message = "Room deleted successfully." });      
+        await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
+        return _responseHandler.NoContent("Room deleted successfully.");
+
     }
 
-    [HttpPost("{RoomClassId}/uploadImages")]
+
+    //////////////////////////////////////////
+    ///
+
+  [HttpPost("{roomClassId}/upload-image")]
     [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Upload images for a specific city.")]
-    public async Task<IActionResult> UploadImages(int RoomClassId, IList<IFormFile> files)
+    [SwaggerOperation(Summary = "Upload an image for a specific room class.")]
+    public async Task<IActionResult> UploadRoomClassImage(int roomClassId, IFormFile file)
     {
-        await _imageService.UploadImagesAsync("RoomClass", RoomClassId, files);
-        return Ok("Images uploaded successfully.");
+        if (file == null || file.Length == 0)
+        {
+            return _responseHandler.BadRequest("No file uploaded.");
+        }
+
+        var uploadResult = await _imageService.UploadImageAsync(file, $"roomClasses/{roomClassId}", "roomClass");
+
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
-    [HttpGet("{RoomClassId}/GetImages")]
-    [SwaggerOperation(Summary = "Retrieve all images associated with a specific city.")]
-    public async Task<IActionResult> GetImages(int RoomClassId)
-    {
-        var images = await _imageService.GetImagesAsync("RoomClass", RoomClassId);
-        return Ok(images);
-    }
-
-    [HttpDelete("{cityId}/DeleteImage")]
-    [SwaggerOperation(Summary = "Delete a specific image associated with a city.")]
+    [HttpDelete("{roomClassId}/delete-image/{publicId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteImage(int RoomClassId, int imageId)
+    [SwaggerOperation(Summary = "Delete an image from a specific room class.")]
+    public async Task<IActionResult> DeleteRoomClassImage(int roomClassId, string publicId)
     {
-        await _imageService.DeleteImageAsync("RoomClass", RoomClassId, imageId);
-        return Ok("Image deleted successfully.");
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var deletionResult = await _imageService.DeleteImageAsync(publicId);
+
+        if (deletionResult.Result == "ok")
+        {
+            return _responseHandler.Success("Image deleted successfully.");
+        }
+
+        return _responseHandler.BadRequest("Failed to delete image.");
     }
 
-    [HttpDelete("{RoomClassId}/DeleteAllImages")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete all images associated with a specific city.")]
-    public async Task<IActionResult> DeleteAllImages(int RoomClassId)
+    [HttpGet("{roomClassId}/image/{publicId}")]
+    [SwaggerOperation(Summary = "Get details of an image associated with a specific room class.")]
+    public async Task<IActionResult> GetRoomClassImageDetails(int roomClassId, string publicId)
     {
-        await _imageService.DeleteAllImagesAsync("RoomClass", RoomClassId);
-        return Ok("All images deleted successfully.");
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        return _responseHandler.Success(imageDetails);
     }
+
 }
-
 
 

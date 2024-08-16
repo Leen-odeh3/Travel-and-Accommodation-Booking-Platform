@@ -2,28 +2,13 @@
 public class HotelService : BaseService<Hotel>, IHotelService
 {
     public HotelService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
-         : base(unitOfWork, mapper)
-    {
-    }
+           : base(unitOfWork, mapper) { }
     public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
-        Expression<Func<Hotel, bool>> filter = null;
+        Expression<Func<Hotel, bool>> filter = h =>
+            (string.IsNullOrEmpty(hotelName) || h.Name.Contains(hotelName)) &&
+            (string.IsNullOrEmpty(description) || h.Description.Contains(description));
 
-        if (!string.IsNullOrEmpty(hotelName) || !string.IsNullOrEmpty(description))
-        {
-            if (!string.IsNullOrEmpty(hotelName) && !string.IsNullOrEmpty(description))
-            {
-                filter = h => h.Name.Contains(hotelName) && h.Description.Contains(description);
-            }
-            else if (!string.IsNullOrEmpty(hotelName))
-            {
-                filter = h => h.Name.Contains(hotelName);
-            }
-            else if (!string.IsNullOrEmpty(description))
-            {
-                filter = h => h.Description.Contains(description);
-            }
-        }
         var hotels = await _unitOfWork.HotelRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
@@ -35,10 +20,8 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<HotelResponseDto> GetHotel(int id)
     {
         ValidationHelper.ValidateId(id);
-        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
-
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found");
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id)
+                  ?? throw new NotFoundException("Hotel not found.");
 
         var hotelDto = _mapper.Map<HotelResponseDto>(hotel);
         return hotelDto;
@@ -56,11 +39,8 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
     {
         ValidationHelper.ValidateRequest(request);
-        var existingHotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
-        if (existingHotel is null)
-        {
-            throw new KeyNotFoundException("Hotel not found");
-        }
+        var existingHotel = await _unitOfWork.HotelRepository.GetByIdAsync(id)
+                        ?? throw new KeyNotFoundException("Hotel not found");
         _mapper.Map(request, existingHotel);
 
         await _unitOfWork.HotelRepository.UpdateAsync(id, existingHotel);
@@ -71,11 +51,9 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<IActionResult> DeleteHotel(int id)
     {
         ValidationHelper.ValidateId(id);
-        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id);
-        if (hotel is null)
-        {
-            throw new KeyNotFoundException("Hotel not found");
-        }
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(id)
+                ?? throw new KeyNotFoundException("Hotel not found.");
+
 
         await _unitOfWork.HotelRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
@@ -85,7 +63,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber)
     {
         var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
-        if (hotels is null || !hotels.Any())
+        if (!hotels.Any())
             throw new NotFoundException("No hotels found matching the search criteria.");
 
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
@@ -148,10 +126,8 @@ public class HotelService : BaseService<Hotel>, IHotelService
     {
         ValidationHelper.ValidateId(hotelId);
 
-        var hotel = await _unitOfWork.HotelRepository.GetHotelWithRoomClassesAndRoomsAsync(hotelId);
-
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found");
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithRoomClassesAndRoomsAsync(hotelId)
+                ?? throw new NotFoundException("Hotel not found");
 
         var rooms = hotel.RoomClasses.SelectMany(rc => rc.Rooms);
 
@@ -162,10 +138,8 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<AmenityResponseDto> AddAmenityToHotelAsync(int hotelId, AmenityCreateRequest request)
     {
         ValidationHelper.ValidateRequest(request);
-
-        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found.");
+        var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId)
+                ?? throw new NotFoundException("Hotel not found.");
 
         var amenity = _mapper.Map<Amenity>(request);
         hotel.Amenities.Add(amenity);
@@ -177,23 +151,19 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<IEnumerable<AmenityResponseDto>> GetAmenitiesByHotelIdAsync(int hotelId)
     {
-        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId);
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found.");
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId)
+                 ?? throw new NotFoundException("Hotel not found.");
 
         var amenitiesDto = _mapper.Map<IEnumerable<AmenityResponseDto>>(hotel.Amenities);
         return amenitiesDto;
     }
-
     public async Task DeleteAmenityFromHotelAsync(int hotelId, int amenityId)
     {
-        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId);
-        if (hotel is null)
-            throw new NotFoundException("Hotel not found.");
+        var hotel = await _unitOfWork.HotelRepository.GetHotelWithAmenitiesAsync(hotelId)
+               ?? throw new NotFoundException("Hotel not found.");
 
-        var amenity = hotel.Amenities.FirstOrDefault(a => a.AmenityID == amenityId);
-        if (amenity is null)
-            throw new NotFoundException("Amenity not found.");
+        var amenity = hotel.Amenities.FirstOrDefault(a => a.AmenityID == amenityId)
+                     ?? throw new NotFoundException("Amenity not found.");
 
         hotel.Amenities.Remove(amenity);
 
@@ -203,10 +173,9 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
     {
         ValidationHelper.ValidateId(hotelId);
-
         var reviews = await _unitOfWork.ReviewRepository.GetReviewsByHotelIdAsync(hotelId);
 
-        if (reviews == null || !reviews.Any())
+        if (!reviews.Any())
             throw new NotFoundException("No reviews found for the specified hotel.");
 
         var averageRating = reviews.Average(r => r.Rating);
@@ -219,7 +188,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
 
         return reviewRatingDto;
     }
-
 }
 
 

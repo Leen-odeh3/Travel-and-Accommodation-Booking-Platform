@@ -1,13 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ReviewService : BaseService<Review>, IReviewService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-        : base(unitOfWork, mapper)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
+    public ReviewService(IUnitOfWork<Review> unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper) { }
     public async Task CreateReviewAsync(ReviewCreateRequest request)
     {
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId);
