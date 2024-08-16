@@ -16,6 +16,7 @@ public static class ModuleInfrastructureDependencies
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<IImageRepository, ImageRepository>();
         services.AddScoped<ILog,Log>();
         return services;
     }

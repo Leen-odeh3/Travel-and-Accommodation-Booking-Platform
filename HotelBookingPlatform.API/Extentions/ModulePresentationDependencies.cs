@@ -1,6 +1,5 @@
 ﻿using CloudinaryDotNet;
 using HotelBookingPlatform.API.Helpers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace HotelBookingPlatform.API.Extentions;
@@ -59,7 +58,7 @@ public static class ModulePresentationDependencies
 
         // // Register Cloudinary
         services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
-       
+
         services.AddSingleton(x =>
         {
             var cloudinarySettings = x.GetRequiredService<IOptions<CloudinarySettings>>().Value;

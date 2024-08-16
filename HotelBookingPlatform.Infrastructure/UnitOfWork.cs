@@ -22,6 +22,7 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         InvoiceRecordRepository =new InvoiceRecordRepository(_context, _logger);
         AmenityRepository = new AmenityRepository(_context, _logger);
         UserRepository = new UserRepository(_userManager,_context, _logger);
+        ImageRepository = new ImageRepository(_context, _logger);
     }
     public IHotelRepository HotelRepository { get; set;}
     public IBookingRepository BookingRepository { get; set;}
@@ -34,6 +35,8 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
     public IInvoiceRecordRepository InvoiceRecordRepository {get; set; }
     public IAmenityRepository AmenityRepository { get; set;}
     public IUserRepository UserRepository { get; set; }
+    public IImageRepository ImageRepository { get; set; }
+
     public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();   
 }
 

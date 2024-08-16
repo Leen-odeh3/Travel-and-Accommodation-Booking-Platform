@@ -88,11 +88,9 @@ public class CityController : ControllerBase
         return _responseHandler.Success(message: "Hotel removed from city successfully.");
     }
     //////////////////////////////
-    ///
-
-
-
     [HttpPost("{cityId}/upload-image")]
+    //[Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Upload an image for a specific city.")]
     public async Task<IActionResult> UploadCityImage(int cityId, IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -100,14 +98,14 @@ public class CityController : ControllerBase
             return _responseHandler.BadRequest("No file uploaded.");
         }
 
-        var uploadResult = await _imageService.UploadImageAsync(file, $"cities/{cityId}");
-
-        // هنا يمكنك إضافة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
+        var uploadResult = await _imageService.UploadImageAsync(file, $"cities/{cityId}", "city");
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
     [HttpDelete("{cityId}/delete-image/{publicId}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Delete an image from a specific city.")]
     public async Task<IActionResult> DeleteCityImage(int cityId, string publicId)
     {
         if (string.IsNullOrEmpty(publicId))
@@ -119,10 +117,23 @@ public class CityController : ControllerBase
 
         if (deletionResult.Result == "ok")
         {
-            // هنا يمكنك إزالة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
             return _responseHandler.Success("Image deleted successfully.");
         }
 
         return _responseHandler.BadRequest("Failed to delete image.");
     }
+
+    [HttpGet("{cityId}/image/{publicId}")]
+    [SwaggerOperation(Summary = "Get details of an image associated with a specific city.")]
+    public async Task<IActionResult> GetCityImageDetails(int cityId, string publicId)
+    {
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        return _responseHandler.Success(imageDetails);
+    }
 }
+    

@@ -121,40 +121,57 @@ public class HotelController : ControllerBase
         return _responseHandler.Success(ratingDto);
     }
 
-    ///////////////////////////////
-    ///
-     [HttpPost("{hotelId}/upload-image")]
-        public async Task<IActionResult> UploadHotelImage(int hotelId, IFormFile file)
+
+    // Upload Image
+    [HttpPost("{hotelId}/upload-image")]
+   // [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Upload an image for a specific hotel.")]
+    public async Task<IActionResult> UploadHotelImage(int hotelId, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
         {
-            if (file == null || file.Length == 0)
-            {
-                return _responseHandler.BadRequest("No file uploaded.");
-            }
-
-            var uploadResult = await _imageService.UploadImageAsync(file, $"hotels/{hotelId}");
-
-            // هنا يمكنك إضافة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
-
-            return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+            return _responseHandler.BadRequest("No file uploaded.");
         }
 
-        [HttpDelete("{hotelId}/delete-image/{publicId}")]
-        public async Task<IActionResult> DeleteHotelImage(int hotelId, string publicId)
-        {
-            if (string.IsNullOrEmpty(publicId))
-            {
-                return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-            }
+        var uploadResult = await _imageService.UploadImageAsync(file, $"hotels/{hotelId}", "hotel");
 
-            var deletionResult = await _imageService.DeleteImageAsync(publicId);
-
-            if (deletionResult.Result == "ok")
-            {
-                // هنا يمكنك إزالة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
-                return _responseHandler.Success("Image deleted successfully.");
-            }
-
-            return _responseHandler.BadRequest("Failed to delete image.");
-        }
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
+
+    // Delete Image
+    [HttpDelete("{hotelId}/delete-image/{publicId}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Delete an image from a specific hotel.")]
+    public async Task<IActionResult> DeleteHotelImage(int hotelId, string publicId)
+    {
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var deletionResult = await _imageService.DeleteImageAsync(publicId);
+
+        if (deletionResult.Result == "ok")
+        {
+            return _responseHandler.Success("Image deleted successfully.");
+        }
+
+        return _responseHandler.BadRequest("Failed to delete image.");
+    }
+
+    // Get Image Details
+    [HttpGet("{hotelId}/image/{publicId}")]
+    [SwaggerOperation(Summary = "Get details of an image associated with a specific hotel.")]
+    public async Task<IActionResult> GetHotelImageDetails(int hotelId, string publicId)
+    {
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        return _responseHandler.Success(imageDetails);
+    }
+
+}
 

@@ -104,7 +104,9 @@ public class RoomClassController : ControllerBase
     //////////////////////////////////////////
     ///
 
-    [HttpPost("{roomClassId}/upload-image")]
+  [HttpPost("{roomClassId}/upload-image")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Upload an image for a specific room class.")]
     public async Task<IActionResult> UploadRoomClassImage(int roomClassId, IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -112,14 +114,14 @@ public class RoomClassController : ControllerBase
             return _responseHandler.BadRequest("No file uploaded.");
         }
 
-        var uploadResult = await _imageService.UploadImageAsync(file, $"room-classes/{roomClassId}");
-
-        // هنا يمكنك إضافة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
+        var uploadResult = await _imageService.UploadImageAsync(file, $"roomClasses/{roomClassId}", "roomClass");
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
     [HttpDelete("{roomClassId}/delete-image/{publicId}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Delete an image from a specific room class.")]
     public async Task<IActionResult> DeleteRoomClassImage(int roomClassId, string publicId)
     {
         if (string.IsNullOrEmpty(publicId))
@@ -131,12 +133,25 @@ public class RoomClassController : ControllerBase
 
         if (deletionResult.Result == "ok")
         {
-            // هنا يمكنك إزالة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
             return _responseHandler.Success("Image deleted successfully.");
         }
 
         return _responseHandler.BadRequest("Failed to delete image.");
     }
+
+    [HttpGet("{roomClassId}/image/{publicId}")]
+    [SwaggerOperation(Summary = "Get details of an image associated with a specific room class.")]
+    public async Task<IActionResult> GetRoomClassImageDetails(int roomClassId, string publicId)
+    {
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
+
+        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        return _responseHandler.Success(imageDetails);
+    }
+
 }
 
 

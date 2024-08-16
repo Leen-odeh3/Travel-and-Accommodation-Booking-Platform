@@ -2,6 +2,7 @@
 namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface IImageService
 {
-    Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folder);
+    Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string imageType);
     Task<DeletionResult> DeleteImageAsync(string publicId);
+    Task<GetResourceResult> GetImageDetailsAsync(string publicId);
 }
