@@ -5,19 +5,20 @@ public class RoomController : ControllerBase
 {
     private readonly IRoomService _roomService;
     private readonly IImageService _imageService;
+    private readonly IResponseHandler _responseHandler;
 
-    public RoomController(IRoomService roomService,IImageService imageService)
+    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler)
     {
         _roomService = roomService;
         _imageService = imageService;
+        _responseHandler = responseHandler;
     }
 
-    // GET: api/Room/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<RoomResponseDto>> GetRoom(int id)
+    public async Task<IActionResult> GetRoom(int id)
     {
-        var room = await _roomService.GetRoomAsync(id);
-        return Ok(room);
+        var room = await _roomService.GetRoomAsync(id);     
+        return _responseHandler.Success(room);
     }
 
     [HttpPost("{roomId}/uploadImages")]
@@ -25,22 +26,22 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> UploadImages(int roomId, IList<IFormFile> files)
     {
         await _imageService.UploadImagesAsync("Room", roomId, files);
-        return Ok("Images uploaded successfully.");
+        return _responseHandler.Success("Images uploaded successfully.");
     }
 
     [HttpGet("{roomId}/GetImages")]
     public async Task<IActionResult> GetImages(int roomId)
     {
         var images = await _imageService.GetImagesAsync("Room", roomId);
-        return Ok(images);
+        return _responseHandler.Success(images);
     }
 
     [HttpDelete("{roomId}/DeleteImage")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteImage(int roomId, int imageId)
     {
-        await _imageService.DeleteImageAsync("Room", roomId,imageId);
-        return Ok("Image deleted successfully.");
+        await _imageService.DeleteImageAsync("Room", roomId, imageId);
+        return _responseHandler.Success("Image deleted successfully.");
     }
 
     [HttpDelete("{roomId}/DeleteAllImages")]
@@ -48,6 +49,6 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> DeleteAllImages(int roomId)
     {
         await _imageService.DeleteAllImagesAsync("Room", roomId);
-        return Ok("All images deleted successfully.");
+        return _responseHandler.Success("All images deleted successfully.");
     }
 }

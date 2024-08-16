@@ -4,11 +4,13 @@
 [Authorize]
 public class ReviewController : ControllerBase
 {
-  private readonly IReviewService _reviewService;
+    private readonly IReviewService _reviewService;
+    private readonly IResponseHandler _responseHandler;
 
-    public ReviewController(IReviewService reviewService)
+    public ReviewController(IReviewService reviewService, IResponseHandler responseHandler)
     {
         _reviewService = reviewService;
+        _responseHandler = responseHandler;
     }
     /// <summary>
     /// Creates a new review.
@@ -22,7 +24,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
     {
         await _reviewService.CreateReviewAsync(request);
-        return Ok();
+        return _responseHandler.Created(request, "Review created successfully.");
     }
 
     /// <summary>
@@ -36,7 +38,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> GetReview(int id)
     {
         var review = await _reviewService.GetReviewAsync(id);
-        return Ok(review);
+        return _responseHandler.Success(review);
     }
 
     /// <summary>
@@ -53,7 +55,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
         var review = await _reviewService.UpdateReviewAsync(id, request);
-        return Ok(review);
+        return _responseHandler.Success(review);
     }
     /// <summary>
     /// Deletes a review by its ID.
@@ -66,6 +68,6 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> DeleteReview(int id)
     {
         await _reviewService.DeleteReviewAsync(id);
-        return NoContent();
+        return _responseHandler.NoContent();
     }
 }

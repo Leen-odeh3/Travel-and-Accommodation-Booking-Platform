@@ -24,3 +24,6 @@ global using UnauthorizedAccessException = HotelBookingPlatform.Domain.Exception
 global using HotelBookingPlatform.Domain.ILogger;
 global using AutoFixture.AutoMoq;
 global using HotelBookingPlatform.Domain.DTOs.Owner;
+global using HotelBookingPlatform.Domain.DTOs.Review;
+global using HotelBookingPlatform.Domain.DTOs.Room;
+global using HotelBookingPlatform.Domain.DTOs.RoomClass;
