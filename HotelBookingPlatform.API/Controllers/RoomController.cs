@@ -21,34 +21,39 @@ public class RoomController : ControllerBase
         return _responseHandler.Success(room);
     }
 
-    [HttpPost("{roomId}/uploadImages")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UploadImages(int roomId, IList<IFormFile> files)
+
+    [HttpPost("{roomId}/upload-image")]
+    public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
-        await _imageService.UploadImagesAsync("Room", roomId, files);
-        return _responseHandler.Success("Images uploaded successfully.");
+        if (file == null || file.Length == 0)
+        {
+            return _responseHandler.BadRequest("No file uploaded.");
+        }
+
+        var uploadResult = await _imageService.UploadImageAsync(file, $"rooms/{roomId}");
+
+        // هنا يمكنك إضافة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
+
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
-    [HttpGet("{roomId}/GetImages")]
-    public async Task<IActionResult> GetImages(int roomId)
+    [HttpDelete("{roomId}/delete-image/{publicId}")]
+    public async Task<IActionResult> DeleteRoomImage(int roomId, string publicId)
     {
-        var images = await _imageService.GetImagesAsync("Room", roomId);
-        return _responseHandler.Success(images);
-    }
+        if (string.IsNullOrEmpty(publicId))
+        {
+            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
+        }
 
-    [HttpDelete("{roomId}/DeleteImage")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteImage(int roomId, int imageId)
-    {
-        await _imageService.DeleteImageAsync("Room", roomId, imageId);
-        return _responseHandler.Success("Image deleted successfully.");
-    }
+        var deletionResult = await _imageService.DeleteImageAsync(publicId);
 
-    [HttpDelete("{roomId}/DeleteAllImages")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteAllImages(int roomId)
-    {
-        await _imageService.DeleteAllImagesAsync("Room", roomId);
-        return _responseHandler.Success("All images deleted successfully.");
+        if (deletionResult.Result == "ok")
+        {
+            // هنا يمكنك إزالة أو تحديث سجل الصورة في قاعدة البيانات إذا لزم الأمر
+            return _responseHandler.Success("Image deleted successfully.");
+        }
+
+        return _responseHandler.BadRequest("Failed to delete image.");
     }
 }
+  

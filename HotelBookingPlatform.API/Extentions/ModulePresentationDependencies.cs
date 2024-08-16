@@ -1,4 +1,9 @@
-﻿namespace HotelBookingPlatform.API.Extentions;
+﻿using CloudinaryDotNet;
+using HotelBookingPlatform.API.Helpers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+
+namespace HotelBookingPlatform.API.Extentions;
 public static class ModulePresentationDependencies
 {
     public static IServiceCollection AddPresentationDependencies(this IServiceCollection services, IConfiguration configuration)
@@ -51,6 +56,18 @@ public static class ModulePresentationDependencies
              });
          });
         services.AddScoped<IResponseHandler, ResponseHandler>();
+
+        // // Register Cloudinary
+        services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+       
+        services.AddSingleton(x =>
+        {
+            var cloudinarySettings = x.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+            return new Cloudinary(new Account(
+                cloudinarySettings.CloudName,
+                cloudinarySettings.ApiKey,
+                cloudinarySettings.ApiSecret));
+        });
 
         return services;
     }
