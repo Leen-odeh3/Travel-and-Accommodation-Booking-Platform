@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository
 {
-    private readonly ILogger _logger;
-    public BookingRepository(AppDbContext context, ILogger logger)
+    private readonly ILog _logger;
+    public BookingRepository(AppDbContext context, ILog logger)
         : base(context, logger)
     {
         _logger = logger;

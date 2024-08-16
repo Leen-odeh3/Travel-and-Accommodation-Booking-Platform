@@ -39,3 +39,4 @@ global using HotelBookingPlatform.API.Middlewares;
 global using HotelBookingPlatform.Application.Extentions;
 global using HotelBookingPlatform.Infrastructure.Extentions;
 global using Microsoft.Extensions.FileProviders;
+global using HotelBookingPlatform.API.Responses;

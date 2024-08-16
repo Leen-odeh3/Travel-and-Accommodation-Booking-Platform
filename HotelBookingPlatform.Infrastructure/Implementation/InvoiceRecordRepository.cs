@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class InvoiceRecordRepository : GenericRepository<InvoiceRecord>, IInvoiceRecordRepository
 {
-    private readonly ILogger _logger;
-    public InvoiceRecordRepository(AppDbContext context, ILogger logger)
+    private readonly ILog _logger;
+    public InvoiceRecordRepository(AppDbContext context, ILog logger)
         : base(context, logger)
     {
         _logger = logger;

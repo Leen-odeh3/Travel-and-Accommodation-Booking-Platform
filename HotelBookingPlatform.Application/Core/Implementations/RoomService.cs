@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class RoomService : BaseService<Room>, IRoomService
 {
-    private readonly Domain.ILogger.ILogger _logger;
-    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper,ILogger logger)
+    private readonly Domain.ILogger.ILog _logger;
+    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper,ILog logger)
         : base(unitOfWork, mapper)
     {
         _logger = logger;

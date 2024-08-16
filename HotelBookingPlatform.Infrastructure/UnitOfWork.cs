@@ -1,10 +1,10 @@
-﻿using ILogger = HotelBookingPlatform.Domain.ILogger.ILogger;
+﻿using ILog = HotelBookingPlatform.Domain.ILogger.ILog;
 namespace HotelBookingPlatform.Infrastructure;
 public class UnitOfWork<T> : IUnitOfWork<T> where T :class
 {
     private readonly AppDbContext _context;
     private readonly UserManager<LocalUser> _userManager;
-    private readonly ILogger _logger;
+    private readonly ILog _logger;
 
     public UnitOfWork(AppDbContext context, UserManager<LocalUser> userManager)
     {

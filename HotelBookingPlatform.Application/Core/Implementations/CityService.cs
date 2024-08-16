@@ -1,9 +1,11 @@
 ﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class CityService : BaseService<City>, ICityService
 {
-    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper)
+    private readonly ILog _logger;
+    public CityService(IUnitOfWork<City> unitOfWork, IMapper mapper, ILog logger)
         : base(unitOfWork, mapper)
     {
+        _logger = logger;
     }
     public async Task<CityResponseDto> AddCityAsync(CityCreateRequest request)
     {
@@ -81,19 +83,13 @@ public class CityService : BaseService<City>, ICityService
     }
     public async Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId)
     {
-        try
-        {
             var hotels = await _unitOfWork.HotelRepository.GetHotelsForCityAsync(cityId);
 
             if (hotels is null)
                 throw new InvalidOperationException("Hotels not found for the specified city.");
 
-            return _mapper.Map<IEnumerable<HotelBasicResponseDto>>(hotels);
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("An error occurred while retrieving hotels.", ex);
-        }
+        _logger.Log($"Retrieved {hotels.Count()} hotels for city with ID {cityId}.","info");
+        return _mapper.Map<IEnumerable<HotelBasicResponseDto>>(hotels);
     }
     public async Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest)
     {
@@ -107,25 +103,29 @@ public class CityService : BaseService<City>, ICityService
         city.Hotels.Add(hotel);
 
         await _unitOfWork.SaveChangesAsync();
+        _logger.Log($"Added hotel to city with ID {cityId}. Hotel Name: {hotel.Name}.","info");
+
     }
     public async Task DeleteHotelFromCityAsync(int cityId, int hotelId)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
 
         var hotel = await _unitOfWork.HotelRepository.GetByIdAsync(hotelId);
-        if (hotel is null || hotel.CityID != cityId)
+        if (hotel.CityID != cityId)
             throw new KeyNotFoundException("Hotel not found in the specified city.");
 
         await _unitOfWork.HotelRepository.DeleteAsync(hotelId);
         city.Hotels.Remove(hotel);
 
         await _unitOfWork.SaveChangesAsync();
+        _logger.Log($"Removed hotel with ID {hotelId} from city with ID {cityId}.","info");
+
     }
     public async Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount)
     {
         var cities = await _unitOfWork.CityRepository.GetTopVisitedCitiesAsync(topCount);
 
-        if (cities is null || !cities.Any())
+        if (!cities.Any())
             throw new NotFoundException("No cities found.");
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);

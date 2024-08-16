@@ -63,7 +63,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
     public async Task<IEnumerable<HotelResponseDto>> SearchHotel(string name, string desc, int pageSize, int pageNumber)
     {
         var hotels = await _unitOfWork.HotelRepository.SearchCriteria(name, desc, pageSize, pageNumber);
-        if (hotels is null || !hotels.Any())
+        if (!hotels.Any())
             throw new NotFoundException("No hotels found matching the search criteria.");
 
         var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);

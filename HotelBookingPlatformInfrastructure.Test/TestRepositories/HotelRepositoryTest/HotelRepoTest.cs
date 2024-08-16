@@ -1,15 +1,15 @@
-﻿namespace HotelBookingPlatform.Infrastructure.Test.TestRepositories.HotelRepositoryTest;
+﻿using HotelBookingPlatform.Domain.ILogger;
 public class HotelRepoTest
 {
     private readonly HotelRepository _sut;
     private readonly InMemoryDbContext _context;
-    private readonly Mock<Domain.ILogger.ILogger> _logger;
+    private readonly Mock<ILog> _logger;
     private readonly IFixture _fixture;
 
     public HotelRepoTest()
     {
         _context = new InMemoryDbContext();
-        _logger = new Mock<Domain.ILogger.ILogger>();
+        _logger = new Mock<ILog>();
         _sut = new HotelRepository(_context, _logger.Object);
         _fixture = new Fixture();
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
@@ -17,19 +17,19 @@ public class HotelRepoTest
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
-    private City CreateCity(int id)
-    {
-        return _fixture.Build<City>()
-            .With(c => c.CityID, id)
-            .Create();
-    }
+    private City CreateCity(int id) =>
+        _fixture.Build<City>().With(c => c.CityID, id).Create();
 
-    private Hotel CreateHotel(int cityId)
-    {
-        return _fixture.Build<Hotel>()
-            .With(h => h.CityID, cityId)
-            .Create();
-    }
+    private Hotel CreateHotel(int cityId) =>
+        _fixture.Build<Hotel>().With(h => h.CityID, cityId).Create();
+
+    private Hotel CreateHotelWithRoomClasses(int cityId) =>
+      _fixture.Build<Hotel>()
+          .With(h => h.CityID, cityId)
+          .With(h => h.RoomClasses, _fixture.Build<RoomClass>()
+              .With(rc => rc.Rooms, _fixture.CreateMany<Room>(5).ToList())
+              .CreateMany(2).ToList())
+          .Create();
 
     [Fact]
     public async Task CreateAsync_ShouldAddHotel()
@@ -41,10 +41,10 @@ public class HotelRepoTest
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _sut.CreateAsync(hotel);
+        await _sut.CreateAsync(hotel);
 
         // Assert
-        var addedHotel = await _context.Hotels.FindAsync(result.HotelId);
+        var addedHotel = await _context.Hotels.FindAsync(hotel.HotelId);
         Assert.NotNull(addedHotel);
         Assert.Equal(hotel.Name, addedHotel.Name);
     }
@@ -59,10 +59,8 @@ public class HotelRepoTest
 
         // Act
         var result = await _sut.GetHotelByNameAsync(hotel.Name);
-
-        // Assert
-        Assert.NotNull(result);
         Assert.Equal(hotel.Name, result.Name);
+        Assert.Equal(hotel.StarRating, result.StarRating);
     }
 
     [Fact]
@@ -152,4 +150,53 @@ public class HotelRepoTest
         );
         Assert.Equal($"Hotel with ID {hotelId} not found.", exception.Message);
     }
+
+    [Fact]
+    public async Task SearchCriteria_ShouldReturnHotelsMatchingName()
+    {
+        // Arrange
+        var city = CreateCity(1);
+        var hotel1 = CreateHotel(1);
+        hotel1.Name = "Grand Hotel";
+        var hotel2 = CreateHotel(1);
+        hotel2.Name = "Lux Hotel";
+        _context.Cities.Add(city);
+        _context.Hotels.AddRange(hotel1, hotel2);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.SearchCriteria("Grand", string.Empty);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("Grand Hotel", result.First().Name);
+    }
+
+    [Fact]
+    public async Task GetHotelWithRoomClassesAndRoomsAsync_ShouldReturnHotelWithRoomClassesAndRooms_WhenHotelExists()
+    {
+        // Arrange
+        var city = CreateCity(1);
+        var hotel = CreateHotelWithRoomClasses(1);
+        _context.Cities.Add(city);
+        _context.Hotels.Add(hotel);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.GetHotelWithRoomClassesAndRoomsAsync(hotel.HotelId);
+
+        Assert.Equal(hotel.HotelId, result.HotelId);
+        Assert.NotEmpty(result.RoomClasses);
+        Assert.All(result.RoomClasses, rc => Assert.NotEmpty(rc.Rooms));
+    }
+
+    [Fact]
+    public async Task GetHotelWithRoomClassesAndRoomsAsync_ShouldThrowKeyNotFoundException_WhenHotelDoesNotExist()
+    {
+        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+            async () => await _sut.GetHotelWithRoomClassesAndRoomsAsync(9999)
+        );
+        Assert.Equal("Hotel with ID 9999 not found.", exception.Message);
+    }
+
 }

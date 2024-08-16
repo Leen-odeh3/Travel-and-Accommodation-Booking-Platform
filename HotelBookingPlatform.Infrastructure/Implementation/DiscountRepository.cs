@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class DiscountRepository : GenericRepository<Discount> ,IDiscountRepository
 {
-    private readonly ILogger _logger;
-    public DiscountRepository(AppDbContext context, ILogger logger)
+    private readonly ILog _logger;
+    public DiscountRepository(AppDbContext context, ILog logger)
         : base(context, logger)
     {
         _logger = logger;

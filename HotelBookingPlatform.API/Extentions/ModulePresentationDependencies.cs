@@ -50,6 +50,7 @@ public static class ModulePresentationDependencies
                  Location = ResponseCacheLocation.Any
              });
          });
+        services.AddScoped<IResponseHandler, ResponseHandler>();
 
         return services;
     }

@@ -1,13 +1,12 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 {
-    private readonly ILogger _logger;
-    public HotelRepository(AppDbContext context, ILogger logger)
+    private readonly ILog _logger;
+    public HotelRepository(AppDbContext context, ILog logger)
         : base(context, logger)
     {
         _logger = logger;
     }
-
     private IQueryable<Hotel> GetHotelsWithIncludes()
     {
         return _appDbContext.Hotels
@@ -35,6 +34,8 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 
     public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)
     {
+        _logger.Log($"Retrieving hotel with ID {hotelId} including RoomClasses and Rooms.","info");
+
         return await _appDbContext.Hotels
             .Include(h => h.RoomClasses)
                 .ThenInclude(rc => rc.Rooms)
@@ -68,12 +69,14 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
     public async Task<IEnumerable<Hotel>> GetHotelsForCityAsync(int cityId)
     {
         return await _appDbContext.Hotels
-            .Where(h => h.CityID == cityId)
+            .Where(h => h.CityID == cityId).Include(h => h.Owner)
             .ToListAsync();
     }
 
     public async Task<Hotel> GetHotelWithAmenitiesAsync(int hotelId)
     {
+        _logger.Log($"Retrieving hotel with ID {hotelId} including Amenities.","info");
+
         return await _appDbContext.Hotels
               .Include(h => h.Amenities)
               .AsSplitQuery()

@@ -8,3 +8,4 @@ global using HotelBookingPlatformInfrastructure.Test.InMemoryContext;
 global using AutoFixture;
 global using Moq;
 global using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
+global using HotelBookingPlatform.Domain.ILogger;

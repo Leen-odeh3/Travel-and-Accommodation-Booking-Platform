@@ -2,8 +2,8 @@
 public class UserRepository : GenericRepository<LocalUser>, IUserRepository
 {
     private readonly UserManager<LocalUser> _userManager;
-    private readonly ILogger _logger;
-    public UserRepository(UserManager<LocalUser> userManager, AppDbContext appDbContext, ILogger logger) :base(appDbContext, logger)
+    private readonly ILog _logger;
+    public UserRepository(UserManager<LocalUser> userManager, AppDbContext appDbContext, ILog logger) :base(appDbContext, logger)
     {
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         _logger = logger;

@@ -1,15 +1,16 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Logger;
-public class Logger : ILogger
+public class Log : ILog
 {
     private const string ErrorLogType = "error";
     private const string InfoLogType = "info";
     private const string WarningLogType = "warning";
-    public void Log(string message, string type)
+
+    void ILog.Log(string message, string Type)
     {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         Console.ResetColor();
 
-        switch (type.ToLower())
+        switch (Type.ToLower())
         {
             case ErrorLogType:
                 Console.BackgroundColor = ConsoleColor.Red;
@@ -34,5 +35,5 @@ public class Logger : ILogger
         }
 
         Console.ResetColor();
-    }  
+    }
 }

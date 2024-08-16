@@ -1,5 +1,5 @@
 ﻿namespace HotelBookingPlatform.Domain.ILogger;
-public interface ILogger
+public interface ILog
 {
     public void Log(string message,string Type);
 }

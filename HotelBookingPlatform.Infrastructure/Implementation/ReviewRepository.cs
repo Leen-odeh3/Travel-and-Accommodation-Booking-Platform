@@ -1,8 +1,8 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class ReviewRepository : GenericRepository<Review>, IReviewRepository
 {
-    private readonly ILogger _logger;
-    public ReviewRepository(AppDbContext context, ILogger logger)
+    private readonly ILog _logger;
+    public ReviewRepository(AppDbContext context, ILog logger)
         : base(context, logger)
     {
         _logger = logger;
