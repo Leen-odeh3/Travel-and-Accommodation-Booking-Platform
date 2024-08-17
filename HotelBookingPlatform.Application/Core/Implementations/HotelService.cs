@@ -36,6 +36,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
         return new CreatedAtActionResult(nameof(GetHotel), "Hotels", new { id = createdHotelDto.HotelId }, createdHotelDto);
     }
+
     public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
     {
         ValidationHelper.ValidateRequest(request);

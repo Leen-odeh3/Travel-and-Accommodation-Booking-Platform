@@ -1,7 +1,4 @@
-﻿using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using HotelBookingPlatform.Domain.Abstracts;
-
+﻿using HotelBookingPlatform.Application.Extentions;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : IImageService
 {
@@ -13,39 +10,63 @@ public class ImageService : IImageService
         _cloudinary = cloudinary;
         _unitOfWork = unitOfWork;
     }
-
-    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string publicId)
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string entityType, int entityId)
     {
-        if (file == null || file.Length == 0)
+
+
+        var allowedFormats = new[]
+        {
+        SupportedImageFormats.Jpg,
+        SupportedImageFormats.Jpeg,
+        SupportedImageFormats.Png
+    };
+        if (file.Length == 0)
             throw new ArgumentException("No file provided.");
 
-        using (var stream = file.OpenReadStream())
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var isSupportedFormat = allowedFormats.Any(f => f.ToExtension() == extension);
+
+        if (!isSupportedFormat)
+            throw new ArgumentException("Unsupported file format.");
+
+        try
         {
-            var uploadParams = new ImageUploadParams
+            using (var stream = file.OpenReadStream())
             {
-                File = new FileDescription(file.FileName, stream),
-                Folder = folderPath,
-                PublicId = publicId
-            };
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = folderPath,
+                    PublicId = $"{entityType}/{entityId}/image"
+                };
 
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-            // إنشاء سجل الصورة وتخزينه في قاعدة البيانات
-            var imageRecord = new Image
-            {
-                Url = uploadResult.SecureUri.ToString(),
-                PublicId = uploadResult.PublicId,
-            };
+                var imageRecord = new Image
+                {
+                    Url = uploadResult.SecureUri.ToString(),
+                    PublicId = uploadResult.PublicId,
+                    Type = entityType,
+                    EntityId = entityId
+                };
 
-            await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
-            await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
+                await _unitOfWork.SaveChangesAsync();
 
-            return uploadResult;
+                return uploadResult;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("An error occurred while uploading the image.", ex);
         }
     }
 
     public async Task<DeletionResult> DeleteImageAsync(string publicId)
     {
+        if (string.IsNullOrEmpty(publicId))
+            throw new BadRequestException("Public ID cannot be null or empty.");
+
         var deleteParams = new DeletionParams(publicId);
         var result = await _cloudinary.DestroyAsync(deleteParams);
         return result;
@@ -53,8 +74,15 @@ public class ImageService : IImageService
 
     public async Task<GetResourceResult> GetImageDetailsAsync(string publicId)
     {
+        if (string.IsNullOrEmpty(publicId))
+            throw new BadRequestException("Public ID cannot be null or empty.");
+
         var result = await _cloudinary.GetResourceAsync(publicId);
         return result;
+    }
+    public async Task<IEnumerable<Image>> GetImagesByTypeAsync(string type)
+    {
+        return await _unitOfWork.ImageRepository.GetImagesByTypeAsync(type);
     }
 }
 

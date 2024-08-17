@@ -7,6 +7,7 @@ public class CityService : BaseService<City>, ICityService
     {
         _logger = logger;
     }
+
     public async Task<CityResponseDto> AddCityAsync(CityCreateRequest request)
     {
         var city = _mapper.Map<City>(request);
@@ -94,17 +95,19 @@ public class CityService : BaseService<City>, ICityService
     public async Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest)
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(cityId);
+        if (city is null)
+            _logger.Log($"City with ID {cityId} not found.", "error");
 
         ValidationHelper.ValidateRequest(hotelRequest);
+
         var hotel = _mapper.Map<Hotel>(hotelRequest);
         hotel.CityID = cityId;
 
         await _unitOfWork.HotelRepository.CreateAsync(hotel);
         city.Hotels.Add(hotel);
-
         await _unitOfWork.SaveChangesAsync();
-        _logger.Log($"Added hotel to city with ID {cityId}. Hotel Name: {hotel.Name}.","info");
 
+        _logger.Log($"Added hotel to city with ID {cityId}. Hotel Name: {hotel.Name}.", "info");
     }
     public async Task DeleteHotelFromCityAsync(int cityId, int hotelId)
     {

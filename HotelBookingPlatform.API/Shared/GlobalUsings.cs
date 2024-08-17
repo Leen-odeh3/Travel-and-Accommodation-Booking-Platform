@@ -14,7 +14,6 @@ global using HotelBookingPlatform.Domain.DTOs.City;
 global using HotelBookingPlatform.Domain.DTOs.Hotel;
 global using HotelBookingPlatform.Domain.DTOs.Discount;
 global using HotelBookingPlatform.Domain.DTOs.HomePage;
-global using HotelBookingPlatform.Domain.Abstracts;
 global using HotelBookingPlatform.Domain.DTOs.InvoiceRecord;
 global using HotelBookingPlatform.Domain.DTOs.Owner;
 global using HotelBookingPlatform.Domain.DTOs.Review;
@@ -38,5 +37,11 @@ global using HotelBookingPlatform.API.Extentions;
 global using HotelBookingPlatform.API.Middlewares;
 global using HotelBookingPlatform.Application.Extentions;
 global using HotelBookingPlatform.Infrastructure.Extentions;
-global using Microsoft.Extensions.FileProviders;
 global using HotelBookingPlatform.API.Responses;
+global using HotelBookingPlatform.Domain.ILogger;
+global using CloudinaryDotNet;
+global using HotelBookingPlatform.API.Helpers;
+global using Microsoft.Extensions.Options;
+global using HotelBookingPlatform.Infrastructure.Logger;
+
+

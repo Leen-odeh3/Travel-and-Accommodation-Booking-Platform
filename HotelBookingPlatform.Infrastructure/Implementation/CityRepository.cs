@@ -1,11 +1,9 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class CityRepository :GenericRepository<City> , ICityRepository
 {
-    private readonly ILog _logger;
-    public CityRepository(AppDbContext context, ILog logger)
-        : base(context, logger)
+    public CityRepository(AppDbContext context)
+        : base(context)
     {
-        _logger = logger;
     }
     public async Task<City> GetCityByIdAsync(int cityId, bool includeHotels = false)
     {
@@ -15,11 +13,12 @@ public class CityRepository :GenericRepository<City> , ICityRepository
         if (includeHotels)
             query = query.Include(c => c.Hotels).ThenInclude(h => h.Owner);
 
-        return await query.FirstOrDefaultAsync(c => c.CityID == cityId);
+        return await query.SingleOrDefaultAsync(c => c.CityID == cityId);
     }
     public async Task<IEnumerable<City>> GetTopVisitedCitiesAsync(int topCount)
     {
-        _logger.Log($"Retrieving top {topCount} visited cities.", "info");
+        if (topCount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(topCount), "The number of top cities must be greater than zero.");
 
         return await _appDbContext.Cities
             .OrderByDescending(c => c.VisitCount) 
@@ -28,14 +27,10 @@ public class CityRepository :GenericRepository<City> , ICityRepository
     }
     public async Task CreateAsync(City city)
     {
-        if (await _appDbContext.Cities.AnyAsync(c => c.Name == city.Name))
-        {
-            _logger.Log($"City with the name {city.Name} already exists.", "warning");
+        if (await _appDbContext.Cities.AnyAsync(c => c.Name == city.Name))    
             throw new InvalidOperationException("City with the same name already exists.");
-        }
 
         _appDbContext.Cities.Add(city);
         await _appDbContext.SaveChangesAsync();
-        _logger.Log($"City {city.Name} created successfully.", "info");
     }
 }

@@ -9,7 +9,7 @@ public class Program
 
         builder.Services.AddApplicationDependencies()
                         .AddPresentationDependencies(builder.Configuration)
-                        .AddInfrastructureDependencies().AddSwaggerDocumentation();
+                        .AddInfrastructureDependencies().AddSwaggerDocumentation().AddCloudinary(builder.Configuration);
 
         var app = builder.Build();
 
@@ -19,7 +19,6 @@ public class Program
         }
 
         app.UseCors();
-       // app.UseCustomStaticFiles(builder.Environment);
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
         app.UseAuthentication();

@@ -10,7 +10,6 @@ public class CityServiceTest
     {
         _fixture = new Fixture();
 
-        // Configure AutoFixture to omit recursive properties
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());

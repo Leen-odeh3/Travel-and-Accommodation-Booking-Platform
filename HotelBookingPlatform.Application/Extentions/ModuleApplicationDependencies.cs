@@ -7,9 +7,11 @@ public static class ModuleApplicationDependencies
 
         services.AddFluentValidation(fv =>
         {
+            fv.RegisterValidatorsFromAssemblyContaining<OwnerValidator>();
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
-        services.AddScoped<IValidator<HotelCreateRequest>, HotelCreateRequestValidator>();
+
+
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRoomClassService, RoomClassService>();
@@ -25,6 +27,8 @@ public static class ModuleApplicationDependencies
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        services.AddScoped<IValidator<HotelCreateRequest>, HotelCreateRequestValidator>();
 
         return services;
     }

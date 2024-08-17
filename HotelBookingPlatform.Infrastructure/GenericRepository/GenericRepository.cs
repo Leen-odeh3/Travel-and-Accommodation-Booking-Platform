@@ -2,7 +2,7 @@
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     protected readonly AppDbContext _appDbContext;
-    public GenericRepository(AppDbContext appDbContext, ILog logger)
+    public GenericRepository(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
     }

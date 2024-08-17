@@ -5,10 +5,12 @@ public class OwnerController : ControllerBase
 {
     private readonly IOwnerService _ownerService;
     private readonly IResponseHandler _responseHandler;
-    public OwnerController(IOwnerService ownerService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+    public OwnerController(IOwnerService ownerService, IResponseHandler responseHandler, ILog logger)
     {
         _ownerService = ownerService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
 
     // GET: api/Owner/5
@@ -17,7 +19,8 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> GetOwner(int id)
     {
         var ownerDto = await _ownerService.GetOwnerAsync(id);
-        return _responseHandler.Success(ownerDto);
+        _logger.Log($"Owner with ID: {id} returned successfully", "info");
+        return _responseHandler.Success(ownerDto, "Returned successfully");
     }
 
     // POST: api/Owner
@@ -29,6 +32,7 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> CreateOwner([FromBody] OwnerCreateDto request)
     {
         var ownerDto = await _ownerService.CreateOwnerAsync(request);
+        _logger.Log($"Owner created successfully with ID: {ownerDto.OwnerID}", "info");
         return _responseHandler.Created(ownerDto, "Owner created successfully.");
     }
 
@@ -41,6 +45,9 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerCreateDto request)
     {
         var existingOwner = await _ownerService.UpdateOwnerAsync(id, request);
+        if (existingOwner is null)
+            _logger.Log($"Owner with ID: {id} not found", "warning");
+
         return _responseHandler.Success(existingOwner, "Owner updated successfully.");
     }
 
@@ -53,6 +60,8 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> DeleteOwner(int id)
     {
         await _ownerService.DeleteOwnerAsync(id);
+        _logger.Log($"Owner with ID: {id} deleted successfully", "info");
+
         return _responseHandler.Success(message: "Owner deleted successfully.");
     }
 
@@ -63,7 +72,7 @@ public class OwnerController : ControllerBase
     public async Task<IActionResult> GetAllOwners()
     {
         var owners = await _ownerService.GetAllAsync();
-        return _responseHandler.Success(owners);
+        return _responseHandler.Success(owners, "Returned all Owners successfully");
     }
 
 }

@@ -17,23 +17,18 @@ public class RoomController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRoom(int id)
     {
-        var room = await _roomService.GetRoomAsync(id);     
+        var room = await _roomService.GetRoomAsync(id);
         return _responseHandler.Success(room);
     }
-
-
 
     [HttpPost("{roomId}/upload-image")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific room.")]
     public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            return _responseHandler.BadRequest("No file uploaded.");
-        }
-
-        var uploadResult = await _imageService.UploadImageAsync(file, $"rooms/{roomId}", "room");
+        var folderPath = $"rooms/{roomId}";
+        var imageType = "Room";
+        var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomId);
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
@@ -43,32 +38,18 @@ public class RoomController : ControllerBase
     [SwaggerOperation(Summary = "Delete an image from a specific room.")]
     public async Task<IActionResult> DeleteRoomImage(int roomId, string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var deletionResult = await _imageService.DeleteImageAsync(publicId);
-
-        if (deletionResult.Result == "ok")
-        {
-            return _responseHandler.Success("Image deleted successfully.");
-        }
-
-        return _responseHandler.BadRequest("Failed to delete image.");
+        return _responseHandler.Success("Image deleted successfully.");
     }
 
     [HttpGet("{roomId}/image/{publicId}")]
     [SwaggerOperation(Summary = "Get details of an image associated with a specific room.")]
     public async Task<IActionResult> GetRoomImageDetails(int roomId, string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+
         return _responseHandler.Success(imageDetails);
     }
 }
+
 

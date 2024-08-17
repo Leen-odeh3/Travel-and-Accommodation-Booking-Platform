@@ -8,10 +8,6 @@
 
   </PropertyGroup>
 
-	<ItemGroup>
-		<Content Include="wwwroot\**\*" />
-	</ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
@@ -32,11 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBookingPlatform.Application\HotelBookingPlatform.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Uploads\Hotel\" />
-    <Folder Include="wwwroot\Uploads\Room\" />
   </ItemGroup>
 
 </Project>

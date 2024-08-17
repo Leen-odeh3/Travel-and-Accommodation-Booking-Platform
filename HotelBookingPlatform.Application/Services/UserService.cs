@@ -10,7 +10,7 @@ public class UserService : IUserService
     }
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
-        var DeafaultRole = Role.User.ToString();
+        var DeafaultRole = Domain.Enums.Role.User.ToString();
         if (await _userManager.FindByEmailAsync(model.Email) is not null)
             throw new BadRequestException("Email is already registered!");
 

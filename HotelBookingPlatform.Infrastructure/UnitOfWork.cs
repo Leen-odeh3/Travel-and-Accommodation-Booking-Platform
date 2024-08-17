@@ -11,18 +11,18 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         _context = context;
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
 
-        HotelRepository = new HotelRepository(_context,_logger);
-        BookingRepository = new BookingRepository(_context, _logger);
-        RoomClasseRepository = new RoomClassRepository(_context, _logger);
-        RoomRepository = new RoomRepository(_context, _logger);
-        CityRepository = new CityRepository(_context, _logger);
-        OwnerRepository = new OwnerRepository(_context,_logger);
-        DiscountRepository = new DiscountRepository(_context, _logger);
-        ReviewRepository = new ReviewRepository(_context, _logger);
-        InvoiceRecordRepository =new InvoiceRecordRepository(_context, _logger);
-        AmenityRepository = new AmenityRepository(_context, _logger);
-        UserRepository = new UserRepository(_userManager,_context, _logger);
-        ImageRepository = new ImageRepository(_context, _logger);
+        HotelRepository = new HotelRepository(_context);
+        BookingRepository = new BookingRepository(_context);
+        RoomClasseRepository = new RoomClassRepository(_context);
+        RoomRepository = new RoomRepository(_context);
+        CityRepository = new CityRepository(_context);
+        OwnerRepository = new OwnerRepository(_context);
+        DiscountRepository = new DiscountRepository(_context);
+        ReviewRepository = new ReviewRepository(_context);
+        InvoiceRecordRepository =new InvoiceRecordRepository(_context);
+        AmenityRepository = new AmenityRepository(_context);
+        UserRepository = new UserRepository(_userManager,_context);
+        ImageRepository = new ImageRepository(_context);
     }
     public IHotelRepository HotelRepository { get; set;}
     public IBookingRepository BookingRepository { get; set;}

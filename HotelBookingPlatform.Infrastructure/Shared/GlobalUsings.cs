@@ -20,4 +20,3 @@ global using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.
 global using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 global using Microsoft.AspNetCore.Identity;
 global using HotelBookingPlatform.Domain.ILogger;
-global using HotelBookingPlatform.Infrastructure.Logger;

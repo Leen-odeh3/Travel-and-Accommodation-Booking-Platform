@@ -6,12 +6,13 @@ public class HotelController : ControllerBase
     private readonly IHotelService _hotelService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-
-    public HotelController(IHotelService hotelService, IImageService imageService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+    public HotelController(IHotelService hotelService, IImageService imageService, IResponseHandler responseHandler, ILog logger)
     {
         _hotelService = hotelService;
         _imageService = imageService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
 
     // GET: api/Hotel
@@ -24,6 +25,7 @@ public class HotelController : ControllerBase
         [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
+        _logger.Log("Fetching hotels list", "info");
         var hotels = await _hotelService.GetHotels(hotelName, description, pageSize, pageNumber);
         return _responseHandler.Success(hotels);
     }
@@ -36,16 +38,6 @@ public class HotelController : ControllerBase
     {
         var hotel = await _hotelService.GetHotel(id);
         return _responseHandler.Success(hotel);
-    }
-
-    // POST: api/Hotel
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new hotel", Description = "Creates a new hotel based on the provided hotel creation request.")]
-    public async Task<IActionResult> CreateHotel([FromBody] HotelCreateRequest request)
-    {
-        var createdHotel = await _hotelService.CreateHotel(request);
-        return _responseHandler.Created(createdHotel, "Hotel created successfully.");
     }
 
     // PUT: api/Hotel/5
@@ -70,6 +62,7 @@ public class HotelController : ControllerBase
 
     // GET: api/Hotel/search
     [HttpGet("search")]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
     [SwaggerOperation(Summary = "Search for hotels", Description = "Searches for hotels based on name and description with pagination.")]
     public async Task<IActionResult> SearchHotel(
         [FromQuery] string name,
@@ -85,6 +78,7 @@ public class HotelController : ControllerBase
     [SwaggerOperation(Summary = "Get all rooms associated with a specific hotel.")]
     public async Task<IActionResult> GetRoomsByHotelIdAsync(int hotelId)
     {
+        _logger.Log($"Fetching rooms for hotel with ID {hotelId}", "info");
         var rooms = await _hotelService.GetRoomsByHotelIdAsync(hotelId);
         return _responseHandler.Success(rooms);
     }
@@ -101,6 +95,7 @@ public class HotelController : ControllerBase
     [SwaggerOperation(Summary = "Get all amenities associated with a specific hotel.")]
     public async Task<IActionResult> GetAmenitiesByHotelId(int hotelId)
     {
+        _logger.Log($"Fetching amenities for hotel with ID {hotelId}", "info");
         var amenities = await _hotelService.GetAmenitiesByHotelIdAsync(hotelId);
         return _responseHandler.Success(amenities);
     }
@@ -109,6 +104,7 @@ public class HotelController : ControllerBase
     [SwaggerOperation(Summary = "Remove an amenity from a specific hotel.")]
     public async Task<IActionResult> DeleteAmenityFromHotel(int hotelId, int amenityId)
     {
+        _logger.Log($"Removing amenity with ID {amenityId} from hotel with ID {hotelId}", "info");
         await _hotelService.DeleteAmenityFromHotelAsync(hotelId, amenityId);
         return _responseHandler.Success("Amenity deleted successfully.");
     }
@@ -122,56 +118,36 @@ public class HotelController : ControllerBase
     }
 
 
-    // Upload Image
     [HttpPost("{hotelId}/upload-image")]
-   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific hotel.")]
     public async Task<IActionResult> UploadHotelImage(int hotelId, IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            return _responseHandler.BadRequest("No file uploaded.");
-        }
+        var folderPath = $"hotels/{hotelId}";
+        var imageType = "hotel";
+        _logger.Log($"Uploading image for hotel with ID {hotelId}", "info");
 
-        var uploadResult = await _imageService.UploadImageAsync(file, $"hotels/{hotelId}", "hotel");
+        var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, hotelId);
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
-    // Delete Image
+
     [HttpDelete("{hotelId}/delete-image/{publicId}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete an image from a specific hotel.")]
     public async Task<IActionResult> DeleteHotelImage(int hotelId, string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var deletionResult = await _imageService.DeleteImageAsync(publicId);
-
-        if (deletionResult.Result == "ok")
-        {
-            return _responseHandler.Success("Image deleted successfully.");
-        }
-
-        return _responseHandler.BadRequest("Failed to delete image.");
+        return _responseHandler.Success("Image deleted successfully.");
     }
 
-    // Get Image Details
     [HttpGet("{hotelId}/image/{publicId}")]
     [SwaggerOperation(Summary = "Get details of an image associated with a specific hotel.")]
     public async Task<IActionResult> GetHotelImageDetails(int hotelId, string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
+        _logger.Log($"Fetching details for image with public ID {publicId} from hotel with ID {hotelId}", "info");
         var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
         return _responseHandler.Success(imageDetails);
     }
-
 }
 
