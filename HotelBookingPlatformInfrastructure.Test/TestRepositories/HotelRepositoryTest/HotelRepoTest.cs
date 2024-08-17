@@ -3,14 +3,12 @@ public class HotelRepoTest
 {
     private readonly HotelRepository _sut;
     private readonly InMemoryDbContext _context;
-    private readonly Mock<ILog> _logger;
     private readonly IFixture _fixture;
 
     public HotelRepoTest()
     {
         _context = new InMemoryDbContext();
-        _logger = new Mock<ILog>();
-        _sut = new HotelRepository(_context, _logger.Object);
+        _sut = new HotelRepository(_context);
         _fixture = new Fixture();
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));

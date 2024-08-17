@@ -1,11 +1,9 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class DiscountRepository : GenericRepository<Discount> ,IDiscountRepository
 {
-    private readonly ILog _logger;
-    public DiscountRepository(AppDbContext context, ILog logger)
-        : base(context, logger)
+    public DiscountRepository(AppDbContext context)
+        : base(context)
     {
-        _logger = logger;
     }
 
     public async Task<IEnumerable<Discount>> GetAllAsync(Expression<Func<IQueryable<Discount>, IQueryable<Discount>>> include = null)

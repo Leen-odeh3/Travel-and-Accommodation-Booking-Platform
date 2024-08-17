@@ -1,11 +1,8 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class ImageRepository:GenericRepository<Image> , IImageRepository
-{
-    private readonly ILog _logger;
-    public ImageRepository(AppDbContext context, ILog logger)
-        : base(context, logger)
+{    public ImageRepository(AppDbContext context)
+        : base(context)
     {
-        _logger = logger;
     }
     public async Task<Image> GetByPublicIdAsync(string publicId)
     {

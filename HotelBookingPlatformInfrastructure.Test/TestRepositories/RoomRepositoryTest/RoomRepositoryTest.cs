@@ -3,14 +3,12 @@ public class RoomRepositoryTest
 {
     private readonly RoomRepository _sut;
     private readonly InMemoryDbContext _context;
-    private readonly Mock<ILog> _logger;
     private readonly IFixture _fixture;
 
     public RoomRepositoryTest()
     {
         _context = new InMemoryDbContext();
-        _logger = new Mock<ILog>();
-        _sut = new RoomRepository(_context, _logger.Object);
+        _sut = new RoomRepository(_context);
         _fixture = new Fixture();
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));

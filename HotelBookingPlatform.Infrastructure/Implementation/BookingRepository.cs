@@ -1,11 +1,9 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository
 {
-    private readonly ILog _logger;
-    public BookingRepository(AppDbContext context, ILog logger)
-        : base(context, logger)
+    public BookingRepository(AppDbContext context)
+        : base(context)
     {
-        _logger = logger;
     }
 
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)

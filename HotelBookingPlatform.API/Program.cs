@@ -9,7 +9,7 @@ public class Program
 
         builder.Services.AddApplicationDependencies()
                         .AddPresentationDependencies(builder.Configuration)
-                        .AddInfrastructureDependencies().AddSwaggerDocumentation();
+                        .AddInfrastructureDependencies().AddSwaggerDocumentation().AddCloudinary(builder.Configuration);
 
         var app = builder.Build();
 

@@ -10,16 +10,11 @@ public class OwnerServiceTest
     {
         _fixture = new Fixture();
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
         _fixture.Customize(new AutoMoqCustomization());
-
         _unitOfWorkMock = _fixture.Freeze<Mock<IUnitOfWork<Owner>>>();
         _mapperMock = _fixture.Freeze<Mock<IMapper>>();
-
         _ownerService = new OwnerService(_unitOfWorkMock.Object, _mapperMock.Object);
     }
-
-
 
     [Fact]
     public async Task GetOwnerAsync_ShouldReturnOwnerDto()
@@ -99,4 +94,22 @@ public class OwnerServiceTest
         _unitOfWorkMock.Verify(u => u.OwnerRepository.GetAllAsync(), Times.Once);
         _mapperMock.Verify(m => m.Map<List<OwnerDto>>(owners), Times.Once);
     }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoOwnersExist()
+    {
+        var owners = new List<Owner>();
+        var ownerDtos = new List<OwnerDto>();
+
+        _unitOfWorkMock.Setup(u => u.OwnerRepository.GetAllAsync()).ReturnsAsync(owners);
+        _mapperMock.Setup(m => m.Map<List<OwnerDto>>(owners)).Returns(ownerDtos);
+
+        var result = await _ownerService.GetAllAsync();
+
+        // Assert
+        result.Should().BeEmpty();
+        _mapperMock.Verify(m => m.Map<List<OwnerDto>>(owners), Times.Once);
+    }
+
+
 }

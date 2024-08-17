@@ -2,14 +2,10 @@
 public class UserRepository : GenericRepository<LocalUser>, IUserRepository
 {
     private readonly UserManager<LocalUser> _userManager;
-    private readonly ILog _logger;
-    public UserRepository(UserManager<LocalUser> userManager, AppDbContext appDbContext, ILog logger) :base(appDbContext, logger)
+    public UserRepository(UserManager<LocalUser> userManager, AppDbContext appDbContext) :base(appDbContext)
     {
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _logger = logger;
-
     }
-
     public async Task<LocalUser> GetUserByEmailAsync(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
