@@ -2,10 +2,7 @@
 public class BookingRepository :GenericRepository<Booking>, IBookingRepository
 {
     public BookingRepository(AppDbContext context)
-        : base(context)
-    {
-    }
-
+        : base(context) { }
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _appDbContext.Bookings.FindAsync(bookingId);

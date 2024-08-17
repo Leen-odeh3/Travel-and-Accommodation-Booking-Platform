@@ -40,16 +40,6 @@ public class HotelController : ControllerBase
         return _responseHandler.Success(hotel);
     }
 
-    // POST: api/Hotel
-    [HttpPost]
-    //[Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Create a new hotel", Description = "Creates a new hotel based on the provided hotel creation request.")]
-    public async Task<IActionResult> CreateHotel([FromBody] HotelCreateRequest request)
-    {
-        var createdHotel = await _hotelService.CreateHotel(request);
-        return _responseHandler.Created(createdHotel, "Hotel created successfully.");
-    }
-
     // PUT: api/Hotel/5
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]

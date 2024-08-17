@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotelBookingPlatform.API\HotelBookingPlatform.API.csproj" />
     <ProjectReference Include="..\HotelBookingPlatform.Application\HotelBookingPlatform.Application.csproj" />
     <ProjectReference Include="..\HotelBookingPlatform.Domain\HotelBookingPlatform.Domain.csproj" />
   </ItemGroup>
