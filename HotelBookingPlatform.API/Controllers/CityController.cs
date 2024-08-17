@@ -87,19 +87,14 @@ public class CityController : ControllerBase
         await _cityService.DeleteHotelFromCityAsync(cityId, hotelId);
         return _responseHandler.Success(message: "Hotel removed from city successfully.");
     }
-    //////////////////////////////
+
     [HttpPost("{cityId}/upload-image")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific city.")]
     public async Task<IActionResult> UploadCityImage(int cityId, IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            return _responseHandler.BadRequest("No file uploaded.");
-        }
 
-        var uploadResult = await _imageService.UploadImageAsync(file, $"cities/{cityId}", "city");
-
+        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "city", cityId);
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
@@ -108,32 +103,19 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Delete an image from a specific city.")]
     public async Task<IActionResult> DeleteCityImage(int cityId, string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var deletionResult = await _imageService.DeleteImageAsync(publicId);
-
-        if (deletionResult.Result == "ok")
-        {
-            return _responseHandler.Success("Image deleted successfully.");
-        }
-
         return _responseHandler.BadRequest("Failed to delete image.");
     }
 
-    [HttpGet("{cityId}/image/{publicId}")]
-    [SwaggerOperation(Summary = "Get details of an image associated with a specific city.")]
-    public async Task<IActionResult> GetCityImageDetails(int cityId, string publicId)
+    [HttpGet("{cityId}/images")]
+    [SwaggerOperation(Summary = "Get all images for a specific city.")]
+    public async Task<IActionResult> GetCityImages(int cityId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
+        if (cityId <= 0)
+            return _responseHandler.BadRequest("Invalid city ID.");
 
-        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
-        return _responseHandler.Success(imageDetails);
+        var images = await _imageService.GetImagesByTypeAsync($"city/{cityId}");
+        return _responseHandler.Success(images);
     }
 }
-    
+

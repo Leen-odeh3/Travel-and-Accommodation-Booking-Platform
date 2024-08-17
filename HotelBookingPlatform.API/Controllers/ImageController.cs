@@ -17,24 +17,25 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost("{entityType}/{entityId}/upload-image")]
-  //  [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific entity.")]
     public async Task<IActionResult> UploadImage(string entityType, int entityId, IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            return _responseHandler.BadRequest("No file uploaded.");
-        }
+        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", entityType, entityId);
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
 
-        var publicId = $"{entityType}/{entityId}/image";
-        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", publicId); // Use the correct folderPath
+    }
 
-        if (uploadResult != null)
-        {
-            return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
-        }
+    [HttpGet("images/{type}")]
+    [SwaggerOperation(Summary = "Get all images by entity type.")]
+    public async Task<IActionResult> GetImagesByType(string type)
+    {
+        if (string.IsNullOrEmpty(type))
+            return _responseHandler.BadRequest("Type cannot be null or empty.");
 
-        return _responseHandler.NotFound("Failed to upload image.");
+        var images = await _imageService.GetImagesByTypeAsync(type);
+
+        return _responseHandler.Success(images);
     }
 
 
@@ -43,21 +44,11 @@ public class ImageController : ControllerBase
     [SwaggerOperation(Summary = "Delete an image by its PublicId.")]
     public async Task<IActionResult> DeleteImage(string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var imageRecord = await _unitOfWork.ImageRepository.GetByPublicIdAsync(publicId);
 
-        if (imageRecord != null)
-        {
-            _unitOfWork.ImageRepository.DeleteAsync(imageRecord.Id); 
-            await _unitOfWork.SaveChangesAsync();
-            return _responseHandler.Success("Image deleted successfully.");
-        }
-
-        return _responseHandler.NotFound("Image not found.");
+        _unitOfWork.ImageRepository.DeleteAsync(imageRecord.Id);
+        await _unitOfWork.SaveChangesAsync();
+        return _responseHandler.Success("Image deleted successfully.");
     }
 
 
@@ -65,18 +56,7 @@ public class ImageController : ControllerBase
     [SwaggerOperation(Summary = "Get image details by its PublicId.")]
     public async Task<IActionResult> GetImageDetails(string publicId)
     {
-        if (string.IsNullOrEmpty(publicId))
-        {
-            return _responseHandler.BadRequest("Public ID cannot be null or empty.");
-        }
-
         var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
-
-        if (imageDetails != null)
-        {
-            return _responseHandler.Success(imageDetails);
-        }
-
-        return _responseHandler.NotFound("Image not found.");
+        return _responseHandler.Success(imageDetails);
     }
 }

@@ -5,5 +5,6 @@ public class Image
     public string PublicId { get; set; }
     public string Url { get; set; }
     public string Type { get; set; }
+    public int EntityId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

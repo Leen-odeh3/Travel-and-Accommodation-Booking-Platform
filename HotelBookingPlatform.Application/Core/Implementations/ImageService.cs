@@ -1,8 +1,4 @@
-﻿using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using HotelBookingPlatform.Domain.Abstracts;
-
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
@@ -13,10 +9,9 @@ public class ImageService : IImageService
         _cloudinary = cloudinary;
         _unitOfWork = unitOfWork;
     }
-
-    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string publicId)
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string entityType, int entityId)
     {
-        if (file == null || file.Length == 0)
+        if (file.Length == 0)
             throw new ArgumentException("No file provided.");
 
         using (var stream = file.OpenReadStream())
@@ -25,16 +20,17 @@ public class ImageService : IImageService
             {
                 File = new FileDescription(file.FileName, stream),
                 Folder = folderPath,
-                PublicId = publicId
+                PublicId = $"{entityType}/{entityId}/image"
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-            // إنشاء سجل الصورة وتخزينه في قاعدة البيانات
             var imageRecord = new Image
             {
                 Url = uploadResult.SecureUri.ToString(),
                 PublicId = uploadResult.PublicId,
+                Type = entityType, 
+                EntityId = entityId
             };
 
             await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
@@ -46,6 +42,9 @@ public class ImageService : IImageService
 
     public async Task<DeletionResult> DeleteImageAsync(string publicId)
     {
+        if (string.IsNullOrEmpty(publicId))
+            throw new BadRequestException("Public ID cannot be null or empty.");
+
         var deleteParams = new DeletionParams(publicId);
         var result = await _cloudinary.DestroyAsync(deleteParams);
         return result;
@@ -53,8 +52,15 @@ public class ImageService : IImageService
 
     public async Task<GetResourceResult> GetImageDetailsAsync(string publicId)
     {
+        if (string.IsNullOrEmpty(publicId))
+            throw new BadRequestException("Public ID cannot be null or empty.");
+
         var result = await _cloudinary.GetResourceAsync(publicId);
         return result;
+    }
+    public async Task<IEnumerable<Image>> GetImagesByTypeAsync(string type)
+    {
+        return await _unitOfWork.ImageRepository.GetImagesByTypeAsync(type);
     }
 }
 
