@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-
-namespace HotelBookingPlatform.API.Controllers;
-
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class HomePageController : ControllerBase
 {
     private readonly ICityService _cityService;
     private readonly IHotelService _hotelService;
-
     private readonly IRoomService _roomService;
     public HomePageController(ICityService cityService, IHotelService hotelService, IRoomService roomService)
     {
@@ -29,7 +25,7 @@ public class HomePageController : ControllerBase
     {
         var topCities = await _cityService.GetTopVisitedCitiesAsync(5);
 
-        if (topCities == null || !topCities.Any())
+        if (topCities is null || !topCities.Any())
         {
             return NotFound(new { message = "No cities found." });
         }
@@ -38,11 +34,6 @@ public class HomePageController : ControllerBase
     }
 
 
-    /// <summary>
-    /// Search for hotels based on various criteria.
-    /// </summary>
-    /// <param name="request">Search criteria.</param>
-    /// <returns>A list of hotels matching the search criteria.</returns>
     [HttpGet("search")]
     [SwaggerOperation(
         Summary = "Search for hotels based on various criteria",
@@ -50,22 +41,16 @@ public class HomePageController : ControllerBase
     )]
     public async Task<ActionResult<SearchResultsDto>> Search([FromQuery] SearchRequestDto request)
     {
-        try
-        {
-            var searchResults = await _hotelService.SearchHotelsAsync(request);
+        var searchResults = await _hotelService.SearchHotelsAsync(request);
 
-            if (searchResults.Hotels == null || !searchResults.Hotels.Any())
-            {
-                return NotFound(new { message = "No hotels found matching the search criteria." });
-            }
-
-            return Ok(searchResults);
-        }
-        catch (Exception ex)
+        if (searchResults.Hotels is null || !searchResults.Hotels.Any())
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request.", error = ex.Message });
+            return NotFound(new { message = "No hotels found matching the search criteria." });
         }
+
+        return Ok(searchResults);
     }
+
 }
 
 

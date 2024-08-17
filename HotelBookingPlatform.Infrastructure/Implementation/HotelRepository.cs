@@ -9,8 +9,7 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
             .Include(h => h.City)
             .Include(h => h.Owner)
             .Include(h => h.Reviews).AsSplitQuery();
-    }
-
+    } 
     private async Task<IEnumerable<Hotel>> PaginateHotelsAsync(IQueryable<Hotel> query, int pageSize, int pageNumber)
     {
         return await query
@@ -26,6 +25,29 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
                         (string.IsNullOrEmpty(desc) || h.Description.Contains(desc)));
 
         return await PaginateHotelsAsync(query, pageSize, pageNumber);
+    }
+    public async Task<IEnumerable<Hotel>> SearchHotelsAsync(
+       string? cityName,
+       int numberOfAdults,
+       int numberOfChildren,
+       int numberOfRooms,
+       DateTime checkInDate,
+       DateTime checkOutDate,
+       int? starRating
+   )
+    {
+        var query = _appDbContext.Hotels.AsQueryable();
+
+        if (!string.IsNullOrEmpty(cityName))
+        {
+            query = query.Where(h => h.Name.Contains(cityName));
+        }
+
+        if (starRating.HasValue)
+        {
+            query = query.Where(h => h.StarRating == starRating.Value);
+        }
+        return await query.ToListAsync();
     }
 
     public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)

@@ -9,7 +9,7 @@ public class AmenityService : BaseService<Amenity>, IAmenityService
     {
         var amenities = await _unitOfWork.AmenityRepository.GetAllAsync();
 
-        if (amenities is null || !amenities.Any())
+        if (!amenities.Any())
         {
             throw new KeyNotFoundException("No amenities found.");
         }

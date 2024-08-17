@@ -36,7 +36,6 @@ public class HotelService : BaseService<Hotel>, IHotelService
         var createdHotelDto = _mapper.Map<HotelResponseDto>(hotel);
         return new CreatedAtActionResult(nameof(GetHotel), "Hotels", new { id = createdHotelDto.HotelId }, createdHotelDto);
     }
-
     public async Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request)
     {
         ValidationHelper.ValidateRequest(request);
@@ -72,55 +71,21 @@ public class HotelService : BaseService<Hotel>, IHotelService
     }
     public async Task<SearchResultsDto> SearchHotelsAsync(SearchRequestDto request)
     {
-        var allHotels = await _unitOfWork.HotelRepository.GetAllAsync();
+        var hotels = await _unitOfWork.HotelRepository.SearchHotelsAsync(
+            request.CityName,
+            request.NumberOfAdults,
+            request.NumberOfChildren,
+            request.NumberOfRooms,
+            request.CheckInDate,
+            request.CheckOutDate,
+            request.StarRating
+        );
 
-        var query = allHotels.AsQueryable();
-        if (!string.IsNullOrEmpty(request.CityName))
-        {
-            query = query.Where(h => h.City.Name.Contains(request.CityName));
-        }
-        if (request.StarRating.HasValue)
-        {
-            query = query.Where(h => h.StarRating == request.StarRating);
-        }
-
-        if (request.CheckInDate != default && request.CheckOutDate != default)
-        {
-            query = query.Where(h => !h.Bookings.Any(b => b.CheckOutDateUtc > request.CheckInDate && b.CheckInDateUtc < request.CheckOutDate));
-        }
-        var hotels = await query
-            .Include(h => h.City)
-            .Include(h => h.RoomClasses)
-            .ToListAsync();
-
-        var hotelSearchResults = hotels.Select(hotel => new HotelSearchResultDto
-        {
-            HotelId = hotel.HotelId,
-            HotelName = hotel.Name,
-            StarRating = hotel.StarRating,
-            RoomType = hotel.RoomClasses.Any()
-                ? hotel.RoomClasses.First().RoomType.ToString()
-                : "Unknown",
-            CityName = hotel.City?.Name ?? "Unknown",
-            Discount = hotel.RoomClasses.Any()
-                ? (double)hotel.RoomClasses
-                    .SelectMany(rc => rc.Discounts)
-                    .Max(d => d.Percentage)
-                : 0.0,
-            Amenities = hotel.RoomClasses
-                .SelectMany(rc => rc.Amenities)
-                .Select(a => new AmenityResponseDto
-                {
-                    AmenityId = a.AmenityID,
-                    Name = a.Name,
-                    Description = a.Description
-                })
-                .ToList()
-        }).ToList();
+        var hotelDtos = _mapper.Map<IEnumerable<HotelResponseDto>>(hotels);
 
         return new SearchResultsDto
         {
-            Hotels = hotelSearchResults
+            Hotels = (IEnumerable<HotelSearchResultDto>)hotelDtos
         };
     }
     public async Task<IEnumerable<RoomResponseDto>> GetRoomsByHotelIdAsync(int hotelId)
@@ -188,7 +153,7 @@ public class HotelService : BaseService<Hotel>, IHotelService
         };
 
         return reviewRatingDto;
-    }
+    } 
 }
 
 

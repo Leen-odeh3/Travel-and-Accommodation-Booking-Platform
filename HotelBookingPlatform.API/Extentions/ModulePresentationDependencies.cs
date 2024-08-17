@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.API.Extentions;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace HotelBookingPlatform.API.Extentions;
 public static class ModulePresentationDependencies
 {
     public static IServiceCollection AddPresentationDependencies(this IServiceCollection services, IConfiguration configuration)
@@ -52,6 +54,9 @@ public static class ModulePresentationDependencies
          });
         services.AddScoped<IResponseHandler, ResponseHandler>();
         services.AddScoped<ILog, Log>();
+
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

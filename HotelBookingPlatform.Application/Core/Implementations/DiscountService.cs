@@ -19,12 +19,11 @@ public class DiscountService : BaseService<Discount>, IDiscountService
 
         return _mapper.Map<DiscountDto>(discount);
     }
-
     public async Task<List<DiscountDto>> GetActiveDiscountsAsync()
     {
-        var now = DateTime.UtcNow;
         var discounts = await _unitOfWork.DiscountRepository.GetAllAsync();
-        var activeDiscounts = discounts.Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now).ToList();
+        var activeDiscounts = discounts.Where(d => d.IsActive).ToList();
+
         return _mapper.Map<List<DiscountDto>>(activeDiscounts);
     }
     public async Task<List<DiscountDto>> GetAllDiscountsAsync()
@@ -32,21 +31,17 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         var discounts = await _unitOfWork.DiscountRepository.GetAllAsync(query => query.Include(d => d.Room));
         return _mapper.Map<List<DiscountDto>>(discounts);
     }
-
-
     public async Task<DiscountDto> GetDiscountByIdAsync(int id)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id, query => query.Include(d => d.Room));
         return _mapper.Map<DiscountDto>(discount);
     }
-
     public async Task DeleteDiscountAsync(int id)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id);
         await _unitOfWork.DiscountRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
-
     public async Task<DiscountDto> UpdateDiscountAsync(int id, UpdateDiscountRequest request)
     {
         var discount = await _unitOfWork.DiscountRepository.GetByIdAsync(id);
@@ -66,5 +61,19 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         _unitOfWork.DiscountRepository.UpdateAsync(id,discount);
         return _mapper.Map<DiscountDto>(discount);
     }
+    public async Task<List<DiscountDto>> GetRoomsWithHighestDiscountsAsync(int topN)
+    {
+        var now = DateTime.UtcNow;
 
+        var discounts = await _unitOfWork.DiscountRepository
+            .GetAllAsync();
+
+        var activeDiscounts = discounts
+            .Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now)
+            .OrderByDescending(d => d.Percentage)
+            .Take(topN)
+            .ToList();
+
+        return _mapper.Map<List<DiscountDto>>(activeDiscounts);
+    }
 }
