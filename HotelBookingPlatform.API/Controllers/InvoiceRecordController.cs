@@ -4,12 +4,13 @@
 public class InvoiceController : ControllerBase
 {
     private readonly IInvoiceRecordService _invoiceService;
+    private readonly IResponseHandler _responseHandler;
 
-    public InvoiceController(IInvoiceRecordService invoiceService)
+    public InvoiceController(IInvoiceRecordService invoiceService, IResponseHandler responseHandler)
     {
         _invoiceService = invoiceService;
+        _responseHandler = responseHandler;
     }
-
     /// <summary>
     /// Creates a new invoice record.
     /// </summary>
@@ -22,7 +23,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> CreateInvoice([FromBody] InvoiceCreateRequest request)
     {
         await _invoiceService.CreateInvoiceAsync(request);
-        return Ok();
+        return _responseHandler.Success("Invoice created successfully.");
     }
 
     /// <summary>
@@ -37,7 +38,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> GetInvoice(int id)
     {
         var invoice = await _invoiceService.GetInvoiceAsync(id);
-        return Ok(invoice);
+        return _responseHandler.Success(invoice, "Invoice record retrieved successfully.");
     }
 
     /// <summary>
@@ -69,7 +70,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> UpdateInvoice(int id, [FromBody] InvoiceCreateRequest request)
     {
         await _invoiceService.UpdateInvoiceAsync(id, request);
-        return Ok();
+        return _responseHandler.Success("Invoice updated successfully.");
     }
 
     /// <summary>
@@ -84,6 +85,6 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> DeleteInvoice(int id)
     {
         await _invoiceService.DeleteInvoiceAsync(id);
-        return Ok();
+        return _responseHandler.Success("Invoice deleted successfully.");
     }
 }

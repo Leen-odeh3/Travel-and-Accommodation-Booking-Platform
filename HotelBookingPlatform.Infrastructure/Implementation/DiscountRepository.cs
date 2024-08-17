@@ -33,9 +33,10 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
     public async Task<Discount> GetActiveDiscountForRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)
     {
         return await _appDbContext.Discounts
-            .Where(d => d.RoomID == roomId
+            .Where(d => d.RoomID == roomId && d.IsActive
                 && d.StartDateUtc <= checkInDate
                 && d.EndDateUtc >= checkOutDate)
             .FirstOrDefaultAsync();
     }
+
 }

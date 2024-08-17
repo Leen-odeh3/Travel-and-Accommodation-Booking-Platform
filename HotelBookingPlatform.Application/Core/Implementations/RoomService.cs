@@ -7,7 +7,16 @@ public class RoomService : BaseService<Room>, IRoomService
     {
         _logger = logger;
     }
-
+    public async Task<IEnumerable<RoomResponseDto>> GetAvailableRoomsWithNoBookingsAsync(int roomClassId)
+    {
+        var rooms = await _unitOfWork.RoomRepository.GetAvailableRoomsWithNoBookingsAsync(roomClassId);
+        return _mapper.Map<IEnumerable<RoomResponseDto>>(rooms);
+    }
+    public async Task<IEnumerable<RoomResponseDto>> GetRoomsByPriceRangeAsync(decimal minPrice, decimal maxPrice)
+    {
+        var rooms = await _unitOfWork.RoomRepository.GetRoomsByPriceRangeAsync(minPrice, maxPrice);
+        return _mapper.Map<IEnumerable<RoomResponseDto>>(rooms);
+    }
     public async Task<RoomResponseDto> GetRoomAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);

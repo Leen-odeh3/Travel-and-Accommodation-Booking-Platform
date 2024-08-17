@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.API.Controllers;
+﻿using HotelBookingPlatform.Domain.Entities;
+
+namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomController : ControllerBase
@@ -12,6 +14,26 @@ public class RoomController : ControllerBase
         _roomService = roomService;
         _imageService = imageService;
         _responseHandler = responseHandler;
+    }
+    /// <summary>
+    /// Retrieves rooms within a specific price range.
+    /// </summary>
+    /// <param name="minPrice">The minimum price of the rooms.</param>
+    /// <param name="maxPrice">The maximum price of the rooms.</param>
+    /// <returns>A list of rooms within the specified price range.</returns>
+    [HttpGet("by-price")]
+    [SwaggerOperation(
+        Summary = "Get rooms by price range",
+        Description = "Retrieves a list of rooms within the specified price range.")]
+    [SwaggerResponse(200, "Rooms within the price range retrieved successfully.", typeof(IEnumerable<RoomResponseDto>))]
+    [SwaggerResponse(404, "No rooms found within the specified price range.")]
+    public async Task<IActionResult> GetRoomsByPriceRange(decimal minPrice, decimal maxPrice)
+    {
+        var rooms = await _roomService.GetRoomsByPriceRangeAsync(minPrice, maxPrice);
+        if (!rooms.Any())
+            return _responseHandler.NotFound("No rooms found within the specified price range.");
+
+        return _responseHandler.Success(rooms, "Rooms within the price range retrieved successfully.");
     }
 
     [HttpGet("{id}")]
@@ -49,6 +71,27 @@ public class RoomController : ControllerBase
         var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
 
         return _responseHandler.Success(imageDetails);
+    }
+
+    /// <summary>
+    /// Retrieves available rooms that have no bookings.
+    /// </summary>
+    /// <returns>A list of available rooms with no bookings.</returns>
+    [HttpGet("available-without-bookings")]
+    [SwaggerOperation(
+        Summary = "Get available rooms with no bookings",
+        Description = "Retrieves a list of available rooms that do not have any bookings."
+    )]
+    [SwaggerResponse(200, "Available rooms with no bookings retrieved successfully.", typeof(IEnumerable<RoomResponseDto>))]
+    [SwaggerResponse(404, "No available rooms found without bookings.")]
+    public async Task<IActionResult> GetAvailableRoomsWithNoBookings([FromQuery] int roomClassId)
+    {
+        var rooms = await _roomService.GetAvailableRoomsWithNoBookingsAsync(roomClassId);
+
+        if (!rooms.Any())
+            return _responseHandler.NotFound("No available rooms found without bookings.");
+
+        return _responseHandler.Success(rooms, "Available rooms with no bookings retrieved successfully.");
     }
 }
 
