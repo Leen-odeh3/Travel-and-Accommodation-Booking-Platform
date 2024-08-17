@@ -2,9 +2,7 @@
 public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
 {
     public HotelRepository(AppDbContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
     private IQueryable<Hotel> GetHotelsWithIncludes()
     {
         return _appDbContext.Hotels

@@ -1,4 +1,4 @@
-﻿using HotelBookingPlatform.Domain.ILogger;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class HotelRepoTest
 {
     private readonly HotelRepository _sut;
@@ -57,6 +57,8 @@ public class HotelRepoTest
 
         // Act
         var result = await _sut.GetHotelByNameAsync(hotel.Name);
+
+        // Assert
         Assert.Equal(hotel.Name, result.Name);
         Assert.Equal(hotel.StarRating, result.StarRating);
     }
@@ -183,6 +185,7 @@ public class HotelRepoTest
         // Act
         var result = await _sut.GetHotelWithRoomClassesAndRoomsAsync(hotel.HotelId);
 
+        // Assert
         Assert.Equal(hotel.HotelId, result.HotelId);
         Assert.NotEmpty(result.RoomClasses);
         Assert.All(result.RoomClasses, rc => Assert.NotEmpty(rc.Rooms));
@@ -196,5 +199,4 @@ public class HotelRepoTest
         );
         Assert.Equal("Hotel with ID 9999 not found.", exception.Message);
     }
-
 }

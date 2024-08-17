@@ -114,4 +114,17 @@ public class CityRepoTest
         );
         Assert.Equal("City with the same name already exists.", exception.Message);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetTopVisitedCitiesAsync_ShouldThrowArgumentOutOfRangeException_WhenTopCountIsInvalid(int topCount)
+    {
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            async () => await _sut.GetTopVisitedCitiesAsync(topCount)
+        );
+        Assert.Equal("The number of top cities must be greater than zero. (Parameter 'topCount')", exception.Message);
+    }
+
 }

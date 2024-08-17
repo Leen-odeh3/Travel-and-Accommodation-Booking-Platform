@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.API.Controllers;
+﻿using HotelBookingPlatform.Domain.Entities;
+
+namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CityController : ControllerBase
@@ -6,15 +8,18 @@ public class CityController : ControllerBase
     private readonly ICityService _cityService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-    public CityController(ICityService cityService, IImageService imageService, IResponseHandler responseHandler)
+    private readonly ILog _log;
+
+    public CityController(ICityService cityService, IImageService imageService, IResponseHandler responseHandler, ILog log)
     {
         _cityService = cityService;
         _imageService = imageService;
         _responseHandler = responseHandler;
+        _log = log;
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add a new city.")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -22,6 +27,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> AddCity([FromBody] CityCreateRequest request)
     {
         var cityResponse = await _cityService.AddCityAsync(request);
+        _log.Log($"City added successfully with ID: {cityResponse.CityID}", "info");
         return _responseHandler.Created(cityResponse, "Owner created successfully.");
     }
 
@@ -34,6 +40,7 @@ public class CityController : ControllerBase
         [FromQuery] int pageNumber = 1)
     {
         var cities = await _cityService.GetCities(CityName, Description, pageSize, pageNumber);
+        _log.Log($"Retrieved {cities.Count()} cities", "info");
         return _responseHandler.Success(cities);
     }
 
@@ -67,6 +74,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> GetHotelsForCity(int cityId)
     {
         var hotels = await _cityService.GetHotelsForCityAsync(cityId);
+        _log.Log($"Retrieving hotels for city ID: {cityId}", "info");
         return _responseHandler.Success(hotels);
     }
 
@@ -85,6 +93,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> DeleteHotelFromCity(int cityId, int hotelId)
     {
         await _cityService.DeleteHotelFromCityAsync(cityId, hotelId);
+        _log.Log($"Hotel ID: {hotelId} removed from city ID: {cityId} successfully", "info");
         return _responseHandler.Success(message: "Hotel removed from city successfully.");
     }
 
@@ -95,6 +104,7 @@ public class CityController : ControllerBase
     {
 
         var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "city", cityId);
+        _log.Log($"Image uploaded for city ID: {cityId}, URL: {uploadResult.SecureUri}", "info");
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
@@ -103,7 +113,9 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Delete an image from a specific city.")]
     public async Task<IActionResult> DeleteCityImage(int cityId, string publicId)
     {
-        var deletionResult = await _imageService.DeleteImageAsync(publicId);
+        var deletionResult = await _imageService.DeleteImageAsync(publicId);      
+        _log.Log($"Deleting image with PublicId: {publicId} from city ID: {cityId}", "info");
+
         return _responseHandler.BadRequest("Failed to delete image.");
     }
 

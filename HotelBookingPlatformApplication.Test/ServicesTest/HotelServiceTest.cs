@@ -19,7 +19,7 @@ public class HotelServiceTest
     }
 
     [Fact]
-    public async Task GetHotels_ShouldReturnHotels_WhenHotelsExist()
+    public async Task GetHotels_WhenHotelsExist_ShouldReturnHotels()
     {
         // Arrange
         var hotels = _fixture.CreateMany<Hotel>().ToList();

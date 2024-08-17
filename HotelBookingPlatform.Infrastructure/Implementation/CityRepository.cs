@@ -13,10 +13,13 @@ public class CityRepository :GenericRepository<City> , ICityRepository
         if (includeHotels)
             query = query.Include(c => c.Hotels).ThenInclude(h => h.Owner);
 
-        return await query.FirstOrDefaultAsync(c => c.CityID == cityId);
+        return await query.SingleOrDefaultAsync(c => c.CityID == cityId);
     }
     public async Task<IEnumerable<City>> GetTopVisitedCitiesAsync(int topCount)
     {
+        if (topCount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(topCount), "The number of top cities must be greater than zero.");
+
         return await _appDbContext.Cities
             .OrderByDescending(c => c.VisitCount) 
             .Take(topCount)
