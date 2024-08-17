@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain;
-
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]

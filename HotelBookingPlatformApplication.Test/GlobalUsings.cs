@@ -27,3 +27,5 @@ global using HotelBookingPlatform.Domain.DTOs.Owner;
 global using HotelBookingPlatform.Domain.DTOs.Review;
 global using HotelBookingPlatform.Domain.DTOs.Room;
 global using HotelBookingPlatform.Domain.DTOs.RoomClass;
+global using CloudinaryDotNet;
+global using HotelBookingPlatform.Domain.Abstracts;

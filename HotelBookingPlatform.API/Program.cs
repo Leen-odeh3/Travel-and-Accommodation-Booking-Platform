@@ -19,7 +19,6 @@ public class Program
         }
 
         app.UseCors();
-       // app.UseCustomStaticFiles(builder.Environment);
         app.UseMiddleware<GlobalExceptionHandling>();
         app.UseHttpsRedirection();
         app.UseAuthentication();

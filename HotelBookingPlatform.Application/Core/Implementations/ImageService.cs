@@ -1,4 +1,5 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿using HotelBookingPlatform.Application.Extentions;
+namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
@@ -11,32 +12,53 @@ public class ImageService : IImageService
     }
     public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string entityType, int entityId)
     {
+
+
+        var allowedFormats = new[]
+        {
+        SupportedImageFormats.Jpg,
+        SupportedImageFormats.Jpeg,
+        SupportedImageFormats.Png
+    };
         if (file.Length == 0)
             throw new ArgumentException("No file provided.");
 
-        using (var stream = file.OpenReadStream())
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var isSupportedFormat = allowedFormats.Any(f => f.ToExtension() == extension);
+
+        if (!isSupportedFormat)
+            throw new ArgumentException("Unsupported file format.");
+
+        try
         {
-            var uploadParams = new ImageUploadParams
+            using (var stream = file.OpenReadStream())
             {
-                File = new FileDescription(file.FileName, stream),
-                Folder = folderPath,
-                PublicId = $"{entityType}/{entityId}/image"
-            };
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = folderPath,
+                    PublicId = $"{entityType}/{entityId}/image"
+                };
 
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-            var imageRecord = new Image
-            {
-                Url = uploadResult.SecureUri.ToString(),
-                PublicId = uploadResult.PublicId,
-                Type = entityType, 
-                EntityId = entityId
-            };
+                var imageRecord = new Image
+                {
+                    Url = uploadResult.SecureUri.ToString(),
+                    PublicId = uploadResult.PublicId,
+                    Type = entityType,
+                    EntityId = entityId
+                };
 
-            await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
-            await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.ImageRepository.CreateAsync(imageRecord);
+                await _unitOfWork.SaveChangesAsync();
 
-            return uploadResult;
+                return uploadResult;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("An error occurred while uploading the image.", ex);
         }
     }
 
