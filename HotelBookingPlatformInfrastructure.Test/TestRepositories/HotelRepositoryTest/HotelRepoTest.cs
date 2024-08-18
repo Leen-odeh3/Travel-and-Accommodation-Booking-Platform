@@ -15,6 +15,61 @@ public class HotelRepoTest
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
+    [Fact]
+    public async Task SearchHotelsAsync_ShouldReturnFilteredHotels_WhenFiltersAreApplied()
+    {
+        // Arrange
+        var city = _fixture.Build<City>()
+            .With(c => c.CityID, 1)
+            .Create();
+
+        var hotel1 = _fixture.Build<Hotel>()
+            .With(h => h.CityID, 1)
+            .With(h => h.StarRating, 5)
+            .With(h => h.RoomClasses, _fixture.Build<RoomClass>()
+                .With(rc => rc.Rooms, _fixture.CreateMany<Room>(3).ToList())
+                .CreateMany(2).ToList())
+            .Create();
+
+        var hotel2 = _fixture.Build<Hotel>()
+            .With(h => h.CityID, 1)
+            .With(h => h.StarRating, 3)
+            .With(h => h.RoomClasses, _fixture.Build<RoomClass>()
+                .With(rc => rc.Rooms, _fixture.CreateMany<Room>(2).ToList())
+                .CreateMany(1).ToList())
+            .Create();
+
+        var hotel3 = _fixture.Build<Hotel>()
+            .With(h => h.CityID, 1)
+            .With(h => h.StarRating, 5)
+            .With(h => h.RoomClasses, _fixture.Build<RoomClass>()
+                .With(rc => rc.Rooms, _fixture.CreateMany<Room>(4).ToList())
+                .CreateMany(1).ToList())
+            .Create();
+
+        _context.Cities.Add(city);
+        _context.Hotels.AddRange(hotel1, hotel2, hotel3);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.SearchHotelsAsync(
+            cityName: null,
+            numberOfAdults: 1,
+            numberOfChildren: 0, 
+            numberOfRooms: 3,
+            checkInDate: DateTime.Now,
+            checkOutDate: DateTime.Now.AddDays(1),
+            starRating: 5 
+        );
+
+        // Assert
+        Assert.NotEmpty(result);
+        Assert.Equal(2, result.Count()); 
+        Assert.Contains(result, h => h.Name == hotel1.Name);
+        Assert.Contains(result, h => h.Name == hotel3.Name);
+        Assert.DoesNotContain(result, h => h.Name == hotel2.Name);
+    }
+
     private City CreateCity(int id) =>
         _fixture.Build<City>().With(c => c.CityID, id).Create();
 

@@ -84,6 +84,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpPost("{hotelId}/amenities")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add an amenity to a specific hotel.")]
     public async Task<IActionResult> AddAmenityToHotel(int hotelId, [FromBody] AmenityCreateRequest request)
     {
@@ -101,6 +102,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpDelete("{hotelId}/amenities/{amenityId}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Remove an amenity from a specific hotel.")]
     public async Task<IActionResult> DeleteAmenityFromHotel(int hotelId, int amenityId)
     {
@@ -119,15 +121,16 @@ public class HotelController : ControllerBase
 
 
     [HttpPost("{hotelId}/upload-image")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific hotel.")]
     public async Task<IActionResult> UploadHotelImage(int hotelId, IFormFile file)
     {
-        var folderPath = $"hotels/{hotelId}";
-        var imageType = "hotel";
-        _logger.Log($"Uploading image for hotel with ID {hotelId}", "info");
+        if (file.Length == 0)
+            return _responseHandler.BadRequest("No file uploaded.");
 
-        var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, hotelId);
+        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Hotels", hotelId);
 
+        _logger.Log($"Image uploaded for hotel ID: {hotelId}, URL: {uploadResult.SecureUri}", "info");
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
 
@@ -141,13 +144,18 @@ public class HotelController : ControllerBase
         return _responseHandler.Success("Image deleted successfully.");
     }
 
-    [HttpGet("{hotelId}/image/{publicId}")]
-    [SwaggerOperation(Summary = "Get details of an image associated with a specific hotel.")]
-    public async Task<IActionResult> GetHotelImageDetails(int hotelId, string publicId)
+    [HttpGet("{hotelId}/images")]
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific hotel.")]
+    public async Task<IActionResult> GetImagesForCity(int hotelId)
     {
-        _logger.Log($"Fetching details for image with public ID {publicId} from hotel with ID {hotelId}", "info");
-        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
-        return _responseHandler.Success(imageDetails);
+        var allCityImages = await _imageService.GetImagesByTypeAsync("Hotels");
+
+        var cityImages = allCityImages.Where(img => img.EntityId == hotelId);
+
+        if (!cityImages.Any())
+            return _responseHandler.NotFound("No images found for the specified city.");
+
+        return _responseHandler.Success(cityImages);
     }
 }
 

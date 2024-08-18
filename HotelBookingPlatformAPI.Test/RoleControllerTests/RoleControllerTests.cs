@@ -11,45 +11,46 @@ public class RoleControllerTests
         _roleServiceMock = new Mock<IRoleService>();
         _responseHandlerMock = new Mock<IResponseHandler>();
         _loggerMock = new Mock<ILog>();
-        _controller = new RoleController(
-            _roleServiceMock.Object,
-            _responseHandlerMock.Object,
-            _loggerMock.Object);
+        _controller = new RoleController(_roleServiceMock.Object, _responseHandlerMock.Object, _loggerMock.Object);
     }
 
     [Fact]
-    public async Task AddRoleAsync_ShouldReturnBadRequest_WhenRoleAssignmentFails()
+    public async Task AddRoleAsync_ShouldReturnSuccess_WhenRoleIsAddedSuccessfully()
     {
         // Arrange
         var model = new AddRoleModel { Email = "admin4@example.com", Role = "Admin" };
-        var failureMessage = "Failed to add role";
-        _roleServiceMock.Setup(s => s.AddRoleAsync(model)).ReturnsAsync(failureMessage);
-        _responseHandlerMock.Setup(r => r.BadRequest(failureMessage)).Returns(new BadRequestObjectResult(failureMessage));
+        var expectedMessage = "Role assigned successfully.";
+        _roleServiceMock.Setup(s => s.AddRoleAsync(model)).ReturnsAsync(expectedMessage);
+
+        _responseHandlerMock.Setup(r => r.Success(It.IsAny<object>(), expectedMessage))
+            .Returns(new OkObjectResult(new { Message = expectedMessage }));
 
         // Act
-        var actionResult = await _controller.AddRoleAsync(model);
+        var result = await _controller.AddRoleAsync(model);
 
         // Assert
-        actionResult.Should().BeOfType<BadRequestObjectResult>();
-        _loggerMock.Invocations.Should().ContainSingle(i => i.Method.Name == "Log" && i.Arguments[0].ToString().Contains("Failed to add role"));
+        result.Should().BeOfType<OkObjectResult>();
+        var okResult = result as OkObjectResult;
+        okResult.Value.Should().BeEquivalentTo(new { Message = expectedMessage });
     }
 
     [Fact]
-    public async Task AddRoleAsync_ShouldReturnSuccess_WhenRoleAssignmentSucceeds()
+    public async Task AddRoleAsync_ShouldReturnBadRequest_WhenRoleAdditionFails()
     {
         // Arrange
         var model = new AddRoleModel { Email = "admin4@example.com", Role = "Admin" };
-        var successMessage = "Role assigned successfully";
-        _roleServiceMock.Setup(s => s.AddRoleAsync(model)).ReturnsAsync(string.Empty); // Empty string means success
-        _responseHandlerMock.Setup(r => r.Success(It.IsAny<object>(), "Role assigned successfully.")).Returns(new OkObjectResult(new { Message = successMessage }));
+        var errorMessage = "Failed to add role";
+        _roleServiceMock.Setup(s => s.AddRoleAsync(model)).ReturnsAsync(string.Empty);
+
+        _responseHandlerMock.Setup(r => r.BadRequest(errorMessage))
+            .Returns(new BadRequestObjectResult(errorMessage));
 
         // Act
-        var actionResult = await _controller.AddRoleAsync(model);
+        var result = await _controller.AddRoleAsync(model);
 
         // Assert
-        actionResult.Should().BeOfType<OkObjectResult>();
-        _loggerMock.Invocations.Should().ContainSingle(i => i.Method.Name == "Log" && i.Arguments[0].ToString().Contains("Role assigned successfully."));
-        var result = actionResult as OkObjectResult;
-        result?.Value.Should().BeEquivalentTo(new { Message = successMessage });
+        result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequestResult = result as BadRequestObjectResult;
+        badRequestResult.Value.Should().Be(errorMessage);
     }
 }

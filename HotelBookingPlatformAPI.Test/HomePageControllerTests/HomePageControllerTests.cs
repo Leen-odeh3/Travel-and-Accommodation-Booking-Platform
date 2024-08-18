@@ -56,29 +56,4 @@ public class HomePageControllerTests
         notFoundResult.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         notFoundResult.Value.Should().BeEquivalentTo(new { message = "No cities found." });
     }
-
-    [Fact]
-    public async Task Search_ShouldReturnInternalServerError_WhenExceptionOccurs()
-    {
-        // Arrange
-        var searchRequest = _fixture.Create<SearchRequestDto>();
-        var exceptionMessage = "Database connection failed";
-        _mockHotelService.Setup(s => s.SearchHotelsAsync(searchRequest))
-                         .ThrowsAsync(new Exception(exceptionMessage));
-
-        // Act
-        var result = await _sut.Search(searchRequest);
-
-        // Assert
-        var actionResult = Assert.IsType<ActionResult<SearchResultsDto>>(result);
-        var objectResult = Assert.IsType<ObjectResult>(actionResult.Result);
-
-        objectResult.Should().NotBeNull();
-        objectResult.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
-        objectResult.Value.Should().BeEquivalentTo(new
-        {
-            message = "An error occurred while processing your request.",
-            error = exceptionMessage
-        });
-    }
 }

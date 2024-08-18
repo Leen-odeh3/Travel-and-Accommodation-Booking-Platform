@@ -110,6 +110,4 @@ public class OwnerServiceTest
         result.Should().BeEmpty();
         _mapperMock.Verify(m => m.Map<List<OwnerDto>>(owners), Times.Once);
     }
-
-
 }

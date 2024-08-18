@@ -99,12 +99,14 @@ public class RoomClassController : ControllerBase
         return _responseHandler.NoContent("Room deleted successfully.");
 
     }
-
     [HttpPost("{roomClassId}/upload-image")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific room class.")]
     public async Task<IActionResult> UploadRoomClassImage(int roomClassId, IFormFile file)
     {
+        if (file.Length == 0)
+            return _responseHandler.BadRequest("No file uploaded.");
+
         var folderPath = $"roomClasses/{roomClassId}";
         var imageType = "roomClass";
         var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomClassId);
@@ -121,12 +123,18 @@ public class RoomClassController : ControllerBase
         return _responseHandler.Success("Image deleted successfully.");
     }
 
-    [HttpGet("{roomClassId}/image/{publicId}")]
-    [SwaggerOperation(Summary = "Get details of an image associated with a specific room class.")]
-    public async Task<IActionResult> GetRoomClassImageDetails(int roomClassId, string publicId)
+    [HttpGet("{roomClassId}/images")]
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific room class.")]
+    public async Task<IActionResult> GetImagesForRoomClass(int roomClassId)
     {
-        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
-        return _responseHandler.Success(imageDetails);
+        var allImages = await _imageService.GetImagesByTypeAsync("roomClass");
+
+        var roomClassImages = allImages.Where(img => img.EntityId == roomClassId);
+
+        if (!roomClassImages.Any())
+            return _responseHandler.NotFound("No images found for the specified room class.");
+
+        return _responseHandler.Success(roomClassImages);
     }
 }
 

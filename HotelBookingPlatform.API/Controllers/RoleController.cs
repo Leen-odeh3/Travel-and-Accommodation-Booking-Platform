@@ -21,14 +21,15 @@ public class RoleController : ControllerBase
     {
         var result = await _roleService.AddRoleAsync(model);
 
-        if (!string.IsNullOrEmpty(result))
+        if (string.IsNullOrEmpty(result))
         {
             _logger.Log($"Failed to add role: {result}", "warning");
-            return _responseHandler.BadRequest(result);
+            return _responseHandler.BadRequest("Failed to add role");
         }
 
         _logger.Log("Role assigned successfully.", "info");
         return _responseHandler.Success(new { Message = result }, "Role assigned successfully.");
     }
+
 }
 

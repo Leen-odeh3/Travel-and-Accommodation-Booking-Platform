@@ -48,12 +48,16 @@ public class RoomController : ControllerBase
     [SwaggerOperation(Summary = "Upload an image for a specific room.")]
     public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
+        if (file.Length == 0)
+            return _responseHandler.BadRequest("No file uploaded.");
+
         var folderPath = $"rooms/{roomId}";
         var imageType = "Room";
         var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomId);
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
+
 
     [HttpDelete("{roomId}/delete-image/{publicId}")]
     [Authorize(Roles = "Admin")]
@@ -64,14 +68,19 @@ public class RoomController : ControllerBase
         return _responseHandler.Success("Image deleted successfully.");
     }
 
-    [HttpGet("{roomId}/image/{publicId}")]
-    [SwaggerOperation(Summary = "Get details of an image associated with a specific room.")]
-    public async Task<IActionResult> GetRoomImageDetails(int roomId, string publicId)
+    [HttpGet("{roomId}/images")]
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific room.")]
+    public async Task<IActionResult> GetRoomImages(int roomId)
     {
-        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        var allRoomImages = await _imageService.GetImagesByTypeAsync("Room");
+        var roomImages = allRoomImages.Where(img => img.EntityId == roomId);
 
-        return _responseHandler.Success(imageDetails);
+        if (!roomImages.Any())
+            return _responseHandler.NotFound("No images found for the specified room.");
+
+        return _responseHandler.Success(roomImages);
     }
+
 
     /// <summary>
     /// Retrieves available rooms that have no bookings.

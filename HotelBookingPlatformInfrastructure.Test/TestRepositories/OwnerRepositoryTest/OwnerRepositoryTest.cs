@@ -50,4 +50,33 @@ public class OwnerRepositoryTest
         Assert.Contains(owners, o => o.OwnerID == owner1.OwnerID && o.Hotels.Count == hotelsForOwner1.Count);
         Assert.Contains(owners, o => o.OwnerID == owner2.OwnerID && o.Hotels.Count == hotelsForOwner2.Count);
     }
+
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnOwner_WhenOwnerExists()
+    {
+        // Arrange
+        var owner = CreateOwner(1);
+        _context.owners.Add(owner);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _sut.GetByIdAsync(owner.OwnerID);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(owner.OwnerID, result.OwnerID);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldAddOwner_WhenValidEntityIsProvided()
+    {
+        var owner = CreateOwner(1);
+
+        // Act
+        var result = await _sut.CreateAsync(owner);
+
+        var createdOwner = await _context.owners.FindAsync(owner.OwnerID);
+        Assert.NotNull(createdOwner);
+        Assert.Equal(owner.OwnerID, createdOwner.OwnerID);
+    }
 }

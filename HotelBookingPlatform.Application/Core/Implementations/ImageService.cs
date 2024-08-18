@@ -13,7 +13,6 @@ public class ImageService : IImageService
     public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string entityType, int entityId)
     {
 
-
         var allowedFormats = new[]
         {
         SupportedImageFormats.Jpg,
@@ -84,5 +83,6 @@ public class ImageService : IImageService
     {
         return await _unitOfWork.ImageRepository.GetImagesByTypeAsync(type);
     }
+
 }
 
