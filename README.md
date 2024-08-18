@@ -269,13 +269,14 @@ Cloudinary is used for managing and storing images in the Hotel Booking Platform
 ### 3. Image Deletion
 - Endpoint: `DELETE /api/image/delete-image/{publicId}`
 
-## Testing Frameworks
+## Testing Frameworks 🔋🪫
 Ensuring code quality and functionality with comprehensive testing suites using:
 
-- xUnit: A popular .NET testing framework that facilitates writing and executing unit tests with a focus on simplicity and extensibility. ✅
-- Moq: A powerful mocking library for .NET that allows creating mock objects for unit testing, enabling isolated and controlled test scenarios. 🧪
-- FluentAssertions: A library that provides a more expressive and readable syntax for assertions, making tests easier to write and understand. 📏
-  
+- ##### xUnit: A popular .NET testing framework that facilitates writing and executing unit tests with a focus on simplicity and extensibility. ✅
+- ##### Moq: A powerful mocking library for .NET that allows creating mock objects for unit testing, enabling isolated and controlled test scenarios. 🧪
+- ##### FluentAssertions: A library that provides a more expressive and readable syntax for assertions, making tests easier to write and understand. 📏
+- ##### Fixture: A testing concept used to set up shared contexts for multiple test cases, allowing for efficient and consistent test execution. 🧩
+
 ## Design Patterns
 In the Hotel Booking Platform, several design patterns are employed to ensure a clean, maintainable, and scalable architecture. Here’s a summary of the key patterns used:
 ### 1. Unit of Work Pattern
