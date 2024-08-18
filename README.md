@@ -316,11 +316,11 @@ cd Travel-and-Accommodation-Booking-Platform
 }
 ```
 ## Contact and Support: 🛟
-<a href="leenodeh287@gmail.com">Email</a>
+#### <a href="leenodeh287@gmail.com">Email</a>
 ## Acknowledgement
 I extend my sincere gratitude to Foothill Technology Solutions for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
 
 ![download](https://github.com/user-attachments/assets/e0ff60a8-63e0-44c6-8890-1391c1a39e75)
 
-##### Thank you for your interest. I look forward to hearing from you! 🃏 
+#### `Thank you for your interest. I look forward to hearing from you! `🃏 
 
