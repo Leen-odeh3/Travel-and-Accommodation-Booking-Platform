@@ -5,10 +5,14 @@ public class TokenController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public TokenController(ITokenService tokenService, IHttpContextAccessor httpContextAccessor)
+    private readonly IResponseHandler _responseHandler;
+    private readonly ILog _logger;
+    public TokenController(ITokenService tokenService, IHttpContextAccessor httpContextAccessor, IResponseHandler responseHandler, ILog logger)
     {
         _tokenService = tokenService;
         _httpContextAccessor = httpContextAccessor;
+        _responseHandler = responseHandler;
+        _logger = logger;
     }
 
     /// <summary>
@@ -26,7 +30,10 @@ public class TokenController : ControllerBase
         var token = model.Token ?? Request.Cookies["refreshToken"];
 
         if (string.IsNullOrEmpty(token))
-            throw new BadRequestException("Token is required!");
+        {
+            _logger.Log("Token is required!", "warning");
+            return _responseHandler.BadRequest("Token is required!");
+        }
 
         var result = await _tokenService.RevokeTokenAsync(token);
 
@@ -34,8 +41,12 @@ public class TokenController : ControllerBase
             throw new BadRequestException("Token is invalid or could not be revoked!");
 
         var httpContext = _httpContextAccessor.HttpContext;
+
         if (httpContext is null)
-            throw new InvalidOperationException("HttpContext is not available.");
+        {
+            _logger.Log("HttpContext is not available.", "error");
+            return _responseHandler.BadRequest("HttpContext is not available.");
+        }
 
         var cookieOptions = new CookieOptions
         {
@@ -48,6 +59,7 @@ public class TokenController : ControllerBase
 
         httpContext.Response.Cookies.Append("refreshToken", "", cookieOptions);
 
-        return Ok("Token has been successfully revoked.");
+        _logger.Log("Token has been successfully revoked.", "info");
+        return _responseHandler.Success("Token has been successfully revoked.");
     }
 }

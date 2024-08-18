@@ -5,10 +5,14 @@ public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly ITokenService _tokenService;
-    public UserController(IUserService userService, ITokenService tokenService)
+    private readonly IResponseHandler _responseHandler;
+    private readonly ILog _logger;
+    public UserController(IUserService userService, ITokenService tokenService, IResponseHandler responseHandler, ILog logger)
     {
         _userService = userService;
         _tokenService = tokenService;
+        _responseHandler = responseHandler;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -16,17 +20,16 @@ public class UserController : ControllerBase
     Description = "This endpoint allows a user to create a new account by providing the necessary details such as username, password, and email.")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
     {
-        if (!ModelState.IsValid)
-            throw new BadRequestException("Invalid model state");
-
         var result = await _userService.RegisterAsync(model);
 
         if (!result.IsAuthenticated)
-            throw new AuthenticationException(result.Message);
+        {
+            _logger.Log($"Registration failed: { result.Message}", "warning");
+            return _responseHandler.BadRequest(result.Message);
+        }
 
         _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
-
-        return Ok(result);
+        return _responseHandler.Success(result, "User registered successfully.");
     }
 
     [HttpPost("login")]
@@ -34,18 +37,19 @@ public class UserController : ControllerBase
     Description = "Authenticates the user with the provided email and password. If the credentials are valid, returns a token and user information.")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
     {
-        if (!ModelState.IsValid)
-            throw new BadRequestException("Invalid model state");
-
         var result = await _userService.LoginAsync(model);
 
         if (!result.IsAuthenticated)
-            throw new InvalidOperationException(result.Message);
+        {
+            _logger.Log($"Login failed: {result.Message}", "warning");
+            return _responseHandler.BadRequest(result.Message);
+        }
 
         if (!string.IsNullOrEmpty(result.RefreshToken))
             _tokenService.SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-        return Ok(result);
+        return _responseHandler.Success(result, "User logged in successfully.");
+
     }
 }
 

@@ -9,3 +9,6 @@ global using AutoFixture;
 global using Microsoft.AspNetCore.Http;
 global using HotelBookingPlatform.API.Responses;
 global using HotelBookingPlatform.Domain.ILogger;
+global using FluentAssertions;
+global using HotelBookingPlatform.Domain.Helpers;
+global using HotelBookingPlatform.Domain.IServices;
