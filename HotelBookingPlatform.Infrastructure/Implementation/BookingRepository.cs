@@ -13,9 +13,16 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
         if (booking.Status == BookingStatus.Completed && newStatus != BookingStatus.Completed)
             throw new InvalidOperationException("Cannot change the status of a completed booking.");
 
-        booking.Status = newStatus;
+        if (newStatus == BookingStatus.Cancelled)
+        {
+            _appDbContext.Bookings.Remove(booking);
+        }
+        else
+        {
+            booking.Status = newStatus;
+            _appDbContext.Bookings.Update(booking);
+        }
 
-        _appDbContext.Bookings.Update(booking);
         await _appDbContext.SaveChangesAsync();
     }
 

@@ -7,12 +7,13 @@ public class BookingController : ControllerBase
     private readonly IBookingService _bookingService;
     private readonly IResponseHandler _responseHandler;
     private readonly IEmailService _emailService;
-
-    public BookingController(IBookingService bookingService, IResponseHandler responseHandler, IEmailService emailService)
+    private readonly ILog _log;
+    public BookingController(IBookingService bookingService, IResponseHandler responseHandler, IEmailService emailService, ILog log)
     {
         _bookingService = bookingService;
         _responseHandler = responseHandler;
         _emailService = emailService;
+        _log = log;
     }
     [HttpPost("confirm")]
     public async Task<IActionResult> ConfirmBooking([FromBody] BookingConfirmation confirmation)
@@ -47,7 +48,6 @@ public class BookingController : ControllerBase
 
     }
 
-
     [HttpPut("{id}/Update_status")]
     [Authorize(Roles = "User")]
     [SwaggerOperation(Summary = "Update the status of a booking.")]
@@ -55,17 +55,22 @@ public class BookingController : ControllerBase
     {
         var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
         if (userEmail is null)
-        {
             return Unauthorized("User email not found in token.");
-        }
 
         var booking = await _bookingService.GetBookingAsync(id);
         if (booking is null)
             return NotFound($"Booking with ID {id} not found.");
 
-        await _bookingService.UpdateBookingStatusAsync(id, newStatus);
-        return _responseHandler.NoContent();
+        if (booking.UserName != userEmail.Split('@')[0])
+            return Unauthorized("You are not authorized to update this booking.");
 
+        if (newStatus == BookingStatus.Cancelled)
+        {
+            await _bookingService.UpdateBookingStatusAsync(id, newStatus);
+            return _responseHandler.NoContent();
+        }
+
+        return BadRequest("Invalid status update request.");
     }
 }
 

@@ -61,10 +61,17 @@ public class BookingService : BaseService<Booking>, IBookingService
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
-        booking.Status = newStatus;
-        await _unitOfWork.BookingRepository.UpdateAsync(bookingId, booking);
+
+        if (booking is null)
+            throw new NotFoundException($"Booking with ID {bookingId} not found.");
+
+        if (booking.Status == BookingStatus.Completed && newStatus != BookingStatus.Completed)
+            throw new InvalidOperationException("Cannot change the status of a completed booking.");
+
+        await _unitOfWork.BookingRepository.UpdateBookingStatusAsync(bookingId, newStatus);
         await _unitOfWork.SaveChangesAsync();
     }
+
     private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
         decimal totalPrice = 0m;
