@@ -16,6 +16,7 @@ public class DiscountController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Adds a new discount to a room.")]
     [SwaggerResponse(200, "Discount added successfully.", typeof(DiscountDto))]
     [SwaggerResponse(400, "Invalid request parameters.")]
@@ -68,6 +69,7 @@ public class DiscountController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete a discount by ID",
         Description = "Deletes a discount from the system using the specified ID.")]
     public async Task<IActionResult> DeleteDiscount(int id)

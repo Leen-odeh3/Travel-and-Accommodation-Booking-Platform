@@ -47,6 +47,10 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
         {
             query = query.Where(h => h.StarRating == starRating.Value);
         }
+        if (numberOfRooms > 0)
+        {
+            query = query.Where(h => h.RoomClasses.Any(rc => rc.Rooms.Count >= numberOfRooms));
+        }
         return await query.ToListAsync();
     }
 

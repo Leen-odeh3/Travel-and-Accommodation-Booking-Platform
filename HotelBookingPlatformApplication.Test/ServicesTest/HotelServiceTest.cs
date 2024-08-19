@@ -146,5 +146,31 @@ public class HotelServiceTest
         // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => _hotelService.GetHotelReviewRatingAsync(hotelId));
     }
+
+    [Fact]
+    public async Task DeleteAmenityFromHotelAsync_ShouldRemoveAmenitySuccessfully()
+    {
+        // Arrange
+        int hotelId = _fixture.Create<int>();
+        int amenityId = _fixture.Create<int>();
+
+        var hotel = new Hotel
+        {
+            HotelId = hotelId,
+            Amenities = new List<Amenity>
+        {
+            new Amenity { AmenityID = amenityId, Name = "Pool" }
+        }
+        };
+
+        _unitOfWorkMock
+            .Setup(uow => uow.HotelRepository.GetHotelWithAmenitiesAsync(hotelId))
+            .ReturnsAsync(hotel);
+
+        // Act
+        await _hotelService.DeleteAmenityFromHotelAsync(hotelId, amenityId);
+        Assert.DoesNotContain(hotel.Amenities, a => a.AmenityID == amenityId);
+    }
+
 }
 

@@ -38,7 +38,7 @@ public class BookingService : BaseService<Booking>, IBookingService
             TotalPrice = totalPrice,
             BookingDateUtc = DateTime.UtcNow,
             PaymentMethod = request.PaymentMethod,
-            HotelId = request.HotelId,
+            Hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId),
             CheckInDateUtc = request.CheckInDateUtc,
             CheckOutDateUtc = request.CheckOutDateUtc,
             Status = BookingStatus.Pending,

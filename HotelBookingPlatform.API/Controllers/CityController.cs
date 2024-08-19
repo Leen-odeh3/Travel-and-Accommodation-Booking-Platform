@@ -17,6 +17,7 @@ public class CityController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Add a new city.")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -95,11 +96,11 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("{cityId}/upload-image")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific city.")]
     public async Task<IActionResult> UploadCityImage(int cityId, IFormFile file)
     {
-        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "city", cityId);
+        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Cities", cityId);
         _log.Log($"Image uploaded for city ID: {cityId}, URL: {uploadResult.SecureUri}", "info");
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
     }
@@ -115,13 +116,18 @@ public class CityController : ControllerBase
     }
 
     [HttpGet("{cityId}/images")]
-    [SwaggerOperation(Summary = "Get all images for a specific city.")]
-    public async Task<IActionResult> GetCityImages(int cityId)
+    [SwaggerOperation(Summary = "Retrieve all images associated with a specific city.")]
+    public async Task<IActionResult> GetImagesForCity(int cityId)
     {
-        if (cityId <= 0)
-            return _responseHandler.BadRequest("Invalid city ID.");
+        var allCityImages = await _imageService.GetImagesByTypeAsync("Cities");
 
-        var images = await _imageService.GetImagesByTypeAsync($"city/{cityId}");
-        return _responseHandler.Success(images);
+        var cityImages = allCityImages.Where(img => img.EntityId == cityId);
+
+        if (!cityImages.Any())
+            return _responseHandler.NotFound("No images found for the specified city.");
+
+        _log.Log($"Retrieved images for city ID: {cityId}", "info");
+        return _responseHandler.Success(cityImages);
     }
 }
+
