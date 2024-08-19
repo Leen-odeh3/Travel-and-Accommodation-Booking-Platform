@@ -1,11 +1,12 @@
-﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class DiscountRepository : GenericRepository<Discount> ,IDiscountRepository
 {
     public DiscountRepository(AppDbContext context)
         : base(context)
     {
     }
-
     public async Task<IEnumerable<Discount>> GetAllAsync(Expression<Func<IQueryable<Discount>, IQueryable<Discount>>> include = null)
     {
         var query = _appDbContext.Discounts.AsQueryable();
@@ -33,9 +34,11 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
     public async Task<Discount> GetActiveDiscountForRoomAsync(int roomId, DateTime checkInDate, DateTime checkOutDate)
     {
         return await _appDbContext.Discounts
-            .Where(d => d.RoomID == roomId && d.IsActive
-                && d.StartDateUtc <= checkInDate
-                && d.EndDateUtc >= checkOutDate)
+            .Where(d => d.RoomID == roomId &&
+                        d.StartDateUtc <= checkInDate &&
+                        d.EndDateUtc >= checkOutDate &&
+                        DateTime.UtcNow >= d.StartDateUtc &&
+                        DateTime.UtcNow <= d.EndDateUtc)
             .FirstOrDefaultAsync();
     }
 

@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [ResponseCache(CacheProfileName = "DefaultCache")]

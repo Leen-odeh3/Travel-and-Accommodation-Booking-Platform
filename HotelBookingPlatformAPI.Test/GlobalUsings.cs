@@ -12,3 +12,5 @@ global using HotelBookingPlatform.Domain.ILogger;
 global using FluentAssertions;
 global using HotelBookingPlatform.Domain.Helpers;
 global using HotelBookingPlatform.Domain.IServices;
+global using HotelBookingPlatform.Domain.DTOs.Discount;
+global using Microsoft.Extensions.Logging;
