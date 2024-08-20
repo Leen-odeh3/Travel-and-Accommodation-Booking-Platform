@@ -5,7 +5,6 @@ public class InvoiceController : ControllerBase
 {
     private readonly IInvoiceRecordService _invoiceService;
     private readonly IResponseHandler _responseHandler;
-
     public InvoiceController(IInvoiceRecordService invoiceService, IResponseHandler responseHandler)
     {
         _invoiceService = invoiceService;
@@ -17,6 +16,7 @@ public class InvoiceController : ControllerBase
     /// <param name="request">The invoice details to create.</param>
     /// <returns>Returns 200 OK if the invoice is created successfully.</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Creates a new invoice record.")]
     [SwaggerResponse(200, "Invoice created successfully.")]
     [SwaggerResponse(400, "Bad request.")]
@@ -32,6 +32,7 @@ public class InvoiceController : ControllerBase
     /// <param name="id">The ID of the invoice to retrieve.</param>
     /// <returns>Returns the invoice record.</returns>
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Retrieves a specific invoice record by ID.")]
     [SwaggerResponse(200, "The invoice record.", typeof(InvoiceResponseDto))]
     [SwaggerResponse(404, "Invoice record not found.")]
@@ -47,6 +48,7 @@ public class InvoiceController : ControllerBase
     /// <param name="bookingId">The ID of the booking to retrieve invoices for.</param>
     /// <returns>Returns a list of invoice records for the specified booking.</returns>
     [HttpGet("by-booking/{bookingId}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Retrieves all invoice records for a specific booking.")]
     [SwaggerResponse(200, "A list of invoice records.", typeof(IEnumerable<InvoiceResponseDto>))]
     [SwaggerResponse(404, "No invoices found for the specified booking.")]
@@ -63,6 +65,7 @@ public class InvoiceController : ControllerBase
     /// <param name="request">The updated invoice details.</param>
     /// <returns>Returns 200 OK if the invoice is updated successfully.</returns>
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Updates an existing invoice record.")]
     [SwaggerResponse(200, "Invoice updated successfully.")]
     [SwaggerResponse(400, "Bad request.")]
@@ -79,6 +82,7 @@ public class InvoiceController : ControllerBase
     /// <param name="id">The ID of the invoice to delete.</param>
     /// <returns>Returns 200 OK if the invoice is deleted successfully.</returns>
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Deletes an invoice record.")]
     [SwaggerResponse(200, "Invoice deleted successfully.")]
     [SwaggerResponse(404, "Invoice record not found.")]

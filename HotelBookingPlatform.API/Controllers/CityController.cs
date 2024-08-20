@@ -96,13 +96,16 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("{cityId}/upload-image")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific city.")]
     public async Task<IActionResult> UploadCityImage(int cityId, IFormFile file)
     {
         var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Cities", cityId);
         _log.Log($"Image uploaded for city ID: {cityId}, URL: {uploadResult.SecureUri}", "info");
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+        return _responseHandler.Success(
+              new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId },
+              "Image uploaded successfully."
+          );
     }
 
     [HttpDelete("{cityId}/delete-image/{publicId}")]
@@ -127,7 +130,7 @@ public class CityController : ControllerBase
             return _responseHandler.NotFound("No images found for the specified city.");
 
         _log.Log($"Retrieved images for city ID: {cityId}", "info");
-        return _responseHandler.Success(cityImages);
+        return _responseHandler.Success(cityImages, "Images retrieved successfully.");
     }
 }
 

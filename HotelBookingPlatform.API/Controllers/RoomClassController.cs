@@ -45,7 +45,7 @@ public class RoomClassController : ControllerBase
     public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, [FromBody] AmenityCreateDto request)
     {
         var addedAmenity = await _roomClassService.AddAmenityToRoomClassAsync(roomClassId, request);
-        return Ok(addedAmenity);
+        return _responseHandler.Created(addedAmenity, "Amenity added successfully to the room class.");
     }
 
     [HttpDelete("{roomClassId}/amenities/{amenityId}")]
@@ -60,8 +60,7 @@ public class RoomClassController : ControllerBase
     public async Task<IActionResult> GetAmenitiesByRoomClassId(int roomClassId)
     {
         var amenities = await _roomClassService.GetAmenitiesByRoomClassIdAsync(roomClassId);
-        return _responseHandler.Success(amenities);
-
+        return _responseHandler.Success(amenities, "Amenities retrieved successfully for the room class.");
     }
 
     [HttpPost("{roomClassId}/rooms")]
@@ -83,7 +82,7 @@ public class RoomClassController : ControllerBase
     public async Task<IActionResult> GetRoomsByRoomClassId(int roomClassId)
     {
         var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
-        return _responseHandler.Success(rooms);
+        return _responseHandler.Success(rooms,"Rooms retrieved successfully for the hotel.");
     }
 
 
@@ -100,7 +99,7 @@ public class RoomClassController : ControllerBase
 
     }
     [HttpPost("{roomClassId}/upload-image")]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific room class.")]
     public async Task<IActionResult> UploadRoomClassImage(int roomClassId, IFormFile file)
     {
@@ -111,7 +110,7 @@ public class RoomClassController : ControllerBase
         var imageType = "roomClass";
         var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomClassId);
 
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId }, "Image uploaded successfully for the hotel.");
     }
 
     [HttpDelete("{roomClassId}/delete-image/{publicId}")]
@@ -134,7 +133,8 @@ public class RoomClassController : ControllerBase
         if (!roomClassImages.Any())
             return _responseHandler.NotFound("No images found for the specified room class.");
 
-        return _responseHandler.Success(roomClassImages);
+        return _responseHandler.Success(roomClassImages,"Images retrieved successfully for the room class."
+);
     }
 }
 

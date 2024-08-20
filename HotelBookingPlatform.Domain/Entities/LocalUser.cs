@@ -1,4 +1,5 @@
-﻿namespace HotelBookingPlatform.Domain.Entities;
+﻿
+namespace HotelBookingPlatform.Domain.Entities;
 public class LocalUser : IdentityUser
 {
     public string FirstName { get; set; }
@@ -6,4 +7,5 @@ public class LocalUser : IdentityUser
     public ICollection<Booking> Bookings { get; set; }
     public ICollection<Review> Reviews { get; set; }
     public List<RefreshToken>? RefreshTokens { get; set; }
+
 }

@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomController : ControllerBase
@@ -8,7 +6,6 @@ public class RoomController : ControllerBase
     private readonly IRoomService _roomService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-
     public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler)
     {
         _roomService = roomService;
@@ -40,7 +37,7 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> GetRoom(int id)
     {
         var room = await _roomService.GetRoomAsync(id);
-        return _responseHandler.Success(room);
+        return _responseHandler.Success(room, "Room retrieved successfully.");
     }
 
     [HttpPost("{roomId}/upload-image")]
@@ -55,7 +52,7 @@ public class RoomController : ControllerBase
         var imageType = "Room";
         var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomId);
 
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId }, "Room added successfully to the room class.");
     }
 
 
@@ -78,7 +75,7 @@ public class RoomController : ControllerBase
         if (!roomImages.Any())
             return _responseHandler.NotFound("No images found for the specified room.");
 
-        return _responseHandler.Success(roomImages);
+        return _responseHandler.Success(roomImages, "Rooms retrieved successfully for the room class.");
     }
 
 

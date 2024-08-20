@@ -55,7 +55,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
         var review = await _reviewService.UpdateReviewAsync(id, request);
-        return _responseHandler.Success(review);
+        return _responseHandler.Success(review, "Review retrieved successfully.");
     }
     /// <summary>
     /// Deletes a review by its ID.

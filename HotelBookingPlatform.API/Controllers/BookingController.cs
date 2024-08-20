@@ -64,7 +64,7 @@ public class BookingController : ControllerBase
         if (booking.UserName != userEmail.Split('@')[0])
             return Unauthorized("You are not authorized to update this booking.");
 
-        if (newStatus == BookingStatus.Cancelled)
+        if (newStatus == BookingStatus.Completed)
         {
             await _bookingService.UpdateBookingStatusAsync(id, newStatus);
             return _responseHandler.NoContent();
