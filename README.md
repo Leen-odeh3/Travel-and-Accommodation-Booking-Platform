@@ -268,6 +268,10 @@ Cloudinary is used for managing and storing images in the Hotel Booking Platform
 
 ### 3. Image Deletion
 - Endpoint: `DELETE /api/image/delete-image/{publicId}`
+## Booking Confirmation 
+Once a booking is confirmed, users receive an email containing the details of their reservation. Below is an example of the booking confirmation email that users receive:
+
+![0](https://github.com/user-attachments/assets/3529c1e5-c0b7-48d7-9db1-c8748d0fef2d)
 
 ## Testing Frameworks 🔋🪫
 Ensuring code quality and functionality with comprehensive testing suites using:
