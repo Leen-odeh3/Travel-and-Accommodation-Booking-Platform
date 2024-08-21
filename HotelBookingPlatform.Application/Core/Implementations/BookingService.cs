@@ -3,18 +3,17 @@ public class BookingService : BaseService<Booking>, IBookingService
 {
     public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper)
         : base(unitOfWork, mapper) { }
+
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
 
         if (booking is null)
-        {
             throw new NotFoundException($"Booking with ID {id} not found.");
-        }
 
-        var user = await _unitOfWork.UserRepository.GetByIdAsync(booking.UserId); 
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(booking.UserId);
         var bookingDto = _mapper.Map<BookingDto>(booking);
-        bookingDto.UserName = user?.UserName; 
+        bookingDto.UserName = user?.UserName;
 
         return bookingDto;
     }
@@ -29,6 +28,7 @@ public class BookingService : BaseService<Booking>, IBookingService
             throw new BadRequestException("Check-out date must be greater than check-in date.");
 
         var totalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
+        var discountedTotalPrice = await CalculateDiscountedPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
 
         var booking = new Booking
         {
@@ -36,6 +36,7 @@ public class BookingService : BaseService<Booking>, IBookingService
             User = user,
             confirmationNumber = GenerateConfirmationNumber(),
             TotalPrice = totalPrice,
+            AfterDiscountedPrice = discountedTotalPrice, 
             BookingDateUtc = DateTime.UtcNow,
             PaymentMethod = request.PaymentMethod,
             Hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId),
@@ -53,11 +54,13 @@ public class BookingService : BaseService<Booking>, IBookingService
                 booking.Rooms.Add(room);
             }
         }
+
         await _unitOfWork.BookingRepository.CreateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
         return _mapper.Map<BookingDto>(booking);
     }
+
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
@@ -80,22 +83,48 @@ public class BookingService : BaseService<Booking>, IBookingService
         foreach (var roomId in roomIds)
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            var discount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
 
-            decimal roomPrice = room.PricePerNight * numberOfNights;
-            if (discount is not null)
+            if (room is not null)
             {
-                decimal discountAmount = (discount.Percentage / 100) * roomPrice;
-                roomPrice -= discountAmount;
+                decimal roomPrice = room.PricePerNight * numberOfNights;
+                totalPrice += roomPrice;
             }
-
-            totalPrice += roomPrice;
         }
 
         return totalPrice;
     }
+
+    private async Task<decimal> CalculateDiscountedPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
+    {
+        decimal totalPrice = 0m;
+        int numberOfNights = (checkOutDate - checkInDate).Days;
+
+        foreach (var roomId in roomIds)
+        {
+            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
+            var discount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
+
+            if (room is not null)
+            {
+                decimal roomPrice = room.PricePerNight * numberOfNights;
+
+                if (discount is not null)
+                {
+                    decimal discountAmount = (discount.Percentage / 100) * roomPrice;
+                    roomPrice -= discountAmount;
+                }
+
+                totalPrice += roomPrice;
+            }
+        }
+
+        return totalPrice;
+    }
+
+
     public string GenerateConfirmationNumber()
     {
         return Guid.NewGuid().ToString();
     }
 }
+
