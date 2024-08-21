@@ -6,11 +6,13 @@ public class RoomController : ControllerBase
     private readonly IRoomService _roomService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler, ILog logger)
     {
         _roomService = roomService;
         _imageService = imageService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
     /// <summary>
     /// Retrieves rooms within a specific price range.
@@ -28,7 +30,10 @@ public class RoomController : ControllerBase
     {
         var rooms = await _roomService.GetRoomsByPriceRangeAsync(minPrice, maxPrice);
         if (!rooms.Any())
+        {
+            _logger.Log($"No rooms found within the price range {minPrice} - {maxPrice}.", "warning");
             return _responseHandler.NotFound("No rooms found within the specified price range.");
+        }
 
         return _responseHandler.Success(rooms, "Rooms within the price range retrieved successfully.");
     }
@@ -46,7 +51,10 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
         if (file.Length == 0)
+        {
+            _logger.Log("No file uploaded during room image upload.", "warning");
             return _responseHandler.BadRequest("No file uploaded.");
+        }
 
         var folderPath = $"rooms/{roomId}";
         var imageType = "Room";
@@ -95,7 +103,10 @@ public class RoomController : ControllerBase
         var rooms = await _roomService.GetAvailableRoomsWithNoBookingsAsync(roomClassId);
 
         if (!rooms.Any())
+        {
+            _logger.Log($"No available rooms found without bookings for room class ID {roomClassId}.", "warning");
             return _responseHandler.NotFound("No available rooms found without bookings.");
+        }
 
         return _responseHandler.Success(rooms, "Available rooms with no bookings retrieved successfully.");
     }

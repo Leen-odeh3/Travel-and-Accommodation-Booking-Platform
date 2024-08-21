@@ -5,10 +5,13 @@ public class InvoiceController : ControllerBase
 {
     private readonly IInvoiceRecordService _invoiceService;
     private readonly IResponseHandler _responseHandler;
-    public InvoiceController(IInvoiceRecordService invoiceService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+
+    public InvoiceController(IInvoiceRecordService invoiceService, IResponseHandler responseHandler, ILog logger)
     {
         _invoiceService = invoiceService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
     /// <summary>
     /// Creates a new invoice record.
@@ -23,6 +26,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> CreateInvoice([FromBody] InvoiceCreateRequest request)
     {
         await _invoiceService.CreateInvoiceAsync(request);
+        _logger.Log("Invoice created successfully.", "info");
         return _responseHandler.Success("Invoice created successfully.");
     }
 
@@ -39,6 +43,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> GetInvoice(int id)
     {
         var invoice = await _invoiceService.GetInvoiceAsync(id);
+        _logger.Log($"Retrieved invoice with ID: {id}", "info");
         return _responseHandler.Success(invoice, "Invoice record retrieved successfully.");
     }
 
@@ -72,8 +77,9 @@ public class InvoiceController : ControllerBase
     [SwaggerResponse(404, "Invoice record not found.")]
     public async Task<IActionResult> UpdateInvoice(int id, [FromBody] InvoiceCreateRequest request)
     {
-        await _invoiceService.UpdateInvoiceAsync(id, request);
-        return _responseHandler.Success("Invoice updated successfully.");
+        var invoices = await _invoiceService.GetInvoicesByBookingAsync(id);
+        _logger.Log($"Retrieved invoices for booking ID: {id}", "info");
+        return _responseHandler.Success(invoices, "Invoices retrieved successfully.");
     }
 
     /// <summary>
@@ -89,6 +95,7 @@ public class InvoiceController : ControllerBase
     public async Task<IActionResult> DeleteInvoice(int id)
     {
         await _invoiceService.DeleteInvoiceAsync(id);
+        _logger.Log($"Deleted invoice with ID: {id}", "info");
         return _responseHandler.Success("Invoice deleted successfully.");
     }
 }

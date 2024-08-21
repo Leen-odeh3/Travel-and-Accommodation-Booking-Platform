@@ -1,23 +1,22 @@
-﻿using FluentAssertions;
-using HotelBookingPlatform.Domain.DTOs.Room;
-using Moq;
-
+﻿using HotelBookingPlatform.Domain.DTOs.Room;
 namespace HotelBookingPlatformAPI.Test.RoomControllerTests;
 public class RoomControllerTests
 {
-    private readonly RoomController _sut; // System Under Test
+    private readonly RoomController _sut;
     private readonly Mock<IRoomService> _mockRoomService;
-    private readonly Mock<IImageService> _mockImageService; // Add this line
+    private readonly Mock<IImageService> _mockImageService;
     private readonly Mock<IResponseHandler> _mockResponseHandler;
+    private readonly Mock<ILog> _mockLogger;
     private readonly Fixture _fixture;
 
     public RoomControllerTests()
     {
         _fixture = new Fixture();
         _mockRoomService = new Mock<IRoomService>();
-        _mockImageService = new Mock<IImageService>(); // Initialize the mock
+        _mockImageService = new Mock<IImageService>();
         _mockResponseHandler = new Mock<IResponseHandler>();
-        _sut = new RoomController(_mockRoomService.Object, _mockImageService.Object, _mockResponseHandler.Object);
+        _mockLogger = new Mock<ILog>();
+        _sut = new RoomController(_mockRoomService.Object, _mockImageService.Object, _mockResponseHandler.Object, _mockLogger.Object);
     }
 
     [Fact]
@@ -53,14 +52,42 @@ public class RoomControllerTests
         {
             StatusCode = StatusCodes.Status200OK,
             Succeeded = true,
-            Message = (string)null,
+            Message = "Room retrieved successfully.",
             Data = roomDto
         });
     }
 
+    [Fact]
+    public async Task GetAvailableRoomsWithNoBookings_ShouldReturnNotFound_WhenNoRoomsAvailable()
+    {
+        // Arrange
+        var roomClassId = 1;
 
-  
+        _mockRoomService.Setup(s => s.GetAvailableRoomsWithNoBookingsAsync(roomClassId))
+                        .ReturnsAsync(new List<RoomResponseDto>());
 
- 
+        _mockResponseHandler
+            .Setup(r => r.NotFound(It.IsAny<string>()))
+            .Returns((string message) =>
+                new NotFoundObjectResult(new
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Succeeded = false,
+                    Message = message,
+                    Data = (object)null
+                }));
+
+        var result = await _sut.GetAvailableRoomsWithNoBookings(roomClassId) as NotFoundObjectResult;
+
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(404);
+        result.Value.Should().BeEquivalentTo(new
+        {
+            StatusCode = StatusCodes.Status404NotFound,
+            Succeeded = false,
+            Message = "No available rooms found without bookings.",
+            Data = (object)null
+        });
+    }
 
 }

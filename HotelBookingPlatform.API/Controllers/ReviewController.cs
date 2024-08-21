@@ -6,11 +6,12 @@ public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;
     private readonly IResponseHandler _responseHandler;
-
-    public ReviewController(IReviewService reviewService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+    public ReviewController(IReviewService reviewService, IResponseHandler responseHandler, ILog logger)
     {
         _reviewService = reviewService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
     /// <summary>
     /// Creates a new review.
@@ -24,6 +25,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
     {
         await _reviewService.CreateReviewAsync(request);
+        _logger.Log($"Review created successfully with request: {@Request}","info");
         return _responseHandler.Created(request, "Review created successfully.");
     }
 
@@ -55,6 +57,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> UpdateReview(int id, [FromBody] ReviewCreateRequest request)
     {
         var review = await _reviewService.UpdateReviewAsync(id, request);
+        _logger.Log($"Review with ID {id} updated successfully with request: {@Request}","info");
         return _responseHandler.Success(review, "Review retrieved successfully.");
     }
     /// <summary>
@@ -68,6 +71,7 @@ public class ReviewController : ControllerBase
     public async Task<IActionResult> DeleteReview(int id)
     {
         await _reviewService.DeleteReviewAsync(id);
+        _logger.Log($"Review with ID {id} deleted successfully.","info");
         return _responseHandler.NoContent();
     }
 }
