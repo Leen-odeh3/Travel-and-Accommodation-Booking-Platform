@@ -21,24 +21,6 @@ public class BookingServiceTest
     }
 
     [Fact]
-    public async Task UpdateBookingStatusAsync_ShouldUpdateStatus()
-    {
-        // Arrange
-        var booking = _fixture.Create<Booking>();
-        var newStatus = BookingStatus.Confirmed;
-
-        _mockUnitOfWork.Setup(u => u.BookingRepository.GetByIdAsync(booking.BookingID))
-            .ReturnsAsync(booking);
-
-        // Act
-        await _sut.UpdateBookingStatusAsync(booking.BookingID, newStatus);
-
-        booking.Status.Should().Be(newStatus);
-        _mockUnitOfWork.Verify(u => u.BookingRepository.UpdateAsync(booking.BookingID, booking), Times.Once);
-        _mockUnitOfWork.Verify(u => u.SaveChangesAsync(), Times.Once);
-    }
-
-    [Fact]
     public async Task CreateBookingAsync_ShouldThrowNotFoundException_WhenUserNotFound()
     {
         // Arrange

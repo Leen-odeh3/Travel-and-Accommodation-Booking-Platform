@@ -1,17 +1,17 @@
 ﻿namespace HotelBookingPlatform.API.Controllers;
-
 [Route("api/[controller]")]
 [ApiController]
 public class HotelAmenitiesController : ControllerBase
 {
     private readonly IHotelAmenitiesService _hotelAmenitiesService;
-    public HotelAmenitiesController(IHotelAmenitiesService hotelAmenitiesService)
+    private readonly IResponseHandler _responseHandler;
+    public HotelAmenitiesController(IHotelAmenitiesService hotelAmenitiesService, IResponseHandler responseHandler)
     {
         _hotelAmenitiesService = hotelAmenitiesService;
+        _responseHandler = responseHandler;
     }
 
     [HttpGet("hotel-Amenities")]
-    [Authorize(Roles = "Admin,User")]
     [SwaggerOperation(Summary = "Retrieve amenities by hotel name with optional pagination.")]
     public async Task<IActionResult> GetAmenitiesByHotelName(
         [FromQuery] string name,
@@ -19,40 +19,29 @@ public class HotelAmenitiesController : ControllerBase
         [FromQuery] int pageNumber = 1)
     {
         var response = await _hotelAmenitiesService.GetAmenitiesByHotelNameAsync(name, pageSize, pageNumber);
-
-        return Ok(response);
+        return _responseHandler.Success(response, "Amenities retrieved successfully.");
     }
 
     [HttpGet("hotel-Amenities/all")]
-   // [Authorize(Roles = "Admin,User")]
     [SwaggerOperation(Summary = "Retrieve all amenities by hotel name.")]
     public async Task<IActionResult> GetAllAmenitiesByHotelName([FromQuery] string name)
     {
         var amenities = await _hotelAmenitiesService.GetAllAmenitiesByHotelNameAsync(name);
-
-        return Ok(amenities);
+        return _responseHandler.Success(amenities, "All amenities retrieved successfully.");
     }
 
-
-
-
     [HttpPut("{amenityId}")]
-    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Update a specific amenity by its ID.")]
     public async Task<IActionResult> UpdateAmenity(int amenityId, [FromBody] AmenityCreateRequest updateDto)
     {
         try
         {
             await _hotelAmenitiesService.UpdateAmenityAsync(amenityId, updateDto);
-            return Ok(new { message = "Amenity updated successfully." });
+            return _responseHandler.Success("Amenity updated successfully.");
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while processing your request." });
+            return _responseHandler.NotFound(ex.Message);
         }
     }
 

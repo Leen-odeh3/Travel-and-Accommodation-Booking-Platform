@@ -34,10 +34,11 @@ public class RoomService : BaseService<Room>, IRoomService
         if (existingRoom is null)
             throw new KeyNotFoundException("Room not found");
 
-        var room = _mapper.Map<Room>(request);
-        await _unitOfWork.RoomRepository.UpdateAsync(id, room);
+        _mapper.Map(request, existingRoom);
 
-        return _mapper.Map<RoomResponseDto>(room);
+        await _unitOfWork.RoomRepository.UpdateAsync(id,existingRoom);
+
+        return _mapper.Map<RoomResponseDto>(existingRoom);
     }
     public async Task DeleteRoomAsync(int id)
     {

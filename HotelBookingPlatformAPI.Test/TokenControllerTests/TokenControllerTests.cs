@@ -40,4 +40,19 @@ public class TokenControllerTests
         await act.Should().ThrowAsync<BadRequestException>()
             .WithMessage("Token is invalid or could not be revoked!");
     }
+
+    [Fact]
+    public async Task RevokeToken_ShouldReturnSuccess_WhenTokenIsRevokedSuccessfully()
+    {
+        var model = new RevokeToken { Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" };
+        _httpContextAccessorMock.Setup(a => a.HttpContext).Returns(_httpContext);
+        _tokenServiceMock.Setup(s => s.RevokeTokenAsync(model.Token)).ReturnsAsync(true);
+        _responseHandlerMock.Setup(r => r.Success("Token has been successfully revoked."))
+                            .Returns(new OkObjectResult("Token has been successfully revoked."));
+
+        var result = await _controller.RevokeToken(model);
+
+        result.Should().BeOfType<OkObjectResult>()
+              .Which.Value.Should().Be("Token has been successfully revoked.");
+    }
 }

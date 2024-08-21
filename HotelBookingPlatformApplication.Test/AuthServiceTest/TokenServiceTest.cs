@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatformApplication.Test.AuthServiceTest;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace HotelBookingPlatformApplication.Test.AuthServiceTest;
 public class TokenServiceTest
 {
     private readonly TokenService _tokenService;

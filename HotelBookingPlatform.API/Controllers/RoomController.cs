@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.Entities;
-
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomController : ControllerBase
@@ -8,12 +6,13 @@ public class RoomController : ControllerBase
     private readonly IRoomService _roomService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-
-    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler)
+    private readonly ILog _logger;
+    public RoomController(IRoomService roomService, IImageService imageService, IResponseHandler responseHandler, ILog logger)
     {
         _roomService = roomService;
         _imageService = imageService;
         _responseHandler = responseHandler;
+        _logger = logger;
     }
     /// <summary>
     /// Retrieves rooms within a specific price range.
@@ -31,7 +30,10 @@ public class RoomController : ControllerBase
     {
         var rooms = await _roomService.GetRoomsByPriceRangeAsync(minPrice, maxPrice);
         if (!rooms.Any())
+        {
+            _logger.Log($"No rooms found within the price range {minPrice} - {maxPrice}.", "warning");
             return _responseHandler.NotFound("No rooms found within the specified price range.");
+        }
 
         return _responseHandler.Success(rooms, "Rooms within the price range retrieved successfully.");
     }
@@ -40,7 +42,7 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> GetRoom(int id)
     {
         var room = await _roomService.GetRoomAsync(id);
-        return _responseHandler.Success(room);
+        return _responseHandler.Success(room, "Room retrieved successfully.");
     }
 
     [HttpPost("{roomId}/upload-image")]
@@ -49,13 +51,16 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> UploadRoomImage(int roomId, IFormFile file)
     {
         if (file.Length == 0)
+        {
+            _logger.Log("No file uploaded during room image upload.", "warning");
             return _responseHandler.BadRequest("No file uploaded.");
+        }
 
         var folderPath = $"rooms/{roomId}";
         var imageType = "Room";
         var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomId);
 
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId }, "Room added successfully to the room class.");
     }
 
 
@@ -78,7 +83,7 @@ public class RoomController : ControllerBase
         if (!roomImages.Any())
             return _responseHandler.NotFound("No images found for the specified room.");
 
-        return _responseHandler.Success(roomImages);
+        return _responseHandler.Success(roomImages, "Rooms retrieved successfully for the room class.");
     }
 
 
@@ -98,7 +103,10 @@ public class RoomController : ControllerBase
         var rooms = await _roomService.GetAvailableRoomsWithNoBookingsAsync(roomClassId);
 
         if (!rooms.Any())
+        {
+            _logger.Log($"No available rooms found without bookings for room class ID {roomClassId}.", "warning");
             return _responseHandler.NotFound("No available rooms found without bookings.");
+        }
 
         return _responseHandler.Success(rooms, "Available rooms with no bookings retrieved successfully.");
     }

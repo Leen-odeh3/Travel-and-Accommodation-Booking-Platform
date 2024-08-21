@@ -131,7 +131,14 @@ public class HotelController : ControllerBase
         var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Hotels", hotelId);
 
         _logger.Log($"Image uploaded for hotel ID: {hotelId}, URL: {uploadResult.SecureUri}", "info");
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+
+        var response = new
+        {
+            Url = uploadResult.SecureUri.ToString(),
+            PublicId = uploadResult.PublicId
+        };
+
+        return _responseHandler.Success(response, "Image uploaded successfully for the hotel.");
     }
 
 
@@ -148,14 +155,20 @@ public class HotelController : ControllerBase
     [SwaggerOperation(Summary = "Retrieve all images associated with a specific hotel.")]
     public async Task<IActionResult> GetImagesForCity(int hotelId)
     {
-        var allCityImages = await _imageService.GetImagesByTypeAsync("Hotels");
+        var hotelImages = await _imageService.GetImagesByTypeAsync("Hotels");
 
-        var cityImages = allCityImages.Where(img => img.EntityId == hotelId);
+        var Images = hotelImages.Where(img => img.EntityId == hotelId);
 
-        if (!cityImages.Any())
+        if (!Images.Any())
             return _responseHandler.NotFound("No images found for the specified city.");
 
-        return _responseHandler.Success(cityImages);
+        var response = new
+        {
+            Images = hotelImages,
+            Message = "Images retrieved successfully for the hotel."
+        };
+
+        return _responseHandler.Success(response,"Images retrieved successfully for the hotel.");
     }
 }
 

@@ -1,8 +1,10 @@
+using Serilog;
 namespace HotelBookingPlatform.API;
 public class Program
 {
     public static void Main(string[] args)
     {
+        SerilogConfiguration.ConfigureLogger();
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddEndpointsApiExplorer();
@@ -11,6 +13,7 @@ public class Program
                         .AddPresentationDependencies(builder.Configuration)
                         .AddInfrastructureDependencies().AddSwaggerDocumentation().AddCloudinary(builder.Configuration);
 
+        builder.Host.UseSerilog();
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
