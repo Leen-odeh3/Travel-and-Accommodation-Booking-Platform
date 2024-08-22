@@ -1,20 +1,18 @@
-﻿using FluentAssertions;
+﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
 using HotelBookingPlatform.Domain.DTOs.City;
-using HotelBookingPlatform.Domain.DTOs.HomePage;
 namespace HotelBookingPlatformApplication.Test.HomePageControllerTests;
 public class HomePageControllerTests
 {
     private readonly HomePageController _sut;
     private readonly Mock<ICityService> _mockCityService;
-    private readonly Mock<IHotelService> _mockHotelService;
+    private readonly Mock<IHotelSearchService> _mockHotelService;
     private readonly Mock<IRoomService> _mockRoomService;
     private readonly Fixture _fixture;
-
     public HomePageControllerTests()
     {
         _fixture = new Fixture();
         _mockCityService = new Mock<ICityService>();
-        _mockHotelService = new Mock<IHotelService>();
+        _mockHotelService = new Mock<IHotelSearchService>();
         _mockRoomService = new Mock<IRoomService>();
         _sut = new HomePageController(_mockCityService.Object, _mockHotelService.Object, _mockRoomService.Object);
     }

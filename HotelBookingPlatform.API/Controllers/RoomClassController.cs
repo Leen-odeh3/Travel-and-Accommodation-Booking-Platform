@@ -1,14 +1,24 @@
-﻿namespace HotelBookingPlatform.API.Controllers;
+﻿using HotelBookingPlatform.Application.Core.Abstracts.RoomClassManagementService;
+namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RoomClassController : ControllerBase
 {
     private readonly IRoomClassService _roomClassService;
+    private readonly IRoomManagementService _roomManagementService;
+    private readonly IAmenityManagementService _amenityManagementService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
-    public RoomClassController(IRoomClassService roomClassService, IImageService imageService, IResponseHandler responseHandler)
+    public RoomClassController(
+        IRoomClassService roomClassService,
+        IRoomManagementService roomManagementService,
+        IAmenityManagementService amenityManagementService,
+        IImageService imageService,
+        IResponseHandler responseHandler)
     {
         _roomClassService = roomClassService;
+        _roomManagementService = roomManagementService;
+        _amenityManagementService = amenityManagementService;
         _imageService = imageService;
         _responseHandler = responseHandler;
     }
@@ -44,7 +54,7 @@ public class RoomClassController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddAmenityToRoomClass(int roomClassId, [FromBody] AmenityCreateDto request)
     {
-        var addedAmenity = await _roomClassService.AddAmenityToRoomClassAsync(roomClassId, request);
+        var addedAmenity = await _amenityManagementService.AddAmenityToRoomClassAsync(roomClassId, request);
         return _responseHandler.Created(addedAmenity, "Amenity added successfully to the room class.");
     }
 
@@ -52,14 +62,14 @@ public class RoomClassController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenityFromRoomClass(int roomClassId, int amenityId)
     {
-        await _roomClassService.DeleteAmenityFromRoomClassAsync(roomClassId, amenityId);
+        await _amenityManagementService.DeleteAmenityFromRoomClassAsync(roomClassId, amenityId);
         return _responseHandler.NoContent("Room class deleted successfully.");
     }
 
     [HttpGet("{roomClassId}/amenities")]
     public async Task<IActionResult> GetAmenitiesByRoomClassId(int roomClassId)
     {
-        var amenities = await _roomClassService.GetAmenitiesByRoomClassIdAsync(roomClassId);
+        var amenities = await _amenityManagementService.GetAmenitiesByRoomClassIdAsync(roomClassId);
         return _responseHandler.Success(amenities, "Amenities retrieved successfully for the room class.");
     }
 
@@ -70,7 +80,7 @@ public class RoomClassController : ControllerBase
         )]
     public async Task<IActionResult> AddRoomToRoomClass(int roomClassId, [FromBody] RoomCreateRequest request)
     {
-        var roomDto = await _roomClassService.AddRoomToRoomClassAsync(roomClassId, request);
+        var roomDto = await _roomManagementService.AddRoomToRoomClassAsync(roomClassId, request);
         return _responseHandler.Created(roomDto, "Room added successfully.");
     }
 
@@ -81,10 +91,9 @@ public class RoomClassController : ControllerBase
 )]
     public async Task<IActionResult> GetRoomsByRoomClassId(int roomClassId)
     {
-        var rooms = await _roomClassService.GetRoomsByRoomClassIdAsync(roomClassId);
-        return _responseHandler.Success(rooms,"Rooms retrieved successfully for the hotel.");
+        var rooms = await _roomManagementService.GetRoomsByRoomClassIdAsync(roomClassId);
+        return _responseHandler.Success(rooms, "Rooms retrieved successfully for the room class.");
     }
-
 
     [HttpDelete("{roomClassId}/rooms/{roomId}")]
     [Authorize(Roles = "Admin")]
@@ -94,10 +103,10 @@ public class RoomClassController : ControllerBase
     )]
     public async Task<IActionResult> DeleteRoomFromRoomClass(int roomClassId, int roomId)
     {
-        await _roomClassService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
+        await _roomManagementService.DeleteRoomFromRoomClassAsync(roomClassId, roomId);
         return _responseHandler.NoContent("Room deleted successfully.");
-
     }
+
     [HttpPost("{roomClassId}/upload-image")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific room class.")]
@@ -133,8 +142,7 @@ public class RoomClassController : ControllerBase
         if (!roomClassImages.Any())
             return _responseHandler.NotFound("No images found for the specified room class.");
 
-        return _responseHandler.Success(roomClassImages,"Images retrieved successfully for the room class."
-);
+        return _responseHandler.Success(roomClassImages, "Images retrieved successfully for the room class.");
     }
 }
 

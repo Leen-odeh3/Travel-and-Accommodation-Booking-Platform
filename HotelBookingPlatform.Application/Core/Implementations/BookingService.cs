@@ -17,7 +17,6 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         return bookingDto;
     }
-
     public async Task<BookingDto> CreateBookingAsync(BookingCreateRequest request, string email)
     {
         var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
@@ -36,7 +35,7 @@ public class BookingService : BaseService<Booking>, IBookingService
             User = user,
             confirmationNumber = GenerateConfirmationNumber(),
             TotalPrice = totalPrice,
-            AfterDiscountedPrice = discountedTotalPrice, 
+            AfterDiscountedPrice = discountedTotalPrice,
             BookingDateUtc = DateTime.UtcNow,
             PaymentMethod = request.PaymentMethod,
             Hotel = await _unitOfWork.HotelRepository.GetByIdAsync(request.HotelId),
@@ -74,7 +73,6 @@ public class BookingService : BaseService<Booking>, IBookingService
         await _unitOfWork.BookingRepository.UpdateBookingStatusAsync(bookingId, newStatus);
         await _unitOfWork.SaveChangesAsync();
     }
-
     private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
         decimal totalPrice = 0m;
@@ -120,7 +118,6 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         return totalPrice;
     }
-
 
     public string GenerateConfirmationNumber()
     {

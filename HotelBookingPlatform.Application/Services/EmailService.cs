@@ -75,7 +75,9 @@ public class EmailService : IEmailService
                     <p><strong>Check-In Date:</strong> {confirmation.CheckInDate:yyyy-MM-dd HH:mm:ss}</p>
                     <p><strong>Check-Out Date:</strong> {confirmation.CheckOutDate:yyyy-MM-dd HH:mm:ss}</p>
                     <p><strong>Total Price:</strong> {confirmation.TotalPrice:C}</p>
+                    <p><strong>User Email:</strong> {confirmation.AfterDiscountedPrice:C}</p>                
                     <p><strong>User Email:</strong> {confirmation.UserEmail}</p>
+
                     <p>Thank you for booking with us!</p>
                 </body>
                 </html>";

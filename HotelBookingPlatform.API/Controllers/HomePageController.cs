@@ -1,15 +1,16 @@
-﻿namespace HotelBookingPlatform.API.Controllers;
+﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
+namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class HomePageController : ControllerBase
 {
     private readonly ICityService _cityService;
-    private readonly IHotelService _hotelService;
+    private readonly IHotelSearchService _HotelSearchService;
     private readonly IRoomService _roomService;
-    public HomePageController(ICityService cityService, IHotelService hotelService, IRoomService roomService)
+    public HomePageController(ICityService cityService, IHotelSearchService hotelService, IRoomService roomService)
     {
         _cityService = cityService;
-        _hotelService = hotelService;
+        _HotelSearchService = hotelService;
         _roomService = roomService;
     }
     /// <summary>
@@ -41,7 +42,7 @@ public class HomePageController : ControllerBase
     )]
     public async Task<ActionResult<SearchResultsDto>> Search([FromQuery] SearchRequestDto request)
     {
-        var searchResults = await _hotelService.SearchHotelsAsync(request);
+        var searchResults = await _HotelSearchService.SearchHotelsAsync(request);
 
         if (searchResults.Hotels is null || !searchResults.Hotels.Any())
         {
