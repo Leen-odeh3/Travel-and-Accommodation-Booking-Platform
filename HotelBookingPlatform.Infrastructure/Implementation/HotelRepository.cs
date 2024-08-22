@@ -54,6 +54,21 @@ public class HotelRepository : GenericRepository<Hotel>, IHotelRepository
         return await query.ToListAsync();
     }
 
+    public async Task<IEnumerable<Hotel>> GetAllAsyncPagenation(Expression<Func<Hotel, bool>> filter = null, int pageSize = 10, int pageNumber = 1)
+    {
+        if (pageSize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");
+
+        if (pageNumber <= 0)
+            throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than zero.");
+        IQueryable<Hotel> query = GetHotelsWithIncludes();
+
+        if (filter is not null)
+            query = query.Where(filter);
+
+        return await PaginateHotelsAsync(query, pageSize, pageNumber);
+    }
+
     public async Task<Hotel> GetHotelWithRoomClassesAndRoomsAsync(int hotelId)
     {
         return await _appDbContext.Hotels

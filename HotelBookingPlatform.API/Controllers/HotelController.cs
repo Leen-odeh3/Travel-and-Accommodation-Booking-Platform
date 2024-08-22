@@ -33,22 +33,6 @@ public class HotelController : ControllerBase
             _hotelRoomService= hotelRoomService;
         }
 
-
-        // GET: api/Hotel
-        [HttpGet]
-    [ResponseCache(CacheProfileName = "DefaultCache")]
-    [SwaggerOperation(Summary = "Get a list of hotels", Description = "Retrieves a list of hotels based on optional filters and pagination.")]
-    public async Task<IActionResult> GetHotels(
-        [FromQuery] string hotelName,
-        [FromQuery] string description,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] int pageNumber = 1)
-    {
-        _logger.Log("Fetching hotels list", "info");
-        var hotels = await _hotelSearchService.GetHotels(hotelName, description, pageSize, pageNumber);
-        return _responseHandler.Success(hotels);
-    }
-
     // GET: api/Hotel/5
     [HttpGet("{id}")]
     [ResponseCache(CacheProfileName = "DefaultCache")]
