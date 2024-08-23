@@ -110,7 +110,6 @@ public class CityServiceTest
     [Fact]
     public async Task DeleteAsync_ShouldCallDeleteMethod()
     {
-        // Arrange
         var cityId = 1;
 
         _unitOfWorkMock.Setup(u => u.CityRepository.GetByIdAsync(cityId)).ReturnsAsync(_fixture.Create<City>());
@@ -120,25 +119,6 @@ public class CityServiceTest
 
         // Assert
         _unitOfWorkMock.Verify(u => u.CityRepository.DeleteAsync(cityId), Times.Once);
-    }
-
-    [Fact]
-    public async Task GetHotelsForCityAsync_ShouldReturnHotelBasicResponseDtos()
-    {
-        // Arrange
-        var cityId = 1;
-        var hotels = _fixture.CreateMany<Hotel>(5).ToList();
-        var hotelBasicResponseDtos = _fixture.CreateMany<HotelBasicResponseDto>(5).ToList();
-
-        _unitOfWorkMock.Setup(u => u.HotelRepository.GetHotelsForCityAsync(cityId)).ReturnsAsync(hotels);
-        _mapperMock.Setup(m => m.Map<IEnumerable<HotelBasicResponseDto>>(hotels)).Returns(hotelBasicResponseDtos);
-
-        // Act
-        var result = await _cityService.GetHotelsForCityAsync(cityId);
-
-        // Assert
-        result.Should().BeEquivalentTo(hotelBasicResponseDtos);
-        _unitOfWorkMock.Verify(u => u.HotelRepository.GetHotelsForCityAsync(cityId), Times.Once);
     }
 
 }

@@ -52,4 +52,5 @@ public class HotelManagementService : IHotelManagementService
         await _unitOfWork.HotelRepository.DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
+
 }

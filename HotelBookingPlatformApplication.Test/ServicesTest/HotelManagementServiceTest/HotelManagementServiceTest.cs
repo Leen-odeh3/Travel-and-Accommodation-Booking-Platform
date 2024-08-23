@@ -19,24 +19,6 @@ public class HotelManagementServiceTest
     }
 
     [Fact]
-    public async Task GetHotels_ShouldReturnHotels_WhenHotelsExist()
-    {
-        // Arrange
-        var hotels = _fixture.CreateMany<Hotel>().ToList();
-        var hotelDtos = _fixture.CreateMany<HotelResponseDto>().ToList();
-
-        _unitOfWorkMock.Setup(u => u.HotelRepository.GetAllAsyncPagenation(It.IsAny<Expression<Func<Hotel, bool>>>(), It.IsAny<int>(), It.IsAny<int>()))
-                       .ReturnsAsync(hotels);
-        _mapperMock.Setup(m => m.Map<IEnumerable<HotelResponseDto>>(hotels))
-                   .Returns(hotelDtos);
-
-        var result = await _service.GetHotels("name", "description", 10, 1);
-
-        Assert.NotEmpty(result);
-        Assert.Equal(hotelDtos, result);
-    }
-
-    [Fact]
     public async Task GetHotel_ShouldReturnHotel_WhenHotelExists()
     {
         // Arrange

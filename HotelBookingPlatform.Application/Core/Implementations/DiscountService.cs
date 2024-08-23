@@ -1,4 +1,5 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿
+namespace HotelBookingPlatform.Application.Core.Implementations;
 public class DiscountService : BaseService<Discount>, IDiscountService
 {
     public DiscountService(IUnitOfWork<Discount> unitOfWork, IMapper mapper)
@@ -89,17 +90,13 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         return _mapper.Map<DiscountDto>(discount);
     }
 
-    public async Task<List<DiscountDto>> GetRoomsWithHighestDiscountsAsync(int topN)
+    public async Task<List<DiscountDto>> GetTopDiscountsAsync(int topN)
     {
         var now = DateTime.UtcNow;
 
-        var discounts = await _unitOfWork.DiscountRepository
-            .GetAllAsync(query => query
-                .Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now)
-                .OrderByDescending(d => d.Percentage)
-                .Take(topN));
-
+        var discounts = await _unitOfWork.DiscountRepository.GetTopDiscountsAsync(topN, now);
         var discountDtos = _mapper.Map<List<DiscountDto>>(discounts);
+
         foreach (var dto in discountDtos)
         {
             dto.IsActive = CalculateIsActive(dto.StartDateUtc, dto.EndDateUtc);
@@ -113,4 +110,5 @@ public class DiscountService : BaseService<Discount>, IDiscountService
         var now = DateTime.UtcNow;
         return now >= startDateUtc && now <= endDateUtc;
     }
+ 
 }

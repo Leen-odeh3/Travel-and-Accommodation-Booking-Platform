@@ -1,5 +1,6 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
 using HotelBookingPlatform.Application.Core.Abstracts.IHotelManagementService;
+using HotelBookingPlatform.Application.Core.Abstracts.RoomClassManagementService;
 namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -13,15 +14,17 @@ public class HotelController : ControllerBase
         private readonly IResponseHandler _responseHandler;
         private readonly IHotelRoomService _hotelRoomService;
         private readonly ILog _logger;
+        private readonly IRoomClassService _roomClassService;
 
-        public HotelController(
+
+    public HotelController(
             IHotelManagementService hotelManagementService,
             IHotelSearchService hotelSearchService,
             IHotelAmenityService hotelAmenityService,
             IHotelReviewService hotelReviewService,
             IImageService imageService,
             IResponseHandler responseHandler,
-            ILog logger,IHotelRoomService hotelRoomService)
+            ILog logger,IHotelRoomService hotelRoomService,IRoomClassService roomClassService)
         {
             _hotelManagementService = hotelManagementService;
             _hotelSearchService = hotelSearchService;
@@ -31,7 +34,8 @@ public class HotelController : ControllerBase
             _responseHandler = responseHandler;
             _logger = logger;
             _hotelRoomService= hotelRoomService;
-        }
+            _roomClassService = roomClassService;
+    } 
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]
@@ -40,7 +44,7 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> GetHotel(int id)
     {
         var hotel = await _hotelManagementService.GetHotel(id);
-        return _responseHandler.Success(hotel);
+        return _responseHandler.Success(hotel, "Hotel Retrieved successfully.");
     }
 
     // PUT: api/Hotel/5
@@ -50,7 +54,7 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> UpdateHotel(int id, [FromBody] HotelResponseDto request)
     {
         var updatedHotel = await _hotelManagementService.UpdateHotelAsync(id, request);
-        return _responseHandler.Success(updatedHotel);
+        return _responseHandler.Success(updatedHotel, "Update successfully.");
     }
 
     // DELETE: api/Hotel/5
@@ -83,7 +87,7 @@ public class HotelController : ControllerBase
     {
         _logger.Log($"Fetching rooms for hotel with ID {hotelId}", "info");
         var rooms = _hotelRoomService.GetRoomsByHotelIdAsync(hotelId);
-        return _responseHandler.Success(rooms);
+        return _responseHandler.Success(rooms, "Retrieved successfully.");
     }
 
     [HttpPost("{hotelId}/amenities")]
@@ -101,7 +105,7 @@ public class HotelController : ControllerBase
     {
         _logger.Log($"Fetching amenities for hotel with ID {hotelId}", "info");
         var amenities = await _hotelAmenityService.GetAmenitiesByHotelIdAsync(hotelId);
-        return _responseHandler.Success(amenities);
+        return _responseHandler.Success(amenities, "Amenity Retrieved successfully.");
     }
 
     [HttpDelete("{hotelId}/amenities/{amenityId}")]
@@ -172,6 +176,24 @@ public class HotelController : ControllerBase
         };
 
         return _responseHandler.Success(response,"Images retrieved successfully for the hotel.");
+    }
+
+
+    [HttpPost("{hotelId}/roomclasses")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Add a RoomClass to a specific hotel.")]
+    public async Task<IActionResult> AddRoomClassToHotel(int hotelId, [FromBody] RoomClassRequestDto request)
+    {    
+        var roomClassDto = await _roomClassService.CreateRoomClass(request);
+        return _responseHandler.Created(roomClassDto, "RoomClass added successfully.");
+    }
+
+    [HttpGet("{hotelId}/roomclasses")]
+    [SwaggerOperation(Summary = "Retrieve all RoomClasses for a specific hotel.")]
+    public async Task<IActionResult> GetRoomClassesByHotelId(int hotelId)
+    {
+        var roomClassesDto = await _roomClassService.GetRoomClassesByHotelId(hotelId);
+        return _responseHandler.Success(roomClassesDto, "Room classes retrieved successfully.");
     }
 }
 

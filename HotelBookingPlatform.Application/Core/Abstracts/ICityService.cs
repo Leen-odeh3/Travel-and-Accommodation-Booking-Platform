@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Domain.DTOs.City;
-using HotelBookingPlatform.Domain.DTOs.Hotel;
-namespace HotelBookingPlatform.Application.Core.Abstracts;
+﻿namespace HotelBookingPlatform.Application.Core.Abstracts;
 public interface ICityService
 {
     Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber);
@@ -9,7 +7,5 @@ public interface ICityService
     Task DeleteAsync(int id);
     Task<CityResponseDto> AddCityAsync(CityCreateRequest request);
     Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount);
-    Task<IEnumerable<HotelBasicResponseDto>> GetHotelsForCityAsync(int cityId);
-    Task AddHotelToCityAsync(int cityId, HotelCreateRequest hotelRequest);
-    Task DeleteHotelFromCityAsync(int cityId, int hotelId);
+
 }

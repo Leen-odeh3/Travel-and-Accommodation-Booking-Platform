@@ -33,7 +33,7 @@ public class BookingService : BaseService<Booking>, IBookingService
         {
             UserId = user.Id,
             User = user,
-            confirmationNumber = GenerateConfirmationNumber(),
+            confirmationNumber = GenerateConfirmNumber.GenerateConfirmationNumber(),
             TotalPrice = totalPrice,
             AfterDiscountedPrice = discountedTotalPrice,
             BookingDateUtc = DateTime.UtcNow,
@@ -49,9 +49,7 @@ public class BookingService : BaseService<Booking>, IBookingService
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
             if (room is not null)
-            {
                 booking.Rooms.Add(room);
-            }
         }
 
         await _unitOfWork.BookingRepository.CreateAsync(booking);
@@ -117,11 +115,6 @@ public class BookingService : BaseService<Booking>, IBookingService
         }
 
         return totalPrice;
-    }
-
-    public string GenerateConfirmationNumber()
-    {
-        return Guid.NewGuid().ToString();
     }
 }
 

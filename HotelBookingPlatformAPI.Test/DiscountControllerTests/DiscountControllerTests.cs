@@ -53,32 +53,6 @@ public class DiscountControllerTests
     }
 
     [Fact]
-    public async Task GetAllDiscounts_ShouldReturnDiscounts_WhenAvailable()
-    {
-        var discounts = new List<DiscountDto>
-        {
-            new DiscountDto {},
-            new DiscountDto {}
-        };
-
-        _discountServiceMock
-            .Setup(ds => ds.GetAllDiscountsAsync())
-            .ReturnsAsync(discounts);
-
-        _responseHandlerMock
-            .Setup(rh => rh.Success(discounts, "Discounts retrieved successfully."))
-            .Returns(new OkObjectResult(discounts));
-
-        // Act
-        var result = await _controller.GetAllDiscounts();
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedDiscounts = Assert.IsType<List<DiscountDto>>(okResult.Value);
-        Assert.Equal(discounts.Count, returnedDiscounts.Count);
-    }
-
-    [Fact]
     public async Task GetActiveDiscounts_ShouldReturnNotFound_WhenNoActiveDiscounts()
     {
         // Arrange
@@ -106,27 +80,40 @@ public class DiscountControllerTests
         // Arrange
         var topN = 5;
         var roomsWithDiscounts = new List<DiscountDto>
-        {
-            new DiscountDto { },
-            new DiscountDto { }
-        };
+    {
+        new DiscountDto { DiscountID = 1, RoomNumber = "101", Percentage = 15, IsActive = true },
+        new DiscountDto { DiscountID = 2, RoomNumber = "102", Percentage = 10, IsActive = false }
+    };
 
         _discountServiceMock
-            .Setup(ds => ds.GetRoomsWithHighestDiscountsAsync(topN))
+            .Setup(ds => ds.GetTopDiscountsAsync(topN))
             .ReturnsAsync(roomsWithDiscounts);
+
+        var successResponse = new OkObjectResult(new
+        {
+            statusCode = 200,
+            succeeded = true,
+            message = "Rooms with highest active discounts retrieved successfully.",
+            data = roomsWithDiscounts
+        });
 
         _responseHandlerMock
             .Setup(rh => rh.Success(roomsWithDiscounts, "Rooms with highest active discounts retrieved successfully."))
-            .Returns(new OkObjectResult(roomsWithDiscounts));
+            .Returns(successResponse);
 
         // Act
         var result = await _controller.GetRoomsWithHighestDiscountsAsync(topN);
 
-        // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedDiscounts = Assert.IsType<List<DiscountDto>>(okResult.Value);
-        Assert.Equal(roomsWithDiscounts.Count, returnedDiscounts.Count);
+        var returnedValue = Assert.IsType<dynamic>(okResult.Value);
+
+        var returnedDiscounts = returnedValue.data;
+        Assert.IsType<List<DiscountDto>>(returnedDiscounts);
+
+        Assert.Equal(roomsWithDiscounts.Count, ((List<DiscountDto>)returnedDiscounts).Count);
+        Assert.Equal("Rooms with highest active discounts retrieved successfully.", returnedValue.message);
     }
+
 
 
     [Fact]

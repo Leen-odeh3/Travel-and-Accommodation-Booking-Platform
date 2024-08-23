@@ -17,7 +17,7 @@ public static class ModuleApplicationDependencies
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
 
-
+        services.AddScoped<ICityHotelService, CityHotelService>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IDiscountService, DiscountService>();
