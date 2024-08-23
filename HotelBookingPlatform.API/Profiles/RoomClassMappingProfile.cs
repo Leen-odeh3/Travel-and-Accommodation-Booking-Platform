@@ -17,5 +17,8 @@ public class RoomClassMappingProfile :Profile
             .ForMember(dest => dest.Rooms, opt => opt.Ignore())
             .ForMember(dest => dest.Discounts, opt => opt.Ignore()) 
             .ForMember(dest => dest.Amenities, opt => opt.Ignore());
+
+        CreateMap<RoomCreateRequest, Room>();
     }
 }
+

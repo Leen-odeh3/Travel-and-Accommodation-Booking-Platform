@@ -4,7 +4,9 @@ public class HotelReviewServiceTest
 {
     private readonly IFixture _fixture;
     private readonly Mock<IUnitOfWork<Review>> _unitOfWorkMock;
+    private readonly Mock<IUnitOfWork<Hotel>> _hotelUnitOfWorkMock;
     private readonly HotelReviewService _service;
+
     public HotelReviewServiceTest()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
@@ -14,7 +16,8 @@ public class HotelReviewServiceTest
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _unitOfWorkMock = _fixture.Freeze<Mock<IUnitOfWork<Review>>>();
-        _service = new HotelReviewService(_unitOfWorkMock.Object);
+        _hotelUnitOfWorkMock = _fixture.Freeze<Mock<IUnitOfWork<Hotel>>>();
+        _service = new HotelReviewService(_unitOfWorkMock.Object, _hotelUnitOfWorkMock.Object);
     }
 
     [Fact]
@@ -27,8 +30,6 @@ public class HotelReviewServiceTest
                        .ReturnsAsync(reviews);
 
         var expectedAverageRating = reviews.Average(r => r.Rating);
-
-        // Act
         var result = await _service.GetHotelReviewRatingAsync(hotelId);
 
         // Assert
@@ -55,13 +56,11 @@ public class HotelReviewServiceTest
     public async Task GetHotelReviewRatingAsync_ShouldThrowArgumentException_WhenHotelIdIsInvalid()
     {
         // Arrange
-        var hotelId = -1; 
-        var reviews = new List<Review>();
+        var invalidHotelId = -1; // Invalid hotel ID
 
-        _unitOfWorkMock.Setup(u => u.ReviewRepository.GetReviewsByHotelIdAsync(hotelId))
-                       .ReturnsAsync(reviews);
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.GetHotelReviewRatingAsync(hotelId));
-        Assert.Equal("ID must be greater than zero.", exception.Message);
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.GetHotelReviewRatingAsync(invalidHotelId));
+        Assert.Equal("ID must be greater than zero. (Parameter 'hotelId')", exception.Message);
     }
 
 }

@@ -14,7 +14,7 @@ public class RoomManagementService : IRoomManagementService
     public async Task<RoomResponseDto> AddRoomToRoomClassAsync(int roomClassId, RoomCreateRequest request)
     {
         var roomClass = await _unitOfWork.RoomClasseRepository.GetByIdAsync(roomClassId);
-        if (roomClass == null)
+        if (roomClass is null)
             throw new NotFoundException("Room class not found.");
 
         var room = _mapper.Map<Room>(request);

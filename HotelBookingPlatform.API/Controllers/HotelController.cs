@@ -1,7 +1,4 @@
-﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
-using HotelBookingPlatform.Application.Core.Abstracts.IHotelManagementService;
-using HotelBookingPlatform.Application.Core.Abstracts.RoomClassManagementService;
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class HotelController : ControllerBase
@@ -15,8 +12,6 @@ public class HotelController : ControllerBase
         private readonly IHotelRoomService _hotelRoomService;
         private readonly ILog _logger;
         private readonly IRoomClassService _roomClassService;
-
-
     public HotelController(
             IHotelManagementService hotelManagementService,
             IHotelSearchService hotelSearchService,
@@ -25,17 +20,17 @@ public class HotelController : ControllerBase
             IImageService imageService,
             IResponseHandler responseHandler,
             ILog logger,IHotelRoomService hotelRoomService,IRoomClassService roomClassService)
-        {
-            _hotelManagementService = hotelManagementService;
-            _hotelSearchService = hotelSearchService;
-            _hotelAmenityService = hotelAmenityService;
-            _hotelReviewService = hotelReviewService;
-            _imageService = imageService;
-            _responseHandler = responseHandler;
-            _logger = logger;
-            _hotelRoomService= hotelRoomService;
-            _roomClassService = roomClassService;
-    } 
+    {
+        _hotelManagementService = hotelManagementService ?? throw new ArgumentNullException(nameof(hotelManagementService));
+        _hotelSearchService = hotelSearchService ?? throw new ArgumentNullException(nameof(hotelSearchService));
+        _hotelAmenityService = hotelAmenityService ?? throw new ArgumentNullException(nameof(hotelAmenityService));
+        _hotelReviewService = hotelReviewService ?? throw new ArgumentNullException(nameof(hotelReviewService));
+        _imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+        _responseHandler = responseHandler ?? throw new ArgumentNullException(nameof(responseHandler));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _hotelRoomService = hotelRoomService ?? throw new ArgumentNullException(nameof(hotelRoomService));
+        _roomClassService = roomClassService ?? throw new ArgumentNullException(nameof(roomClassService));
+    }
 
     // GET: api/Hotel/5
     [HttpGet("{id}")]
@@ -87,7 +82,7 @@ public class HotelController : ControllerBase
     {
         _logger.Log($"Fetching rooms for hotel with ID {hotelId}", "info");
         var rooms = _hotelRoomService.GetRoomsByHotelIdAsync(hotelId);
-        return _responseHandler.Success(rooms, "Retrieved successfully.");
+        return _responseHandler.Success(rooms, "Rooms retrieved successfully.");
     }
 
     [HttpPost("{hotelId}/amenities")]

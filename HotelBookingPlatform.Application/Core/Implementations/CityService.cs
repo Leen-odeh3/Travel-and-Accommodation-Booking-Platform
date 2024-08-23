@@ -12,7 +12,6 @@ public class CityService : BaseService<City>, ICityService
     {
         var city = _mapper.Map<City>(request);
         await _unitOfWork.CityRepository.CreateAsync(city);
-
         return _mapper.Map<CityResponseDto>(city);
     }
     public async Task<IEnumerable<CityResponseDto>> GetCities(string cityName, string description, int pageSize, int pageNumber)
@@ -31,13 +30,15 @@ public class CityService : BaseService<City>, ICityService
                           (!string.IsNullOrEmpty(description) && c.Description.Contains(description));
         }
         var cities = await _unitOfWork.CityRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
+
+        if (cities is null || !cities.Any())
+            throw new NotFoundException("No cities found.");
+
         foreach (var city in cities)
         {
             city.VisitCount += 1;
             await _unitOfWork.CityRepository.UpdateAsync(city.CityID, city);
         }
-        if (cities is null || !cities.Any())
-            throw new NotFoundException("No Cities Found");
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);
     }
@@ -63,6 +64,8 @@ public class CityService : BaseService<City>, ICityService
     {
         var existingCity = await _unitOfWork.CityRepository.GetByIdAsync(id);
 
+        if (existingCity is null)
+            throw new NotFoundException($"City with ID {id} not found.");
         var city = _mapper.Map(request, existingCity);
         await _unitOfWork.CityRepository.UpdateAsync(id, city);
 
@@ -72,13 +75,16 @@ public class CityService : BaseService<City>, ICityService
     {
         var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
 
+        if (city is null)
+            throw new NotFoundException($"City with ID {id} not found.");
+
         await _unitOfWork.CityRepository.DeleteAsync(id);
     }
     public async Task<IEnumerable<CityResponseDto>> GetTopVisitedCitiesAsync(int topCount)
     {
         var cities = await _unitOfWork.CityRepository.GetTopVisitedCitiesAsync(topCount);
 
-        if (!cities.Any())
+        if (cities is null || !cities.Any())
             throw new NotFoundException("No cities found.");
 
         return _mapper.Map<IEnumerable<CityResponseDto>>(cities);

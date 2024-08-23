@@ -33,7 +33,7 @@ public class BookingService : BaseService<Booking>, IBookingService
         {
             UserId = user.Id,
             User = user,
-            confirmationNumber = GenerateConfirmNumber.GenerateConfirmationNumber(),
+            confirmationNumber = GenerateConfirmationNumber(),
             TotalPrice = totalPrice,
             AfterDiscountedPrice = discountedTotalPrice,
             BookingDateUtc = DateTime.UtcNow,
@@ -103,18 +103,27 @@ public class BookingService : BaseService<Booking>, IBookingService
             if (room is not null)
             {
                 decimal roomPrice = room.PricePerNight * numberOfNights;
+                Console.WriteLine($"Room ID: {roomId}, Original Price: {roomPrice}");
 
                 if (discount is not null)
                 {
-                    decimal discountAmount = (discount.Percentage / 100) * roomPrice;
-                    roomPrice -= discountAmount;
+                    if (checkInDate >= discount.StartDateUtc && checkOutDate <= discount.EndDateUtc)
+                    {
+                        decimal discountAmount = (discount.Percentage / 100) * roomPrice;
+                        roomPrice -= discountAmount;
+                    }
                 }
 
                 totalPrice += roomPrice;
             }
         }
 
+        Console.WriteLine($"Total Discounted Price: {totalPrice}");
         return totalPrice;
+    }
+    public static string GenerateConfirmationNumber()
+    {
+        return Guid.NewGuid().ToString();
     }
 }
 

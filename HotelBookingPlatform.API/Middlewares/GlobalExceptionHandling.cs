@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.API.Middlewares;
+﻿namespace HotelBookingPlatform.API.Middlewares;
 public class GlobalExceptionHandling
 {
     private readonly RequestDelegate _next;

@@ -1,6 +1,4 @@
-﻿using HotelBookingPlatform.Application.Core.Abstracts.IHotelManagementService;
-
-namespace HotelBookingPlatform.API.Controllers;
+﻿namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CityController : ControllerBase
@@ -51,7 +49,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
         var city = await _cityService.GetCity(id, includeHotels);
-        return _responseHandler.Success(city);
+        return _responseHandler.Success(city, "Retrieve city successfully.");
     }
 
     [HttpPut("{id}")]

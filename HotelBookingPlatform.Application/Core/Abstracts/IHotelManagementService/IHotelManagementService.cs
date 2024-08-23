@@ -5,7 +5,6 @@ public interface IHotelManagementService
     Task<HotelResponseDto> UpdateHotelAsync(int id, HotelResponseDto request);
     Task DeleteHotel(int id);
     Task<HotelResponseDto> CreateHotel(HotelCreateRequest request);
-
 }
 
 

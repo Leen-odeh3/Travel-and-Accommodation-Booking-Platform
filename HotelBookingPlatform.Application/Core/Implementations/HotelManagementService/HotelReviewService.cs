@@ -1,17 +1,26 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
+using HotelBookingPlatform.Application.Helpers;
 namespace HotelBookingPlatform.Application.Core.Implementations.HotelManagementService;
 public class HotelReviewService : IHotelReviewService
 {
     private readonly IUnitOfWork<Review> _unitOfWork;
+    private readonly IUnitOfWork<Hotel> _hotelUnitOfWork;
+    private readonly EntityValidator<Hotel> _hotelValidator;
 
-    public HotelReviewService(IUnitOfWork<Review> unitOfWork)
+    public HotelReviewService(
+        IUnitOfWork<Review> unitOfWork,
+        IUnitOfWork<Hotel> hotelUnitOfWork)
     {
-        _unitOfWork = unitOfWork;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _hotelUnitOfWork = hotelUnitOfWork ?? throw new ArgumentNullException(nameof(hotelUnitOfWork));
+        _hotelValidator = new EntityValidator<Hotel>(_hotelUnitOfWork.HotelRepository);
     }
 
     public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
     {
-        ValidationHelper.ValidateId(hotelId);
+        if (hotelId <= 0)
+            throw new ArgumentException("ID must be greater than zero.", nameof(hotelId));
+
         var reviews = await _unitOfWork.ReviewRepository.GetReviewsByHotelIdAsync(hotelId);
 
         if (!reviews.Any())
@@ -25,5 +34,5 @@ public class HotelReviewService : IHotelReviewService
             AverageRating = averageRating
         };
     }
-}
 
+}

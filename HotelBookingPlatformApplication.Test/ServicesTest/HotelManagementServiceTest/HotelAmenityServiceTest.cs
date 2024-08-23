@@ -1,5 +1,6 @@
 ﻿using HotelBookingPlatform.Application.Core.Implementations.HotelManagementService;
 using HotelBookingPlatform.Domain.DTOs.Amenity;
+using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
 namespace HotelBookingPlatformApplication.Test.ServicesTest.HotelManagementServiceTest;
 public class HotelAmenityServiceTest
 {
@@ -57,50 +58,32 @@ public class HotelAmenityServiceTest
     }
 
     [Fact]
-    public async Task GetAmenitiesByHotelIdAsync_ShouldReturnAmenities_WhenHotelExists()
+    public async Task AddAmenityToHotelAsync_ShouldThrowArgumentNullException_WhenRequestIsNull()
     {
         // Arrange
         var hotelId = _fixture.Create<int>();
-        var hotel = _fixture.Build<Hotel>()
-            .With(h => h.Amenities, _fixture.CreateMany<Amenity>().ToList())
-            .Create();
-        var amenityDtos = _fixture.CreateMany<AmenityResponseDto>().ToList();
 
-        _unitOfWorkMock
-            .Setup(uow => uow.HotelRepository.GetHotelWithAmenitiesAsync(hotelId))
-            .ReturnsAsync(hotel);
-        _mapperMock
-            .Setup(m => m.Map<IEnumerable<AmenityResponseDto>>(hotel.Amenities))
-            .Returns(amenityDtos);
-
-        var result = await _hotelAmenityService.GetAmenitiesByHotelIdAsync(hotelId);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(amenityDtos, result);
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _hotelAmenityService.AddAmenityToHotelAsync(hotelId, null));
     }
 
     [Fact]
-    public async Task DeleteAmenityFromHotelAsync_ShouldRemoveAmenitySuccessfully()
+    public async Task AddAmenityToHotelAsync_ShouldThrowKeyNotFoundException_WhenHotelDoesNotExist()
     {
         // Arrange
         var hotelId = _fixture.Create<int>();
-        var amenityId = _fixture.Create<int>();
-        var hotel = _fixture.Build<Hotel>()
-            .With(h => h.Amenities, new List<Amenity>
-            {
-                    _fixture.Build<Amenity>().With(a => a.AmenityID, amenityId).Create()
-            })
-            .Create();
+        var request = _fixture.Create<AmenityCreateRequest>();
 
         _unitOfWorkMock
-            .Setup(uow => uow.HotelRepository.GetHotelWithAmenitiesAsync(hotelId))
-            .ReturnsAsync(hotel);
+            .Setup(uow => uow.HotelRepository.GetByIdAsync(hotelId))
+            .ThrowsAsync(new KeyNotFoundException($"Entity of type Hotel with ID {hotelId} was not found."));
 
-        // Act
-        await _hotelAmenityService.DeleteAmenityFromHotelAsync(hotelId, amenityId);
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            _hotelAmenityService.AddAmenityToHotelAsync(hotelId, request));
 
-        _unitOfWorkMock.Verify(uow => uow.HotelRepository.UpdateAsync(hotelId, It.IsAny<Hotel>()), Times.Once);
-        Assert.DoesNotContain(hotel.Amenities, a => a.AmenityID == amenityId);
+        Assert.Equal($"Entity of type Hotel with ID {hotelId} was not found.", exception.Message);
     }
+
 }

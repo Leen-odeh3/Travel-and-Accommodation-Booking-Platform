@@ -2,7 +2,7 @@
 public class RoomService : BaseService<Room>, IRoomService
 {
     private readonly Domain.ILogger.ILog _logger;
-    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper,ILog logger)
+    public RoomService(IUnitOfWork<Room> unitOfWork, IMapper mapper, ILog logger)
         : base(unitOfWork, mapper)
     {
         _logger = logger;
@@ -29,14 +29,13 @@ public class RoomService : BaseService<Room>, IRoomService
     }
     public async Task<RoomResponseDto> UpdateRoomAsync(int id, RoomCreateRequest request)
     {
-       ValidationHelper.ValidateRequest(request);
         var existingRoom = await _unitOfWork.RoomRepository.GetByIdAsync(id);
         if (existingRoom is null)
             throw new KeyNotFoundException("Room not found");
 
         _mapper.Map(request, existingRoom);
 
-        await _unitOfWork.RoomRepository.UpdateAsync(id,existingRoom);
+        await _unitOfWork.RoomRepository.UpdateAsync(id, existingRoom);
 
         return _mapper.Map<RoomResponseDto>(existingRoom);
     }

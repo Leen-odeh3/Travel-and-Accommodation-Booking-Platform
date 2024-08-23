@@ -7,9 +7,10 @@ public class HotelSearchService : IHotelSearchService
 
     public HotelSearchService(IUnitOfWork<Hotel> unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
+
     public async Task<IEnumerable<HotelResponseDto>> GetHotels(string hotelName, string description, int pageSize, int pageNumber)
     {
         Expression<Func<Hotel, bool>> filter = h =>
@@ -17,6 +18,7 @@ public class HotelSearchService : IHotelSearchService
             (string.IsNullOrEmpty(description) || h.Description.Contains(description));
 
         var hotels = await _unitOfWork.HotelRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
+
         if (!hotels.Any())
             throw new NotFoundException("No hotels found matching the criteria.");
 

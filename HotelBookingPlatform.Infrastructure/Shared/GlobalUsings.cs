@@ -13,7 +13,6 @@ global using HotelBookingPlatform.Infrastructure.Implementation;
 global using HotelBookingPlatform.Infrastructure.Repositories;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
-global using HotelBookingPlatform.Infrastructure.HelperMethods;
 global using System.Linq.Expressions;
 global using HotelBookingPlatform.Domain.Enums;
 global using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;

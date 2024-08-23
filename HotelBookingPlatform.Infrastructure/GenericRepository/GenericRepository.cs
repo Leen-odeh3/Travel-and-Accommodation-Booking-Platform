@@ -9,7 +9,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<T> CreateAsync(T entity)
     {
-        ValidationHelper.ValidateRequest(entity);
         await _appDbContext.Set<T>().AddAsync(entity);
         await _appDbContext.SaveChangesAsync();
         return entity;
@@ -17,7 +16,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<string> DeleteAsync(int id)
     {
-        ValidationHelper.ValidateId(id);
         var entity = await _appDbContext.Set<T>().FindAsync(id);
 
         if (entity is null)
@@ -31,7 +29,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _appDbContext.Set<T>().ToListAsync();
+        return await _appDbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 
     public async Task<IEnumerable<T>> GetAllAsyncPagenation(Expression<Func<T, bool>> filter = null, int pageSize = 10, int pageNumber = 1)
@@ -53,7 +51,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<T> GetByIdAsync(int id)
     {
-        ValidationHelper.ValidateId(id);
         var entity = await _appDbContext.Set<T>().FindAsync(id);
 
         if (entity is null)
@@ -64,8 +61,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<T> UpdateAsync(int id, T entity)
     {
-        ValidationHelper.ValidateId(id);
-        ValidationHelper.ValidateRequest(entity);
         var existingEntity = await _appDbContext.Set<T>().FindAsync(id);
 
         if (existingEntity is null)
