@@ -19,7 +19,6 @@ global using HotelBookingPlatform.Domain;
 global using HotelBookingPlatform.Application.Core.Abstracts;
 global using HotelBookingPlatform.Domain.Exceptions;
 global using KeyNotFoundException = HotelBookingPlatform.Domain.Exceptions.KeyNotFoundException;
-global using HotelBookingPlatform.Infrastructure.HelperMethods;
 global using HotelBookingPlatform.Domain.DTOs.City;
 global using System.Linq.Expressions;
 global using InvalidOperationException = HotelBookingPlatform.Domain.Exceptions.InvalidOperationException;

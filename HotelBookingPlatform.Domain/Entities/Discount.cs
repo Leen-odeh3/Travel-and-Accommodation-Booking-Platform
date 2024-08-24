@@ -8,7 +8,7 @@ public class Discount
     public DateTime EndDateUtc { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public Room Room { get; set; }
-    public bool IsActive => DateTime.UtcNow >= StartDateUtc && DateTime.UtcNow <= EndDateUtc;
+    public bool IsActive { get; set; } 
     public Discount()
     {
         CreatedAtUtc = DateTime.UtcNow;

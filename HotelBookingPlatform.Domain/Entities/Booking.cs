@@ -7,6 +7,7 @@ public class Booking
     public BookingStatus Status { get; set; }
     public string confirmationNumber { get; set; }
     public decimal TotalPrice { get; set; }
+    public decimal AfterDiscountedPrice { get; set; }
     public DateTime BookingDateUtc { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public int HotelId { get; set; }

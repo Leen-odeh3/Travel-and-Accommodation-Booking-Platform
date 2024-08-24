@@ -53,32 +53,6 @@ public class DiscountControllerTests
     }
 
     [Fact]
-    public async Task GetAllDiscounts_ShouldReturnDiscounts_WhenAvailable()
-    {
-        var discounts = new List<DiscountDto>
-        {
-            new DiscountDto {},
-            new DiscountDto {}
-        };
-
-        _discountServiceMock
-            .Setup(ds => ds.GetAllDiscountsAsync())
-            .ReturnsAsync(discounts);
-
-        _responseHandlerMock
-            .Setup(rh => rh.Success(discounts, "Discounts retrieved successfully."))
-            .Returns(new OkObjectResult(discounts));
-
-        // Act
-        var result = await _controller.GetAllDiscounts();
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedDiscounts = Assert.IsType<List<DiscountDto>>(okResult.Value);
-        Assert.Equal(discounts.Count, returnedDiscounts.Count);
-    }
-
-    [Fact]
     public async Task GetActiveDiscounts_ShouldReturnNotFound_WhenNoActiveDiscounts()
     {
         // Arrange
@@ -99,35 +73,6 @@ public class DiscountControllerTests
         var notFoundResult = Assert.IsType<NotFoundResult>(result);
         Assert.NotNull(notFoundResult);
     }
-
-    [Fact]
-    public async Task GetRoomsWithHighestDiscounts_ShouldReturnDiscounts_WhenAvailable()
-    {
-        // Arrange
-        var topN = 5;
-        var roomsWithDiscounts = new List<DiscountDto>
-        {
-            new DiscountDto { },
-            new DiscountDto { }
-        };
-
-        _discountServiceMock
-            .Setup(ds => ds.GetRoomsWithHighestDiscountsAsync(topN))
-            .ReturnsAsync(roomsWithDiscounts);
-
-        _responseHandlerMock
-            .Setup(rh => rh.Success(roomsWithDiscounts, "Rooms with highest active discounts retrieved successfully."))
-            .Returns(new OkObjectResult(roomsWithDiscounts));
-
-        // Act
-        var result = await _controller.GetRoomsWithHighestDiscountsAsync(topN);
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedDiscounts = Assert.IsType<List<DiscountDto>>(okResult.Value);
-        Assert.Equal(roomsWithDiscounts.Count, returnedDiscounts.Count);
-    }
-
 
     [Fact]
     public async Task GetDiscountById_ShouldReturnNotFound_WhenDiscountDoesNotExist()

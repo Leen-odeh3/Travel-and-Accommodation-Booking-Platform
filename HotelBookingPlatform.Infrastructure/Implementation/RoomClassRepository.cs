@@ -1,4 +1,6 @@
-﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepository
 {
     public RoomClassRepository(AppDbContext context)
@@ -64,6 +66,12 @@ public class RoomClassRepository : GenericRepository<RoomClass>, IRoomClasseRepo
     {
         return await ApplyIncludes(_appDbContext.RoomClasses, includeDiscounts: false, includeAmenities: false, includeRooms: true, includeHotel: false)
             .FirstOrDefaultAsync(rc => rc.RoomClassID == id);
+    }
+    public async Task<IEnumerable<RoomClass>> GetByHotelIdAsync(int hotelId)
+    {
+        return await _appDbContext.RoomClasses
+            .Where(rc => rc.HotelId == hotelId)
+            .ToListAsync();
     }
 }
 

@@ -6,7 +6,6 @@ public class InvoiceController : ControllerBase
     private readonly IInvoiceRecordService _invoiceService;
     private readonly IResponseHandler _responseHandler;
     private readonly ILog _logger;
-
     public InvoiceController(IInvoiceRecordService invoiceService, IResponseHandler responseHandler, ILog logger)
     {
         _invoiceService = invoiceService;

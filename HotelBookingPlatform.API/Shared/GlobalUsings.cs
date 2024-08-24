@@ -43,5 +43,8 @@ global using CloudinaryDotNet;
 global using HotelBookingPlatform.API.Helpers;
 global using Microsoft.Extensions.Options;
 global using HotelBookingPlatform.Infrastructure.Logger;
+global using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
+global using HotelBookingPlatform.Application.Core.Abstracts.IHotelManagementService;
+global using HotelBookingPlatform.Application.Core.Abstracts.RoomClassManagementService;
 
 

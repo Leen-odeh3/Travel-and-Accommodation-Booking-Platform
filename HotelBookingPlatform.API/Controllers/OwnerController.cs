@@ -44,11 +44,9 @@ public class OwnerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateOwner(int id, [FromBody] OwnerCreateDto request)
     {
-        var existingOwner = await _ownerService.UpdateOwnerAsync(id, request);
-        if (existingOwner is null)
-            _logger.Log($"Owner with ID: {id} not found", "warning");
-
-        return _responseHandler.Success(existingOwner, "Owner updated successfully.");
+        var updatedOwner = await _ownerService.UpdateOwnerAsync(id, request);
+        _logger.Log($"Owner with ID: {id} updated successfully", "info");
+        return _responseHandler.Success(updatedOwner, "Owner updated successfully.");
     }
 
     // DELETE: api/Owner/5

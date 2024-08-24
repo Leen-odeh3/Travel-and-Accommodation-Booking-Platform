@@ -1,14 +1,11 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
-public class CityRepository :GenericRepository<City> , ICityRepository
+public class CityRepository : GenericRepository<City>, ICityRepository
 {
     public CityRepository(AppDbContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
     public async Task<City> GetCityByIdAsync(int cityId, bool includeHotels = false)
     {
-        ValidationHelper.ValidateId(cityId);
-        IQueryable<City> query = _appDbContext.Cities.AsQueryable();
+        IQueryable<City> query = _appDbContext.Cities.AsNoTracking();
 
         if (includeHotels)
             query = query.Include(c => c.Hotels).ThenInclude(h => h.Owner);
@@ -21,13 +18,13 @@ public class CityRepository :GenericRepository<City> , ICityRepository
             throw new ArgumentOutOfRangeException(nameof(topCount), "The number of top cities must be greater than zero.");
 
         return await _appDbContext.Cities
-            .OrderByDescending(c => c.VisitCount) 
+            .OrderByDescending(c => c.VisitCount)
             .Take(topCount)
             .ToListAsync();
     }
     public async Task CreateAsync(City city)
     {
-        if (await _appDbContext.Cities.AnyAsync(c => c.Name == city.Name))    
+        if (await _appDbContext.Cities.AnyAsync(c => c.Name == city.Name))
             throw new InvalidOperationException("City with the same name already exists.");
 
         _appDbContext.Cities.Add(city);

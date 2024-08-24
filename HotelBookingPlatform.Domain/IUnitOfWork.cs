@@ -1,18 +1,17 @@
-﻿
-namespace HotelBookingPlatform.Domain;
-public interface IUnitOfWork<T>  where T: class 
+﻿namespace HotelBookingPlatform.Domain;
+public interface IUnitOfWork<T> where T : class
 {
-    IHotelRepository HotelRepository { get; set; }
-    IBookingRepository BookingRepository { get; set; }
-    IRoomClasseRepository RoomClasseRepository { get; set; }
-    IRoomRepository RoomRepository { get; set; }
-    ICityRepository CityRepository { get; set; }
-    IOwnerRepository OwnerRepository { get; set; }
-    IImageRepository ImageRepository { get; set; }
-    IDiscountRepository DiscountRepository { get; set; }
-    IReviewRepository ReviewRepository { get; set; }
-    IInvoiceRecordRepository InvoiceRecordRepository { get; set; }
-    IAmenityRepository AmenityRepository { get; set; }
-    IUserRepository UserRepository { get; set; }
+    IHotelRepository HotelRepository { get; }
+    IBookingRepository BookingRepository { get; }
+    IRoomClasseRepository RoomClasseRepository { get; }
+    IRoomRepository RoomRepository { get; }
+    ICityRepository CityRepository { get; }
+    IOwnerRepository OwnerRepository { get; }
+    IImageRepository ImageRepository { get; }
+    IDiscountRepository DiscountRepository { get; }
+    IReviewRepository ReviewRepository { get; }
+    IInvoiceRecordRepository InvoiceRecordRepository { get; }
+    IAmenityRepository AmenityRepository { get; }
+    IUserRepository UserRepository { get; }
     Task<int> SaveChangesAsync();
 }

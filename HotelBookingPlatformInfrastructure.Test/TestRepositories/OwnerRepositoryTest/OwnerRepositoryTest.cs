@@ -22,7 +22,7 @@ public class OwnerRepositoryTest
         _fixture.Build<Hotel>().With(h => h.OwnerID, ownerId).Create();
 
     [Fact]
-    public async Task GetAllAsync_ShouldReturnAllOwnersWithHotels()
+    public async Task GetAllWithHotelsAsync_ShouldReturnAllOwnersWithHotels()
     {
         // Arrange
         var owner1 = CreateOwner(1);
@@ -42,7 +42,7 @@ public class OwnerRepositoryTest
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _sut.GetAllAsync();
+        var result = await _sut.GetAllWithHotelsAsync();
 
         // Assert
         var owners = result.ToList();
@@ -70,12 +70,14 @@ public class OwnerRepositoryTest
     [Fact]
     public async Task CreateAsync_ShouldAddOwner_WhenValidEntityIsProvided()
     {
+        // Arrange
         var owner = CreateOwner(1);
 
         // Act
-        var result = await _sut.CreateAsync(owner);
-
+        await _sut.CreateAsync(owner);
         var createdOwner = await _context.owners.FindAsync(owner.OwnerID);
+
+        // Assert
         Assert.NotNull(createdOwner);
         Assert.Equal(owner.OwnerID, createdOwner.OwnerID);
     }

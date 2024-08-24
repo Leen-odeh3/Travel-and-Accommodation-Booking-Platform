@@ -41,20 +41,6 @@ public class DiscountController : ControllerBase
         return _responseHandler.Success(discount, "Discount updated successfully.");
     }
 
-    [HttpGet]
-    [SwaggerOperation(
-        Summary = "Get all discounts",
-        Description = "Retrieves a list of all available discounts."
-    )]
-    [SwaggerResponse(200, "Discounts retrieved successfully.", typeof(IEnumerable<DiscountDto>))]
-    [SwaggerResponse(404, "No discounts found.")]
-    [SwaggerResponse(500, "An unexpected error occurred.")]
-    public async Task<IActionResult> GetAllDiscounts()
-    {
-        var discounts = await _discountService.GetAllDiscountsAsync();
-        return _responseHandler.Success(discounts, "Discounts retrieved successfully.");
-    }
-
     [HttpGet("{id}")]
     [SwaggerOperation(
     Summary = "Get a discount by ID",
@@ -105,18 +91,19 @@ public class DiscountController : ControllerBase
 
     [HttpGet("top-discounts")]
     [SwaggerOperation(
-      Summary = "Get rooms with highest active discounts",
-      Description = "Retrieves a list of rooms with the highest active discounts."
-    )]
+    Summary = "Get rooms with highest active discounts",
+    Description = "Retrieves a list of rooms with the highest active discounts."
+)]
     [SwaggerResponse(200, "Rooms with highest active discounts retrieved successfully.", typeof(IEnumerable<DiscountDto>))]
     [SwaggerResponse(404, "No active discounts found.")]
     [SwaggerResponse(500, "An unexpected error occurred.")]
-    public async Task<IActionResult> GetRoomsWithHighestDiscountsAsync(int topN = 5)
+    public async Task<IActionResult> GetRoomsWithHighestDiscountsAsync([FromQuery] int topN = 5)
     {
-        var roomsWithDiscounts = await _discountService.GetRoomsWithHighestDiscountsAsync(topN);
+        var roomsWithDiscounts = await _discountService.GetTopDiscountsAsync(topN);
         if (!roomsWithDiscounts.Any())
             return _responseHandler.NotFound("No active discounts found.");
 
         return _responseHandler.Success(roomsWithDiscounts, "Rooms with highest active discounts retrieved successfully.");
     }
+
 }

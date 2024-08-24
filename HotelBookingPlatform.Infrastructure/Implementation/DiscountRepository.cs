@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace HotelBookingPlatform.Infrastructure.Implementation;
+﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
 public class DiscountRepository : GenericRepository<Discount> ,IDiscountRepository
 {
     public DiscountRepository(AppDbContext context)
@@ -22,6 +20,16 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
         return await query.FirstOrDefaultAsync(d => d.DiscountID == id);
     }
 
+    public async Task<IEnumerable<Discount>> GetTopDiscountsAsync(int topN, DateTime now)
+    {
+        var query = _appDbContext.Discounts.Include(r=>r.Room)
+            .Where(d => d.StartDateUtc <= now && d.EndDateUtc >= now)
+            .OrderByDescending(d => d.Percentage)
+            .Take(topN);
+
+        return await query.ToListAsync();
+    }
+
     public async Task DeleteAsync(int id)
     {
         var discount = await _appDbContext.Discounts.FindAsync(id);
@@ -35,8 +43,8 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
     {
         return await _appDbContext.Discounts
             .Where(d => d.RoomID == roomId &&
-                        d.StartDateUtc <= checkInDate &&
-                        d.EndDateUtc >= checkOutDate &&
+                        d.StartDateUtc <= checkOutDate &&  
+                        d.EndDateUtc >= checkInDate &&   
                         DateTime.UtcNow >= d.StartDateUtc &&
                         DateTime.UtcNow <= d.EndDateUtc)
             .FirstOrDefaultAsync();

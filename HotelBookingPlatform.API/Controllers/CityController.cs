@@ -4,16 +4,18 @@
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
+    private readonly ICityHotelService _cityHotelService;
     private readonly IImageService _imageService;
     private readonly IResponseHandler _responseHandler;
     private readonly ILog _log;
 
-    public CityController(ICityService cityService, IImageService imageService, IResponseHandler responseHandler, ILog log)
+    public CityController(ICityService cityService, IImageService imageService, IResponseHandler responseHandler, ILog log,ICityHotelService cityHotelService)
     {
         _cityService = cityService;
         _imageService = imageService;
         _responseHandler = responseHandler;
         _log = log;
+        _cityHotelService = cityHotelService;
     }
 
     [HttpPost]
@@ -47,7 +49,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> GetCity(int id, [FromQuery] bool includeHotels = false)
     {
         var city = await _cityService.GetCity(id, includeHotels);
-        return _responseHandler.Success(city);
+        return _responseHandler.Success(city, "Retrieve city successfully.");
     }
 
     [HttpPut("{id}")]
@@ -71,9 +73,9 @@ public class CityController : ControllerBase
     [ResponseCache(CacheProfileName = "DefaultCache")]
     public async Task<IActionResult> GetHotelsForCity(int cityId)
     {
-        var hotels = await _cityService.GetHotelsForCityAsync(cityId);
+        var hotels = await _cityHotelService.GetHotelsForCityAsync(cityId);
         _log.Log($"Retrieving hotels for city ID: {cityId}", "info");
-        return _responseHandler.Success(hotels);
+        return _responseHandler.Success(hotels, "Get Hotels For City Done");
     }
 
     [HttpPost("{cityId}/hotels")]
@@ -81,8 +83,8 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Add a hotel to a specific city.")]
     public async Task<IActionResult> AddHotelToCity(int cityId, [FromBody] HotelCreateRequest hotelRequest)
     {
-            await _cityService.AddHotelToCityAsync(cityId, hotelRequest);
-            return _responseHandler.Success(message: "Hotel added to city successfully.");
+        await _cityHotelService.AddHotelToCityAsync(cityId, hotelRequest);
+        return _responseHandler.Success(message: "Hotel added to city successfully.");
     }
 
     [HttpDelete("{cityId}/hotel/{hotelId}")]
@@ -90,7 +92,7 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Remove a hotel from a specific city.")]
     public async Task<IActionResult> DeleteHotelFromCity(int cityId, int hotelId)
     {
-        await _cityService.DeleteHotelFromCityAsync(cityId, hotelId);
+        await _cityHotelService.DeleteHotelFromCityAsync(cityId, hotelId);
         _log.Log($"Hotel ID: {hotelId} removed from city ID: {cityId} successfully", "info");
         return _responseHandler.Success(message: "Hotel removed from city successfully.");
     }

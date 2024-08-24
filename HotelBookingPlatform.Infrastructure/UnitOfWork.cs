@@ -1,6 +1,6 @@
 ﻿using ILog = HotelBookingPlatform.Domain.ILogger.ILog;
 namespace HotelBookingPlatform.Infrastructure;
-public class UnitOfWork<T> : IUnitOfWork<T> where T :class
+public class UnitOfWork<T> : IUnitOfWork<T> where T : class
 {
     private readonly AppDbContext _context;
     private readonly UserManager<LocalUser> _userManager;
@@ -19,24 +19,24 @@ public class UnitOfWork<T> : IUnitOfWork<T> where T :class
         OwnerRepository = new OwnerRepository(_context);
         DiscountRepository = new DiscountRepository(_context);
         ReviewRepository = new ReviewRepository(_context);
-        InvoiceRecordRepository =new InvoiceRecordRepository(_context);
+        InvoiceRecordRepository = new InvoiceRecordRepository(_context);
         AmenityRepository = new AmenityRepository(_context);
-        UserRepository = new UserRepository(_userManager,_context);
+        UserRepository = new UserRepository(_userManager, _context);
         ImageRepository = new ImageRepository(_context);
     }
-    public IHotelRepository HotelRepository { get; set;}
-    public IBookingRepository BookingRepository { get; set;}
-    public IRoomClasseRepository RoomClasseRepository { get; set;}
-    public IRoomRepository RoomRepository { get; set;}
-    public ICityRepository CityRepository { get; set;}
+    public IHotelRepository HotelRepository { get; set; }
+    public IBookingRepository BookingRepository { get; set; }
+    public IRoomClasseRepository RoomClasseRepository { get; set; }
+    public IRoomRepository RoomRepository { get; set; }
+    public ICityRepository CityRepository { get; set; }
     public IOwnerRepository OwnerRepository { get; set; }
     public IDiscountRepository DiscountRepository { get; set; }
     public IReviewRepository ReviewRepository { get; set; }
-    public IInvoiceRecordRepository InvoiceRecordRepository {get; set; }
-    public IAmenityRepository AmenityRepository { get; set;}
+    public IInvoiceRecordRepository InvoiceRecordRepository { get; set; }
+    public IAmenityRepository AmenityRepository { get; set; }
     public IUserRepository UserRepository { get; set; }
     public IImageRepository ImageRepository { get; set; }
 
-    public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();   
+    public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 }
 
