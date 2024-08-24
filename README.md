@@ -1,45 +1,48 @@
-# Travel Booking Platform 🌐✈️
+<div align="center">
+<h2> Travel and Accommodation Booking Platform - Your Ultimate Gateway to Unforgettable Adventures! ⚡🌐✈️</h2>
+</div>
+
 ## Overview 💥
 This project is a comprehensive hotel booking platform designed to provide users with a seamless experience in searching for hotels, viewing detailed information, and making secure bookings. The platform features an advanced search capability, personalized recommendations, and a secure checkout process. For administrators, there is a dedicated interface for managing cities, hotels, and rooms, with functionalities for creating, updating, and deleting entries. User authentication is handled securely through JWT, ensuring robust role-based access control and a maintainable system architecture.
 
 <a href="https://whimsical.com/function-PgTQUTGPFg5SWjqSueYh7x@GjdVyJ6vu7AX2orrZkLYPgQZBb99MoadQxTwLgPFdA24">Functional Requirements And Non-Functional Requirements</a>
 ## Key Features 🌟
-### 1. User Authentication
+### 1.🔒 User Authentication
 - Secure login page with JWT-based authentication.
 - Role-based access control for different user permissions.
-### 2. Advanced Search Functionality
+### 2.🔍 Advanced Search Functionality
 - Central search bar for finding hotels and cities.
 - Interactive calendar for selecting check-in and check-out dates.
 - Adjustable controls for specifying the number of adults, children, and rooms.
-### 3. Personalized Recommendations
+### 3.📈 Personalized Recommendations
 - Featured deals highlighting special offers on selected hotels.
 - Display of recently visited hotels based on user history.
 - Trending destinations showcasing the most popular cities.
-### 4. Comprehensive Search Filters
+### 4.🤝 Comprehensive Search Filters
 - Filters for price range, star ratings, amenities, and room types.
 - Infinite scroll for browsing hotel listings.
-### 5. Detailed Hotel Pages
+### 5.🏠 Detailed Hotel Pages
 - High-quality image gallery with fullscreen viewing.
 - Detailed information about the hotel, including reviews and an interactive map.
 - Room availability and selection with the option to add rooms to the cart for booking.
-### 6. Secure Checkout Process
+### 6.✅ Secure Checkout Process
 - Collection of user information and payment details.
 - Booking confirmation with details, printable options, and email notifications.
-### 7. Admin Management Interface
+### 7.⚙️ Admin Management Interface
 - Easy navigation and management of cities, hotels, and rooms.
 - Search filters and detailed grids for administrative tasks.
 - Forms for creating and updating cities, hotels, and rooms.
-### 8. API Design and Management
+### 8.🔧 API Design and Management
 - RESTful APIs for all functionalities with clear documentation.
 - Robust error handling and logging for debugging and monitoring.
-### 9. Performance and Scalability
+### 9.🛠️ Performance and Scalability
 - Efficient data handling for optimized performance.
 - Scalable architecture to support growing user and data demands.
-### 10. Comprehensive Testing
+### 10.🎯 Comprehensive Testing
 - Unit testing, integration testing, and API testing to ensure reliability and performance.
 - CI/CD pipeline for automated testing and deployment.
   
-## API Endpoints
+## 🌐 API Endpoints
 
 ### User Endpoints
 
@@ -268,12 +271,12 @@ Cloudinary is used for managing and storing images in the Hotel Booking Platform
 
 ### 3. Image Deletion
 - Endpoint: `DELETE /api/image/delete-image/{publicId}`
-## Booking Confirmation 
+## 📩  Booking Confirmation 
 Once a booking is confirmed, users receive an email containing the details of their reservation. Below is an example of the booking confirmation email that users receive:
 
-![0](https://github.com/user-attachments/assets/3529c1e5-c0b7-48d7-9db1-c8748d0fef2d)
+![0](https://github.com/user-attachments/assets/14aff3a6-15e8-4572-a782-840c251c0e90)
 
-## Testing Frameworks 🔋🪫
+## 🔋🪫 Testing Frameworks 
 Ensuring code quality and functionality with comprehensive testing suites using:
 
 - ##### xUnit: A popular .NET testing framework that facilitates writing and executing unit tests with a focus on simplicity and extensibility. ✅
@@ -293,7 +296,7 @@ The Generic Repository pattern provides a way to manage CRUD operations in a con
 
 ![layers](https://github.com/user-attachments/assets/2eded6b6-715e-415b-b7a3-63a4d17db03c)
 
-## Project Management 🚀
+## 🕰️ Project Management 
 #### Use of Trello for Task Management
 <img width="956" alt="Board" src="https://github.com/user-attachments/assets/38944aca-1b8e-4b6e-bf9b-4d0bf774e459">
 
@@ -320,12 +323,17 @@ cd Travel-and-Accommodation-Booking-Platform
   }
 }
 ```
-## Contact and Support: 🛟
-#### <a href="leenodeh287@gmail.com">Email</a>
-## Acknowledgement
-I extend my sincere gratitude to Foothill Technology Solutions for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
+## 🛟 Contact and Support
+If you have any questions or comments about Project, please contact me via <a href="leenodeh287@gmail.com">Email</a> .
+
+## 🏅 Acknowledgements
+I extend my sincere gratitude to <a href="https://www.foothillsolutions.com/">Foothill Technology Solutions </a> for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
+
+<div align="center">
 
 ![download](https://github.com/user-attachments/assets/e0ff60a8-63e0-44c6-8890-1391c1a39e75)
 
-#### `Thank you for your interest. I look forward to hearing from you! `🃏 
+#### Thank you for your interest. I look forward to hearing from you! 🥳
+
+</div>
 
