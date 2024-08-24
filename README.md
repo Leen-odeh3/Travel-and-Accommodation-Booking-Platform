@@ -324,7 +324,7 @@ cd Travel-and-Accommodation-Booking-Platform
 }
 ```
 ## 🛟 Contact and Support
-If you have any questions or comments about Project, please contact me via <a href="leenodeh287@gmail.com">Email</a> .
+If you have any questions or comments about the project, please feel free to contact me at `leenodeh287@gmail.com` .
 
 ## 🏅 Acknowledgements
 I extend my sincere gratitude to <a href="https://www.foothillsolutions.com/">Foothill Technology Solutions </a> for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
