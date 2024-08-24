@@ -67,7 +67,7 @@ public class HotelCreateRequestValidatorTests
         // Arrange
         var model = new HotelCreateRequest
         {
-            Name = "Valid Hotel",
+            Name = "The Ritz-Carlton",
             StarRating = 3,
             PhoneNumber = "123456789",
             OwnerID = 1

@@ -1,5 +1,4 @@
-﻿
-namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿namespace HotelBookingPlatform.Application.Core.Implementations;
 public class DiscountService : BaseService<Discount>, IDiscountService
 {
     public DiscountService(IUnitOfWork<Discount> unitOfWork, IMapper mapper)

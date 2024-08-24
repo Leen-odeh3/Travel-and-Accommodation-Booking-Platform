@@ -68,6 +68,7 @@ public class EmailService : IEmailService
                 <html>
                 <body>
                     <h2>Booking Confirmation</h2>
+ 
                     <p><strong>Confirmation Number:</strong> {confirmation.ConfirmationNumber}</p>
                     <p><strong>Hotel Name:</strong> {confirmation.HotelName}</p>
                     <p><strong>Hotel Address:</strong> {confirmation.HotelAddress}</p>
@@ -75,7 +76,8 @@ public class EmailService : IEmailService
                     <p><strong>Check-In Date:</strong> {confirmation.CheckInDate:yyyy-MM-dd HH:mm:ss}</p>
                     <p><strong>Check-Out Date:</strong> {confirmation.CheckOutDate:yyyy-MM-dd HH:mm:ss}</p>
                     <p><strong>Total Price:</strong> {confirmation.TotalPrice:C}</p>
-                    <p><strong>User Email:</strong> {confirmation.AfterDiscountedPrice:C}</p>                
+                    <p><strong>Discount Percentage:</strong> {confirmation.Percentage}%</p>
+                    <p><strong>Price After Discount:</strong> {confirmation.AfterDiscountedPrice:C}</p>
                     <p><strong>User Email:</strong> {confirmation.UserEmail}</p>
 
                     <p>Thank you for booking with us!</p>

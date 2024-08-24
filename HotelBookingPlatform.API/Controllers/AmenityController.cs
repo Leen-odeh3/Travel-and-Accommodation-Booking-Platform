@@ -20,15 +20,8 @@ public class AmenityController : ControllerBase
         Tags = new[] { "Amenities" })]
     public async Task<IActionResult> GetAllAmenities()
     {
-        try
-        {
             var amenities = await _amenityService.GetAllAmenity();
             return _responseHandler.Success(amenities, "Amenities retrieved successfully.");
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return _responseHandler.NotFound(ex.Message);
-        }      
     }
 }
 

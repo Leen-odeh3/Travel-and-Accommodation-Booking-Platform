@@ -16,7 +16,7 @@ public class InvoiceRecordService : BaseService<InvoiceRecord>, IInvoiceRecordSe
     public async Task<InvoiceResponseDto> GetInvoiceAsync(int id)
     {
         var invoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
-        if (invoiceRecord == null)
+        if (invoiceRecord is null)
             throw new NotFoundException("Invoice not found");
 
         return _mapper.Map<InvoiceResponseDto>(invoiceRecord);
@@ -31,7 +31,7 @@ public class InvoiceRecordService : BaseService<InvoiceRecord>, IInvoiceRecordSe
     public async Task UpdateInvoiceAsync(int id, InvoiceCreateRequest request)
     {
         var invoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
-        if (invoiceRecord == null)
+        if (invoiceRecord is null)
             throw new NotFoundException("Invoice not found");
 
         _mapper.Map(request, invoiceRecord);
@@ -42,7 +42,7 @@ public class InvoiceRecordService : BaseService<InvoiceRecord>, IInvoiceRecordSe
     public async Task DeleteInvoiceAsync(int id)
     {
         var invoiceRecord = await _unitOfWork.InvoiceRecordRepository.GetByIdAsync(id);
-        if (invoiceRecord == null)
+        if (invoiceRecord is null)
             throw new NotFoundException("Invoice not found");
 
         await _unitOfWork.InvoiceRecordRepository.DeleteAsync(id);

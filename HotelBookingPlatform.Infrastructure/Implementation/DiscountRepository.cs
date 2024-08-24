@@ -43,8 +43,8 @@ public class DiscountRepository : GenericRepository<Discount> ,IDiscountReposito
     {
         return await _appDbContext.Discounts
             .Where(d => d.RoomID == roomId &&
-                        d.StartDateUtc <= checkInDate &&
-                        d.EndDateUtc >= checkOutDate &&
+                        d.StartDateUtc <= checkOutDate &&  
+                        d.EndDateUtc >= checkInDate &&   
                         DateTime.UtcNow >= d.StartDateUtc &&
                         DateTime.UtcNow <= d.EndDateUtc)
             .FirstOrDefaultAsync();

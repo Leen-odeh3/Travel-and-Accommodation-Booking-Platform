@@ -26,7 +26,10 @@ public class BookingService : BaseService<Booking>, IBookingService
         if (request.CheckInDateUtc >= request.CheckOutDateUtc)
             throw new BadRequestException("Check-out date must be greater than check-in date.");
 
+        // حساب السعر الإجمالي
         var totalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
+
+        // حساب السعر بعد تطبيق الخصم
         var discountedTotalPrice = await CalculateDiscountedPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
 
         var booking = new Booking
@@ -92,35 +95,30 @@ public class BookingService : BaseService<Booking>, IBookingService
 
     private async Task<decimal> CalculateDiscountedPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
     {
-        decimal totalPrice = 0m;
-        int numberOfNights = (checkOutDate - checkInDate).Days;
+        decimal discountedTotalPrice = 0;
+        var numberOfNights = (checkOutDate - checkInDate).Days;
 
         foreach (var roomId in roomIds)
         {
             var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            var discount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
-
-            if (room is not null)
+            if (room != null)
             {
-                decimal roomPrice = room.PricePerNight * numberOfNights;
-                Console.WriteLine($"Room ID: {roomId}, Original Price: {roomPrice}");
-
-                if (discount is not null)
+                var activeDiscount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
+                if (activeDiscount != null && activeDiscount.IsActive)
                 {
-                    if (checkInDate >= discount.StartDateUtc && checkOutDate <= discount.EndDateUtc)
-                    {
-                        decimal discountAmount = (discount.Percentage / 100) * roomPrice;
-                        roomPrice -= discountAmount;
-                    }
+                    var discountPrice = room.PricePerNight * (1 - (activeDiscount.Percentage / 100.0m));
+                    discountedTotalPrice += discountPrice * numberOfNights;
                 }
-
-                totalPrice += roomPrice;
+                else
+                {
+                    discountedTotalPrice += room.PricePerNight * numberOfNights;
+                }
             }
         }
 
-        Console.WriteLine($"Total Discounted Price: {totalPrice}");
-        return totalPrice;
+        return discountedTotalPrice;
     }
+
     public static string GenerateConfirmationNumber()
     {
         return Guid.NewGuid().ToString();

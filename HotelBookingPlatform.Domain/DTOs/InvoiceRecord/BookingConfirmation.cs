@@ -10,4 +10,5 @@ public class BookingConfirmation
     public DateTime CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
     public string UserEmail { get; set; }
+    public decimal Percentage { get; set; }
 }
