@@ -1,5 +1,5 @@
 <div align="center">
-<h2> Travel and Accommodation Booking Platform - Your Ultimate Gateway to Unforgettable Adventures! ⚡🌐✈️</h2>
+<h1> Travel and Accommodation Booking Platform - Your Ultimate Gateway to Unforgettable Adventures! ⚡🌐✈️</h1>
 </div>
 
 ## Overview 💥
