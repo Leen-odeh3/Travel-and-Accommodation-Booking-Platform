@@ -58,7 +58,7 @@ public class RoomController : ControllerBase
 
         var folderPath = $"rooms/{roomId}";
         var imageType = "Room";
-        var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomId);
+        var uploadResult = await _imageService.UploadImageAsync(file,imageType, roomId);
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId }, "Room added successfully to the room class.");
     }

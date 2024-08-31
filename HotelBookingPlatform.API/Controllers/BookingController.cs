@@ -41,6 +41,9 @@ public class BookingController : ControllerBase
     }
     [HttpPost]
     [Route("create")]
+    [SwaggerOperation(Summary = "Create a new booking", Description = "Creates a new booking record in the system. The request must include details of the booking such as check-in and check-out dates, room IDs, payment method, and hotel ID. The user making the request must be authenticated.",
+     OperationId = "CreateBooking",
+     Tags = new[] { "Booking" } )]
     public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
     {
         var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;

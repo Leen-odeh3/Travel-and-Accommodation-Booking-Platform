@@ -1,5 +1,5 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Configuration;
-public class ReviewConfiguration: IEntityTypeConfiguration<Review>
+public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {

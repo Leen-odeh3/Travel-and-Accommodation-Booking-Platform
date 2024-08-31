@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Application.Helpers;
-
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ReviewService : BaseService<Review>, IReviewService
 {
@@ -55,7 +54,6 @@ public class ReviewService : BaseService<Review>, IReviewService
 
         return reviewDto;
     }
-
     public async Task<ReviewResponseDto> UpdateReviewAsync(int id, ReviewCreateRequest request)
     {
         var review = await _reviewValidator.ValidateExistenceAsync(id);
@@ -68,7 +66,6 @@ public class ReviewService : BaseService<Review>, IReviewService
 
         return _mapper.Map<ReviewResponseDto>(review);
     }
-
     public async Task DeleteReviewAsync(int id)
     {
         await _reviewValidator.ValidateExistenceAsync(id);

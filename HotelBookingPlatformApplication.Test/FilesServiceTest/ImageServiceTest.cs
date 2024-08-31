@@ -20,7 +20,7 @@ public class ImageServiceTest
         var file = new Mock<IFormFile>();
         file.Setup(f => f.Length).Returns(0);
 
-        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object, "folder", "entityType", 1);
+        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object,"entityType", 1);
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("No file provided.");
     }
 
@@ -31,7 +31,7 @@ public class ImageServiceTest
         file.Setup(f => f.Length).Returns(1);
         file.Setup(f => f.FileName).Returns("file.txt");
 
-        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object, "folder", "entityType", 1);
+        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object,"entityType", 1);
 
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("Unsupported file format.");
     }

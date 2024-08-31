@@ -4,7 +4,6 @@ public class ReviewRepositoryTest
     private readonly ReviewRepository _sut;
     private readonly InMemoryDbContext _context;
     private readonly IFixture _fixture;
-
     public ReviewRepositoryTest()
     {
         _context = new InMemoryDbContext();
@@ -35,10 +34,8 @@ public class ReviewRepositoryTest
         var review = _fixture.Create<Review>();
         await _sut.CreateAsync(review);
 
-        // Act
         var retrievedReview = await _sut.GetByIdAsync(review.ReviewID);
 
-        // Assert
         Assert.Equal(review.ReviewID, retrievedReview.ReviewID);
     }
 
@@ -55,5 +52,4 @@ public class ReviewRepositoryTest
 
         Assert.Equal("The hotel was clean and comfortable. Excellent service!", updatedReview.Content);
     }
-
 }
