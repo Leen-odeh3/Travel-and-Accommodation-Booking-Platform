@@ -130,7 +130,7 @@ public class HotelController : ControllerBase
         if (file.Length == 0)
             return _responseHandler.BadRequest("No file uploaded.");
 
-        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Hotels", hotelId);
+        var uploadResult = await _imageService.UploadImageAsync(file,"Hotels", hotelId);
 
         _logger.Log($"Image uploaded for hotel ID: {hotelId}, URL: {uploadResult.SecureUri}", "info");
 

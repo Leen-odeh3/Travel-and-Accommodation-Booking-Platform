@@ -117,7 +117,7 @@ public class RoomClassController : ControllerBase
 
         var folderPath = $"roomClasses/{roomClassId}";
         var imageType = "roomClass";
-        var uploadResult = await _imageService.UploadImageAsync(file, folderPath, imageType, roomClassId);
+        var uploadResult = await _imageService.UploadImageAsync(file,imageType, roomClassId);
 
         return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId }, "Image uploaded successfully for the hotel.");
     }

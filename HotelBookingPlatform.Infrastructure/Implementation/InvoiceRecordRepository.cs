@@ -2,9 +2,7 @@
 public class InvoiceRecordRepository : GenericRepository<InvoiceRecord>, IInvoiceRecordRepository
 {
     public InvoiceRecordRepository(AppDbContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
     public async Task<IEnumerable<InvoiceRecord>> GetAllAsync(Expression<Func<InvoiceRecord, bool>> filter = null)
     {
         IQueryable<InvoiceRecord> query = _appDbContext.Set<InvoiceRecord>();

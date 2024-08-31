@@ -20,7 +20,7 @@ public class ReviewController : ControllerBase
     /// <response code="200">Returns a success status if the review is created.</response>
     /// <response code="400">If the review request is invalid.</response>
     [HttpPost]
-    [Authorize(Roles = "User")] // Only users with the 'User' role can create reviews
+    [Authorize(Roles = "User")]
     [SwaggerOperation(Summary = "Creates a new review.", Description = "Allows authenticated users to create a new review for a hotel.")]
     public async Task<IActionResult> CreateReview([FromBody] ReviewCreateRequest request)
     {
@@ -67,11 +67,12 @@ public class ReviewController : ControllerBase
     /// <response code="204">If the review is successfully deleted.</response>
     /// <response code="404">If the review with the given ID is not found.</response>
     [HttpDelete("{id}")]
+    [Authorize(Roles = "User")]
     [SwaggerOperation(Summary = "Deletes a review by its ID.", Description = "Allows users with 'Admin' role to delete a review.")]
     public async Task<IActionResult> DeleteReview(int id)
     {
         await _reviewService.DeleteReviewAsync(id);
         _logger.Log($"Review with ID {id} deleted successfully.","info");
-        return _responseHandler.NoContent();
+        return _responseHandler.Success("Review deleted successfully.");
     }
 }

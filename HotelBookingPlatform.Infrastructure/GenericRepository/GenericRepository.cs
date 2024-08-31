@@ -32,7 +32,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _appDbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsyncPagenation(Expression<Func<T, bool>> filter = null, int pageSize = 10, int pageNumber = 1)
+    public async Task<IEnumerable<T>> GetAsyncPagenation(Expression<Func<T, bool>> filter, int pageSize = 10, int pageNumber = 1)
     {
         if (pageSize <= 0)
             throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than zero.");

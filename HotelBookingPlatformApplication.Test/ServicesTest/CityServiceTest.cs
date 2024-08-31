@@ -53,7 +53,7 @@ public class CityServiceTest
         var cities = _fixture.CreateMany<City>(5).ToList();
         var cityResponseDtos = _fixture.CreateMany<CityResponseDto>(5).ToList();
 
-        _unitOfWorkMock.Setup(u => u.CityRepository.GetAllAsyncPagenation(It.IsAny<Expression<Func<City, bool>>>(), pageSize, pageNumber))
+        _unitOfWorkMock.Setup(u => u.CityRepository.GetAsyncPagenation(It.IsAny<Expression<Func<City, bool>>>(), pageSize, pageNumber))
             .ReturnsAsync(cities);
         _mapperMock.Setup(m => m.Map<IEnumerable<CityResponseDto>>(cities)).Returns(cityResponseDtos);
 
@@ -62,7 +62,7 @@ public class CityServiceTest
 
         // Assert
         result.Should().BeEquivalentTo(cityResponseDtos);
-        _unitOfWorkMock.Verify(u => u.CityRepository.GetAllAsyncPagenation(It.IsAny<Expression<Func<City, bool>>>(), pageSize, pageNumber), Times.Once);
+        _unitOfWorkMock.Verify(u => u.CityRepository.GetAsyncPagenation(It.IsAny<Expression<Func<City, bool>>>(), pageSize, pageNumber), Times.Once);
     }
 
     [Fact]

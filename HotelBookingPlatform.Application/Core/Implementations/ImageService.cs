@@ -1,4 +1,5 @@
 ﻿using HotelBookingPlatform.Application.Extentions;
+using System.Net;
 namespace HotelBookingPlatform.Application.Core.Implementations;
 public class ImageService : IImageService
 {
@@ -10,15 +11,15 @@ public class ImageService : IImageService
         _cloudinary = cloudinary;
         _unitOfWork = unitOfWork;
     }
-    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string folderPath, string entityType, int entityId)
+    public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string entityType, int entityId)
     {
-
         var allowedFormats = new[]
         {
         SupportedImageFormats.Jpg,
         SupportedImageFormats.Jpeg,
         SupportedImageFormats.Png
     };
+
         if (file.Length == 0)
             throw new ArgumentException("No file provided.");
 
@@ -32,11 +33,13 @@ public class ImageService : IImageService
         {
             using (var stream = file.OpenReadStream())
             {
+                var uniqueId = Guid.NewGuid().ToString();
+                var publicId = $"{entityType}/{entityId}/{uniqueId}";
+
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    Folder = folderPath,
-                    PublicId = $"{entityType}/{entityId}/image"
+                    PublicId = publicId 
                 };
 
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
@@ -67,9 +70,23 @@ public class ImageService : IImageService
             throw new BadRequestException("Public ID cannot be null or empty.");
 
         var deleteParams = new DeletionParams(publicId);
-        var result = await _cloudinary.DestroyAsync(deleteParams);
-        return result;
+
+        try
+        {
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ApplicationException($"Error deleting image: {result.Error?.Message}");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("An error occurred while deleting the image.", ex);
+        }
     }
+
 
     public async Task<GetResourceResult> GetImageDetailsAsync(string publicId)
     {

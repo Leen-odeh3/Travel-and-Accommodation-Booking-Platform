@@ -29,3 +29,7 @@ global using HotelBookingPlatform.Domain.DTOs.Room;
 global using HotelBookingPlatform.Domain.DTOs.RoomClass;
 global using CloudinaryDotNet;
 global using HotelBookingPlatform.Domain.Abstracts;
+global using HotelBookingPlatform.Application.Core.Abstracts.IBookingManagementService;
+global using HotelBookingPlatform.Application.Core.Implementations.BookingManagementService;
+global using HotelBookingPlatform.Domain.DTOs.Booking;
+global using HotelBookingPlatform.Domain.Enums;

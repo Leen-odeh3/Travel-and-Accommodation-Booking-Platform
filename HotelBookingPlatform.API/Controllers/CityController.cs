@@ -102,7 +102,7 @@ public class CityController : ControllerBase
     [SwaggerOperation(Summary = "Upload an image for a specific city.")]
     public async Task<IActionResult> UploadCityImage(int cityId, IFormFile file)
     {
-        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", "Cities", cityId);
+        var uploadResult = await _imageService.UploadImageAsync(file,"Cities", cityId);
         _log.Log($"Image uploaded for city ID: {cityId}, URL: {uploadResult.SecureUri}", "info");
         return _responseHandler.Success(
               new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId },

@@ -10,5 +10,11 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(b => b.ConfirmationNumber).IsUnique();
+
+        builder.Property(b => b.ConfirmationNumber)
+          .HasMaxLength(50)
+          .IsRequired();
     }
 }

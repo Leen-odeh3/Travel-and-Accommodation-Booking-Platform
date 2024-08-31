@@ -17,7 +17,7 @@ public class HotelSearchService : IHotelSearchService
             (string.IsNullOrEmpty(hotelName) || h.Name.Contains(hotelName)) &&
             (string.IsNullOrEmpty(description) || h.Description.Contains(description));
 
-        var hotels = await _unitOfWork.HotelRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
+        var hotels = await _unitOfWork.HotelRepository.GetAsyncPagenation(filter, pageSize, pageNumber);
 
         if (!hotels.Any())
             throw new NotFoundException("No hotels found matching the criteria.");

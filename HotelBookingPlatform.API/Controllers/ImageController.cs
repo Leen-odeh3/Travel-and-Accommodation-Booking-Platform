@@ -16,13 +16,18 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost("{entityType}/{entityId}/upload-image")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific entity.")]
     public async Task<IActionResult> UploadImage(string entityType, int entityId, IFormFile file)
     {
-        var uploadResult = await _imageService.UploadImageAsync(file, "path/to/your/folder", entityType, entityId);
-        return _responseHandler.Success(new { Url = uploadResult.SecureUri.ToString(), PublicId = uploadResult.PublicId });
+        var uploadResult = await _imageService.UploadImageAsync(file, entityType, entityId);
+        var result = new
+        {
+            Url = uploadResult.SecureUri.ToString(),
+            PublicId = uploadResult.PublicId
+        };
 
+        return _responseHandler.Success(result, "Image uploaded successfully.");
     }
 
     [HttpGet("images/{type}")]
@@ -34,19 +39,20 @@ public class ImageController : ControllerBase
 
         var images = await _imageService.GetImagesByTypeAsync(type);
 
-        return _responseHandler.Success(images);
+        return _responseHandler.Success(images, "Done Get all images");
     }
 
-
     [HttpDelete("delete-image/{publicId}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Delete an image by its PublicId.")]
     public async Task<IActionResult> DeleteImage(string publicId)
     {
         var imageRecord = await _unitOfWork.ImageRepository.GetByPublicIdAsync(publicId);
 
-        _unitOfWork.ImageRepository.DeleteAsync(imageRecord.Id);
-        await _unitOfWork.SaveChangesAsync();
+        if (imageRecord is null)
+            return _responseHandler.NotFound("Image not found.");
+
+        await _imageService.DeleteImageAsync(publicId);
         return _responseHandler.Success("Image deleted successfully.");
     }
 
