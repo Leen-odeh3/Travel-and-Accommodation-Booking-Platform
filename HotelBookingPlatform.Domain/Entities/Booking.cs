@@ -5,7 +5,7 @@ public class Booking
     public string UserId { get; set; }
     public LocalUser User { get; set; }
     public BookingStatus Status { get; set; }
-    public string confirmationNumber { get; set; }
+    public string ConfirmationNumber { get; set; }
     public decimal TotalPrice { get; set; }
     public decimal AfterDiscountedPrice { get; set; }
     public DateTime BookingDateUtc { get; set; }
@@ -14,6 +14,6 @@ public class Booking
     public Hotel Hotel { get; set; }
     public DateTime CheckInDateUtc { get; set; }
     public DateTime CheckOutDateUtc { get; set; }
-    public ICollection<Room> Rooms {  get; set; }
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
     public ICollection<InvoiceRecord> Invoice { get; set; } = new List<InvoiceRecord>();
 }

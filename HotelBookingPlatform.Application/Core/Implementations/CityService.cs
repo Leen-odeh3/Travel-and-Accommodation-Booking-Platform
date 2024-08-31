@@ -29,7 +29,7 @@ public class CityService : BaseService<City>, ICityService
             filter = c => (!string.IsNullOrEmpty(cityName) && c.Name.Contains(cityName)) ||
                           (!string.IsNullOrEmpty(description) && c.Description.Contains(description));
         }
-        var cities = await _unitOfWork.CityRepository.GetAllAsyncPagenation(filter, pageSize, pageNumber);
+        var cities = await _unitOfWork.CityRepository.GetAsyncPagenation(filter, pageSize, pageNumber);
 
         if (cities is null || !cities.Any())
             throw new NotFoundException("No cities found.");

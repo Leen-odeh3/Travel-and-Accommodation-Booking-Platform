@@ -22323,3 +22323,1458 @@ WHERE [a].[UserId] = @__userId_0
 2024-08-24 21:33:53.791 +03:00 [DBG] Connection id "0HN64DC174CME" is closed. The last processed stream ID was 1.
 2024-08-24 21:33:53.801 +03:00 [DBG] Connection id "0HN64DC174CME" sending FIN because: "The Socket transport's send loop completed gracefully."
 2024-08-24 21:33:53.815 +03:00 [DBG] Connection id "0HN64DC174CME" stopped.
+2024-08-31 12:09:05.174 +03:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2024-08-31 12:09:05.451 +03:00 [DBG] Hosting starting
+2024-08-31 12:09:05.527 +03:00 [INF] User profile is available. Using 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2024-08-31 12:09:05.536 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-5dc8f8a8-2ffa-4a04-9c24-99574df10981.xml'.
+2024-08-31 12:09:05.652 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-7f2c3628-443f-404a-ae0c-68b85bc9411a.xml'.
+2024-08-31 12:09:05.679 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-8b924b12-ddc6-487f-b83a-45744266a460.xml'.
+2024-08-31 12:09:05.706 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-e554efbd-c8ad-408b-86ee-59e78d255d63.xml'.
+2024-08-31 12:09:05.751 +03:00 [DBG] Found key {5dc8f8a8-2ffa-4a04-9c24-99574df10981}.
+2024-08-31 12:09:05.771 +03:00 [DBG] Found key {7f2c3628-443f-404a-ae0c-68b85bc9411a}.
+2024-08-31 12:09:05.774 +03:00 [DBG] Found key {8b924b12-ddc6-487f-b83a-45744266a460}.
+2024-08-31 12:09:05.775 +03:00 [DBG] Found key {e554efbd-c8ad-408b-86ee-59e78d255d63}.
+2024-08-31 12:09:05.790 +03:00 [DBG] Considering key {8b924b12-ddc6-487f-b83a-45744266a460} with expiration date 2024-11-21 11:47:39Z as default key.
+2024-08-31 12:09:05.798 +03:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2024-08-31 12:09:05.808 +03:00 [DBG] Decrypting secret element using Windows DPAPI.
+2024-08-31 12:09:05.813 +03:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2024-08-31 12:09:05.833 +03:00 [DBG] Opening CNG algorithm 'AES' from provider 'null' with chaining mode CBC.
+2024-08-31 12:09:05.853 +03:00 [DBG] Opening CNG algorithm 'SHA256' from provider 'null' with HMAC.
+2024-08-31 12:09:05.866 +03:00 [DBG] Using key {8b924b12-ddc6-487f-b83a-45744266a460} as the default key.
+2024-08-31 12:09:05.871 +03:00 [DBG] Key ring with default key {8b924b12-ddc6-487f-b83a-45744266a460} was loaded during application startup.
+2024-08-31 12:09:06.464 +03:00 [DBG] Using development certificate: CN=localhost (Thumbprint: 11B01FF3F2247D8CCE18AD0B376E737147DB39EC)
+2024-08-31 12:09:06.583 +03:00 [INF] Now listening on: https://localhost:7054
+2024-08-31 12:09:06.586 +03:00 [INF] Now listening on: http://localhost:5248
+2024-08-31 12:09:06.589 +03:00 [DBG] Loaded hosting startup assembly HotelBookingPlatform.API
+2024-08-31 12:09:06.591 +03:00 [DBG] Loaded hosting startup assembly Microsoft.AspNetCore.Watch.BrowserRefresh
+2024-08-31 12:09:06.593 +03:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.BrowserLink.Net
+2024-08-31 12:09:06.596 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-08-31 12:09:06.598 +03:00 [INF] Hosting environment: Development
+2024-08-31 12:09:06.601 +03:00 [INF] Content root path: C:\Users\hp\Desktop\C#\HotelBookingPlatform.API\
+2024-08-31 12:09:06.604 +03:00 [DBG] Hosting started
+2024-08-31 12:09:07.091 +03:00 [DBG] Connection id "0HN69JI8M0VM6" accepted.
+2024-08-31 12:09:07.091 +03:00 [DBG] Connection id "0HN69JI8M0VM5" accepted.
+2024-08-31 12:09:07.098 +03:00 [DBG] Connection id "0HN69JI8M0VM6" started.
+2024-08-31 12:09:07.098 +03:00 [DBG] Connection id "0HN69JI8M0VM5" started.
+2024-08-31 12:09:09.065 +03:00 [DBG] Connection id "0HN69JI8M0VM7" accepted.
+2024-08-31 12:09:09.135 +03:00 [DBG] Connection id "0HN69JI8M0VM7" started.
+2024-08-31 12:09:09.143 +03:00 [DBG] Connection id "0HN69JI8M0VM8" accepted.
+2024-08-31 12:09:09.152 +03:00 [DBG] Connection id "0HN69JI8M0VM8" started.
+2024-08-31 12:09:09.299 +03:00 [DBG] Connection id "0HN69JI8M0VM8" received FIN.
+2024-08-31 12:09:09.422 +03:00 [DBG] Connection 0HN69JI8M0VM8 established using the following protocol: "Tls13"
+2024-08-31 12:09:09.422 +03:00 [DBG] Connection 0HN69JI8M0VM7 established using the following protocol: "Tls13"
+2024-08-31 12:09:09.473 +03:00 [DBG] Connection id "0HN69JI8M0VM8" is closed. The last processed stream ID was 0.
+2024-08-31 12:09:09.484 +03:00 [DBG] Connection id "0HN69JI8M0VM8" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:09:09.512 +03:00 [DBG] Connection id "0HN69JI8M0VM8" stopped.
+2024-08-31 12:09:09.644 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger - -
+2024-08-31 12:09:10.308 +03:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2024-08-31 12:09:10.436 +03:00 [DBG] No candidates found for the request path '/swagger'
+2024-08-31 12:09:10.438 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:10.614 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/index.html - -
+2024-08-31 12:09:10.615 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger - - - 301 0 - 985.1300ms
+2024-08-31 12:09:10.627 +03:00 [DBG] No candidates found for the request path '/swagger/index.html'
+2024-08-31 12:09:10.635 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:11.100 +03:00 [DBG] Response markup is scheduled to include browser refresh script injection.
+2024-08-31 12:09:12.240 +03:00 [DBG] Response markup was updated to include browser refresh script injection.
+2024-08-31 12:09:12.243 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/index.html - - - 200 - text/html;charset=utf-8 1628.0328ms
+2024-08-31 12:09:12.255 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui.css - -
+2024-08-31 12:09:12.255 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui-bundle.js - -
+2024-08-31 12:09:12.256 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui-standalone-preset.js - -
+2024-08-31 12:09:12.258 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui.css'
+2024-08-31 12:09:12.259 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-bundle.js'
+2024-08-31 12:09:12.262 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-standalone-preset.js'
+2024-08-31 12:09:12.264 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:12.266 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:12.268 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:12.312 +03:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2024-08-31 12:09:12.315 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui.css - - - 200 144929 text/css 60.3941ms
+2024-08-31 12:09:12.330 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/_framework/aspnetcore-browser-refresh.js - -
+2024-08-31 12:09:12.380 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/_framework/aspnetcore-browser-refresh.js - - - 200 12380 application/javascript;+charset=utf-8 50.2210ms
+2024-08-31 12:09:12.404 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2024-08-31 12:09:12.423 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui-standalone-preset.js - - - 200 312163 application/javascript 166.6572ms
+2024-08-31 12:09:12.444 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/_vs/browserLink - -
+2024-08-31 12:09:12.453 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2024-08-31 12:09:12.456 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui-bundle.js - - - 200 1061536 application/javascript 200.4617ms
+2024-08-31 12:09:12.691 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 246.5624ms
+2024-08-31 12:09:14.899 +03:00 [DBG] Connection id "0HN69JI8M0VM7" received FIN.
+2024-08-31 12:09:14.901 +03:00 [DBG] Connection id "0HN69JI8M0VM7" is closed. The last processed stream ID was 13.
+2024-08-31 12:09:14.906 +03:00 [DBG] Connection id "0HN69JI8M0VM7" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:09:14.913 +03:00 [DBG] Connection id "0HN69JI8M0VM7" stopped.
+2024-08-31 12:09:15.615 +03:00 [DBG] Connection id "0HN69JI8M0VM9" accepted.
+2024-08-31 12:09:15.616 +03:00 [DBG] Connection id "0HN69JI8M0VM9" started.
+2024-08-31 12:09:15.645 +03:00 [DBG] Connection 0HN69JI8M0VM9 established using the following protocol: "Tls13"
+2024-08-31 12:09:15.648 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/v1/swagger.json - -
+2024-08-31 12:09:15.650 +03:00 [DBG] No candidates found for the request path '/swagger/v1/swagger.json'
+2024-08-31 12:09:15.652 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:15.813 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/favicon-32x32.png - -
+2024-08-31 12:09:15.815 +03:00 [DBG] No candidates found for the request path '/swagger/favicon-32x32.png'
+2024-08-31 12:09:15.819 +03:00 [DBG] Request did not match any endpoints
+2024-08-31 12:09:15.821 +03:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2024-08-31 12:09:15.823 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/favicon-32x32.png - - - 200 628 image/png 10.2310ms
+2024-08-31 12:09:16.235 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 587.0118ms
+2024-08-31 12:09:17.163 +03:00 [DBG] Authentication of the HTTPS connection timed out.
+2024-08-31 12:09:17.163 +03:00 [DBG] Authentication of the HTTPS connection timed out.
+2024-08-31 12:09:17.165 +03:00 [DBG] Connection id "0HN69JI8M0VM6" stopped.
+2024-08-31 12:09:17.166 +03:00 [DBG] Connection id "0HN69JI8M0VM5" stopped.
+2024-08-31 12:09:17.169 +03:00 [DBG] Connection id "0HN69JI8M0VM6" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:09:17.171 +03:00 [DBG] Connection id "0HN69JI8M0VM5" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:09:19.900 +03:00 [DBG] Connection id "0HN69JI8M0VM9" received FIN.
+2024-08-31 12:09:19.902 +03:00 [DBG] Connection id "0HN69JI8M0VM9" is closed. The last processed stream ID was 3.
+2024-08-31 12:09:19.906 +03:00 [DBG] Connection id "0HN69JI8M0VM9" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:09:19.918 +03:00 [DBG] Connection id "0HN69JI8M0VM9" stopped.
+2024-08-31 12:09:52.509 +03:00 [DBG] Connection id "0HN69JI8M0VMA" accepted.
+2024-08-31 12:09:52.513 +03:00 [DBG] Connection id "0HN69JI8M0VMA" started.
+2024-08-31 12:09:52.538 +03:00 [DBG] Connection 0HN69JI8M0VMA established using the following protocol: "Tls13"
+2024-08-31 12:09:52.557 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7054/api/auth/login application/json 72
+2024-08-31 12:09:52.582 +03:00 [DBG] 1 candidate(s) found for the request path '/api/auth/login'
+2024-08-31 12:09:52.594 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)' with route pattern 'api/auth/login' is valid for the request path '/api/auth/login'
+2024-08-31 12:09:52.599 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:09:52.601 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:09:52.603 +03:00 [INF] No CORS policy found for the specified request.
+2024-08-31 12:09:52.744 +03:00 [DBG] AuthenticationScheme: Bearer was not authenticated.
+2024-08-31 12:09:52.751 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:09:52.848 +03:00 [INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] LoginAsync(HotelBookingPlatform.Domain.Helpers.LoginModel) on controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API).
+2024-08-31 12:09:52.854 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:09:52.857 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:09:52.860 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)"]
+2024-08-31 12:09:52.866 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:09:52.871 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:09:52.877 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API)
+2024-08-31 12:09:53.222 +03:00 [DBG] An 'IServiceProvider' was created for internal use by Entity Framework.
+2024-08-31 12:09:53.330 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API)
+2024-08-31 12:09:53.352 +03:00 [DBG] Attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' ...
+2024-08-31 12:09:53.361 +03:00 [DBG] Attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' using the name '' in request data ...
+2024-08-31 12:09:53.367 +03:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter' for content type 'application/json'.
+2024-08-31 12:09:53.386 +03:00 [DBG] Connection id "0HN69JI8M0VMA", Request id "0HN69JI8M0VMA:00000001": started reading request body.
+2024-08-31 12:09:53.390 +03:00 [DBG] Connection id "0HN69JI8M0VMA", Request id "0HN69JI8M0VMA:00000001": done reading request body.
+2024-08-31 12:09:53.433 +03:00 [DBG] JSON input formatter succeeded, deserializing to type 'HotelBookingPlatform.Domain.Helpers.LoginModel'
+2024-08-31 12:09:53.437 +03:00 [DBG] Done attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:09:53.439 +03:00 [DBG] Done attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:09:53.441 +03:00 [DBG] Attempting to validate the bound parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' ...
+2024-08-31 12:09:53.500 +03:00 [DBG] Done attempting to validate the bound parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:09:54.935 +03:00 [DBG] The index {'BookingID'} was not created on entity type 'BookingRoom (Dictionary<string, object>)' as the properties are already covered by the index {'BookingID', 'RoomID'}.
+2024-08-31 12:09:54.943 +03:00 [DBG] The index {'LocalUserId'} was not created on entity type 'RefreshToken' as the properties are already covered by the index {'LocalUserId', 'Id'}.
+2024-08-31 12:09:54.948 +03:00 [DBG] The index {'UserId'} was not created on entity type 'IdentityUserRole<string>' as the properties are already covered by the index {'UserId', 'RoleId'}.
+2024-08-31 12:09:54.953 +03:00 [DBG] The index {'UserId'} was not created on entity type 'IdentityUserToken<string>' as the properties are already covered by the index {'UserId', 'LoginProvider', 'Name'}.
+2024-08-31 12:09:54.958 +03:00 [DBG] The index {'AmenityID'} was not created on entity type 'RoomClassAmenity (Dictionary<string, object>)' as the properties are already covered by the index {'AmenityID', 'RoomClassID'}.
+2024-08-31 12:09:55.192 +03:00 [DBG] The property 'Discount.RoomClassID' was created in shadow state because there are no eligible CLR members with a matching name.
+2024-08-31 12:09:55.196 +03:00 [DBG] The property 'RefreshToken.LocalUserId' was created in shadow state because there are no eligible CLR members with a matching name.
+2024-08-31 12:09:55.200 +03:00 [DBG] The property 'RefreshToken.Id' was created in shadow state because there are no eligible CLR members with a matching name.
+2024-08-31 12:09:55.281 +03:00 [WRN] No store type was specified for the decimal property 'AfterDiscountedPrice' on entity type 'Booking'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-08-31 12:09:55.286 +03:00 [WRN] No store type was specified for the decimal property 'DiscountPercentageAtBooking' on entity type 'InvoiceRecord'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-08-31 12:09:55.288 +03:00 [WRN] No store type was specified for the decimal property 'PriceAtBooking' on entity type 'InvoiceRecord'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-08-31 12:09:55.652 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:09:55.899 +03:00 [DBG] Compiling query expression: 
+'DbSet<LocalUser>()
+    .SingleOrDefault(u => u.NormalizedEmail == __normalizedEmail_0)'
+2024-08-31 12:09:56.075 +03:00 [DBG] Including navigation: 'LocalUser.RefreshTokens'.
+2024-08-31 12:09:56.943 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<LocalUser>(
+    asyncEnumerable: new SingleQueryingEnumerable<LocalUser>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: LocalUser.Id (string) Required PK AfterSave:Throw, 0], [Property: LocalUser.AccessFailedCount (int) Required, 1], [Property: LocalUser.ConcurrencyStamp (string) Concurrency, 2], [Property: LocalUser.Email (string) MaxLength(256), 3], [Property: LocalUser.EmailConfirmed (bool) Required, 4], [Property: LocalUser.FirstName (string) Required, 5], [Property: LocalUser.LastName (string) Required, 6], [Property: LocalUser.LockoutEnabled (bool) Required, 7], [Property: LocalUser.LockoutEnd (DateTimeOffset?), 8], [Property: LocalUser.NormalizedEmail (string) Index MaxLength(256), 9], [Property: LocalUser.NormalizedUserName (string) Index MaxLength(256), 10], [Property: LocalUser.PasswordHash (string), 11], [Property: LocalUser.PhoneNumber (string), 12], [Property: LocalUser.PhoneNumberConfirmed (bool) Required, 13], [Property: LocalUser.SecurityStamp (string), 14], [Property: LocalUser.TwoFactorEnabled (bool) Required, 15], [Property: LocalUser.UserName (string) MaxLength(256), 16] }
+                1 -> 0
+                2 -> Dictionary<IProperty, int> { [Property: RefreshToken.LocalUserId (no field, string) Shadow Required PK FK AfterSave:Throw, 17], [Property: RefreshToken.Id (no field, int) Shadow Required PK AfterSave:Throw ValueGenerated.OnAdd, 18], [Property: RefreshToken.CreatedOn (DateTime) Required, 19], [Property: RefreshToken.ExpiresOn (DateTime) Required, 20], [Property: RefreshToken.RevokedOn (DateTime?), 21], [Property: RefreshToken.Token (string) Required, 22] }
+                3 -> 17
+                4 -> 18
+            SELECT t.Id, t.AccessFailedCount, t.ConcurrencyStamp, t.Email, t.EmailConfirmed, t.FirstName, t.LastName, t.LockoutEnabled, t.LockoutEnd, t.NormalizedEmail, t.NormalizedUserName, t.PasswordHash, t.PhoneNumber, t.PhoneNumberConfirmed, t.SecurityStamp, t.TwoFactorEnabled, t.UserName, r.LocalUserId, r.Id, r.CreatedOn, r.ExpiresOn, r.RevokedOn, r.Token
+            FROM 
+            (
+                SELECT TOP(2) a.Id, a.AccessFailedCount, a.ConcurrencyStamp, a.Email, a.EmailConfirmed, a.FirstName, a.LastName, a.LockoutEnabled, a.LockoutEnd, a.NormalizedEmail, a.NormalizedUserName, a.PasswordHash, a.PhoneNumber, a.PhoneNumberConfirmed, a.SecurityStamp, a.TwoFactorEnabled, a.UserName
+                FROM AspNetUsers AS a
+                WHERE a.NormalizedEmail == @__normalizedEmail_0
+            ) AS t
+            LEFT JOIN RefreshToken AS r ON t.Id == r.LocalUserId
+            ORDER BY t.Id ASC, r.LocalUserId ASC), 
+        Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, LocalUser>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:09:57.110 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:09:57.278 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (168ms).
+2024-08-31 12:09:57.353 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:58.156 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:58.220 +03:00 [DBG] Executing DbCommand [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:09:58.663 +03:00 [INF] Executed DbCommand (473ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:09:58.784 +03:00 [DBG] Context 'AppDbContext' started tracking 'LocalUser' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:09:58.906 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:09:58.951 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:09:58.958 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:09:58.982 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:09:59.000 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.023 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.182 +03:00 [DBG] Compiling query expression: 
+'DbSet<IdentityUserClaim<string>>()
+    .Where(uc => uc.UserId.Equals(__user_Id_0))
+    .Select(c => c.ToClaim())'
+2024-08-31 12:09:59.217 +03:00 [DBG] Generated query execution expression: 
+'queryContext => new SingleQueryingEnumerable<Claim>(
+    (RelationalQueryContext)queryContext, 
+    RelationalCommandCache.SelectExpression(
+        Client Projections:
+            0 -> Dictionary<IProperty, int> { [Property: IdentityUserClaim<string>.Id (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: IdentityUserClaim<string>.ClaimType (string), 1], [Property: IdentityUserClaim<string>.ClaimValue (string), 2], [Property: IdentityUserClaim<string>.UserId (string) Required FK Index, 3] }
+        SELECT a.Id, a.ClaimType, a.ClaimValue, a.UserId
+        FROM AspNetUserClaims AS a
+        WHERE a.UserId == @__user_Id_0), 
+    Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, Claim>, 
+    HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+    False, 
+    False, 
+    True
+)'
+2024-08-31 12:09:59.223 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:09:59.227 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:09:59.231 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.238 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.244 +03:00 [DBG] Executing DbCommand [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+FROM [AspNetUserClaims] AS [a]
+WHERE [a].[UserId] = @__user_Id_0
+2024-08-31 12:09:59.273 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+FROM [AspNetUserClaims] AS [a]
+WHERE [a].[UserId] = @__user_Id_0
+2024-08-31 12:09:59.298 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:09:59.301 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.304 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.344 +03:00 [DBG] Compiling query expression: 
+'DbSet<IdentityUserRole<string>>()
+    .Join(
+        inner: DbSet<IdentityRole>(), 
+        outerKeySelector: userRole => userRole.RoleId, 
+        innerKeySelector: role => role.Id, 
+        resultSelector: (userRole, role) => new { 
+            userRole = userRole, 
+            role = role
+         })
+    .Where(<>h__TransparentIdentifier0 => <>h__TransparentIdentifier0.userRole.UserId.Equals(__userId_0))
+    .Select(<>h__TransparentIdentifier0 => <>h__TransparentIdentifier0.role.Name)'
+2024-08-31 12:09:59.384 +03:00 [DBG] Generated query execution expression: 
+'queryContext => new SingleQueryingEnumerable<string>(
+    (RelationalQueryContext)queryContext, 
+    RelationalCommandCache.SelectExpression(
+        Projection Mapping:
+            EmptyProjectionMember -> 0
+        SELECT a0.Name
+        FROM AspNetUserRoles AS a
+        INNER JOIN AspNetRoles AS a0 ON a.RoleId == a0.Id
+        WHERE a.UserId == @__userId_0), 
+    Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, string>, 
+    HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+    False, 
+    False, 
+    True
+)'
+2024-08-31 12:09:59.397 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:09:59.400 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:09:59.405 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.409 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.413 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:09:59.437 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:09:59.444 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:09:59.446 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.450 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.482 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:09:59.486 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:09:59.488 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.494 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.497 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:09:59.503 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:09:59.515 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:09:59.517 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.520 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.808 +03:00 [DBG] Compiling query expression: 
+'DbSet<LocalUser>()
+    .FirstOrDefault(u => u.NormalizedUserName == __normalizedUserName_0)'
+2024-08-31 12:09:59.814 +03:00 [DBG] Including navigation: 'LocalUser.RefreshTokens'.
+2024-08-31 12:09:59.832 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<LocalUser>(
+    asyncEnumerable: new SingleQueryingEnumerable<LocalUser>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: LocalUser.Id (string) Required PK AfterSave:Throw, 0], [Property: LocalUser.AccessFailedCount (int) Required, 1], [Property: LocalUser.ConcurrencyStamp (string) Concurrency, 2], [Property: LocalUser.Email (string) MaxLength(256), 3], [Property: LocalUser.EmailConfirmed (bool) Required, 4], [Property: LocalUser.FirstName (string) Required, 5], [Property: LocalUser.LastName (string) Required, 6], [Property: LocalUser.LockoutEnabled (bool) Required, 7], [Property: LocalUser.LockoutEnd (DateTimeOffset?), 8], [Property: LocalUser.NormalizedEmail (string) Index MaxLength(256), 9], [Property: LocalUser.NormalizedUserName (string) Index MaxLength(256), 10], [Property: LocalUser.PasswordHash (string), 11], [Property: LocalUser.PhoneNumber (string), 12], [Property: LocalUser.PhoneNumberConfirmed (bool) Required, 13], [Property: LocalUser.SecurityStamp (string), 14], [Property: LocalUser.TwoFactorEnabled (bool) Required, 15], [Property: LocalUser.UserName (string) MaxLength(256), 16] }
+                1 -> 0
+                2 -> Dictionary<IProperty, int> { [Property: RefreshToken.LocalUserId (no field, string) Shadow Required PK FK AfterSave:Throw, 17], [Property: RefreshToken.Id (no field, int) Shadow Required PK AfterSave:Throw ValueGenerated.OnAdd, 18], [Property: RefreshToken.CreatedOn (DateTime) Required, 19], [Property: RefreshToken.ExpiresOn (DateTime) Required, 20], [Property: RefreshToken.RevokedOn (DateTime?), 21], [Property: RefreshToken.Token (string) Required, 22] }
+                3 -> 17
+                4 -> 18
+            SELECT t.Id, t.AccessFailedCount, t.ConcurrencyStamp, t.Email, t.EmailConfirmed, t.FirstName, t.LastName, t.LockoutEnabled, t.LockoutEnd, t.NormalizedEmail, t.NormalizedUserName, t.PasswordHash, t.PhoneNumber, t.PhoneNumberConfirmed, t.SecurityStamp, t.TwoFactorEnabled, t.UserName, r.LocalUserId, r.Id, r.CreatedOn, r.ExpiresOn, r.RevokedOn, r.Token
+            FROM 
+            (
+                SELECT TOP(1) a.Id, a.AccessFailedCount, a.ConcurrencyStamp, a.Email, a.EmailConfirmed, a.FirstName, a.LastName, a.LockoutEnabled, a.LockoutEnd, a.NormalizedEmail, a.NormalizedUserName, a.PasswordHash, a.PhoneNumber, a.PhoneNumberConfirmed, a.SecurityStamp, a.TwoFactorEnabled, a.UserName
+                FROM AspNetUsers AS a
+                WHERE a.NormalizedUserName == @__normalizedUserName_0
+            ) AS t
+            LEFT JOIN RefreshToken AS r ON t.Id == r.LocalUserId
+            ORDER BY t.Id ASC, r.LocalUserId ASC), 
+        Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, LocalUser>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:09:59.838 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:09:59.840 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:09:59.843 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.848 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.853 +03:00 [DBG] Executing DbCommand [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedUserName] = @__normalizedUserName_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:09:59.879 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedUserName] = @__normalizedUserName_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:09:59.886 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:09:59.887 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.890 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:09:59.959 +03:00 [DBG] An entity of type 'LocalUser' tracked by 'AppDbContext' changed state from '"Unchanged"' to '"Modified"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:09:59.978 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:09:59.985 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:10:00.029 +03:00 [DBG] 1 entities were added and 0 entities were removed from navigation 'LocalUser.RefreshTokens'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:10:00.082 +03:00 [DBG] 'AppDbContext' generated a temporary value for the property 'Id.RefreshToken'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:10:00.099 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:10:00.119 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:10:00.167 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:10:00.172 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:10:00.179 +03:00 [DBG] Beginning transaction with isolation level 'Unspecified'.
+2024-08-31 12:10:00.213 +03:00 [DBG] Began transaction with isolation level 'ReadCommitted'.
+2024-08-31 12:10:00.314 +03:00 [DBG] Executing update commands individually as the number of batchable commands (2) is smaller than the minimum batch size (4).
+2024-08-31 12:10:00.375 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:10:00.379 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (4ms).
+2024-08-31 12:10:00.387 +03:00 [DBG] Executing DbCommand [Parameters=[@p16='?' (Size = 450), @p0='?' (DbType = Int32), @p1='?' (Size = 4000), @p17='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (DbType = Boolean), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (DbType = Boolean), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 256), @p9='?' (Size = 256), @p10='?' (Size = 4000), @p11='?' (Size = 4000), @p12='?' (DbType = Boolean), @p13='?' (Size = 4000), @p14='?' (DbType = Boolean), @p15='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [Email] = @p2, [EmailConfirmed] = @p3, [FirstName] = @p4, [LastName] = @p5, [LockoutEnabled] = @p6, [LockoutEnd] = @p7, [NormalizedEmail] = @p8, [NormalizedUserName] = @p9, [PasswordHash] = @p10, [PhoneNumber] = @p11, [PhoneNumberConfirmed] = @p12, [SecurityStamp] = @p13, [TwoFactorEnabled] = @p14, [UserName] = @p15
+WHERE [Id] = @p16 AND [ConcurrencyStamp] = @p17;
+SELECT @@ROWCOUNT;
+2024-08-31 12:10:00.464 +03:00 [INF] Executed DbCommand (77ms) [Parameters=[@p16='?' (Size = 450), @p0='?' (DbType = Int32), @p1='?' (Size = 4000), @p17='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (DbType = Boolean), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (DbType = Boolean), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 256), @p9='?' (Size = 256), @p10='?' (Size = 4000), @p11='?' (Size = 4000), @p12='?' (DbType = Boolean), @p13='?' (Size = 4000), @p14='?' (DbType = Boolean), @p15='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [Email] = @p2, [EmailConfirmed] = @p3, [FirstName] = @p4, [LastName] = @p5, [LockoutEnabled] = @p6, [LockoutEnd] = @p7, [NormalizedEmail] = @p8, [NormalizedUserName] = @p9, [PasswordHash] = @p10, [PhoneNumber] = @p11, [PhoneNumberConfirmed] = @p12, [SecurityStamp] = @p13, [TwoFactorEnabled] = @p14, [UserName] = @p15
+WHERE [Id] = @p16 AND [ConcurrencyStamp] = @p17;
+SELECT @@ROWCOUNT;
+2024-08-31 12:10:00.497 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:10:00.518 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:10:00.521 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:10:00.528 +03:00 [DBG] Executing DbCommand [Parameters=[@p0='?' (Size = 450), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [RefreshToken] ([LocalUserId], [CreatedOn], [ExpiresOn], [RevokedOn], [Token])
+VALUES (@p0, @p1, @p2, @p3, @p4);
+SELECT [Id]
+FROM [RefreshToken]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity() AND [LocalUserId] = @p0;
+2024-08-31 12:10:00.568 +03:00 [INF] Executed DbCommand (40ms) [Parameters=[@p0='?' (Size = 450), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [RefreshToken] ([LocalUserId], [CreatedOn], [ExpiresOn], [RevokedOn], [Token])
+VALUES (@p0, @p1, @p2, @p3, @p4);
+SELECT [Id]
+FROM [RefreshToken]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity() AND [LocalUserId] = @p0;
+2024-08-31 12:10:00.609 +03:00 [DBG] The foreign key property 'RefreshToken.Id' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2024-08-31 12:10:00.624 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:10:00.646 +03:00 [DBG] Committing transaction.
+2024-08-31 12:10:00.666 +03:00 [DBG] Committed transaction.
+2024-08-31 12:10:00.683 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:10:00.687 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:10:00.699 +03:00 [DBG] Disposing transaction.
+2024-08-31 12:10:00.709 +03:00 [DBG] An entity of type 'RefreshToken' tracked by 'AppDbContext' changed state from '"Added"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:10:00.715 +03:00 [DBG] An entity of type 'LocalUser' tracked by 'AppDbContext' changed state from '"Modified"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:10:00.724 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 2 entities written to the database.
+2024-08-31 12:10:00.755 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:10:00.770 +03:00 [DBG] No information found on request to perform content negotiation.
+2024-08-31 12:10:00.771 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:10:00.773 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:10:00.777 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:10:00.780 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[HotelBookingPlatform.Domain.Helpers.AuthModel, HotelBookingPlatform.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2024-08-31 12:10:00.912 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API) in 8001.5896ms
+2024-08-31 12:10:00.928 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:10:00.956 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:10:00.972 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7054/api/auth/login application/json 72 - 200 - application/json;+charset=utf-8 8414.5506ms
+2024-08-31 12:11:12.753 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7054/api/Discount application/json 131
+2024-08-31 12:11:12.779 +03:00 [DBG] 1 candidate(s) found for the request path '/api/Discount'
+2024-08-31 12:11:12.795 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.DiscountController.AddDiscount (HotelBookingPlatform.API)' with route pattern 'api/Discount' is valid for the request path '/api/Discount'
+2024-08-31 12:11:12.800 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.DiscountController.AddDiscount (HotelBookingPlatform.API)'
+2024-08-31 12:11:12.803 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:11:12.808 +03:00 [INF] No CORS policy found for the specified request.
+2024-08-31 12:11:12.954 +03:00 [DBG] Successfully validated the token.
+2024-08-31 12:11:12.958 +03:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2024-08-31 12:11:12.974 +03:00 [DBG] Authorization was successful.
+2024-08-31 12:11:12.977 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.DiscountController.AddDiscount (HotelBookingPlatform.API)'
+2024-08-31 12:11:12.985 +03:00 [INF] Route matched with {action = "AddDiscount", controller = "Discount"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] AddDiscount(HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest) on controller HotelBookingPlatform.API.Controllers.DiscountController (HotelBookingPlatform.API).
+2024-08-31 12:11:12.989 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:11:12.993 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:11:12.996 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)","Microsoft.AspNetCore.Mvc.Filters.ResponseCacheFilter"]
+2024-08-31 12:11:13.003 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:11:13.004 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:11:13.006 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.DiscountController (HotelBookingPlatform.API)
+2024-08-31 12:11:13.358 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.DiscountController (HotelBookingPlatform.API)
+2024-08-31 12:11:13.364 +03:00 [DBG] Attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest' ...
+2024-08-31 12:11:13.367 +03:00 [DBG] Attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest' using the name '' in request data ...
+2024-08-31 12:11:13.370 +03:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter' for content type 'application/json'.
+2024-08-31 12:11:13.382 +03:00 [DBG] Connection id "0HN69JI8M0VMA", Request id "0HN69JI8M0VMA:00000003": started reading request body.
+2024-08-31 12:11:13.386 +03:00 [DBG] Connection id "0HN69JI8M0VMA", Request id "0HN69JI8M0VMA:00000003": done reading request body.
+2024-08-31 12:11:13.414 +03:00 [DBG] JSON input formatter succeeded, deserializing to type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest'
+2024-08-31 12:11:13.418 +03:00 [DBG] Done attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest'.
+2024-08-31 12:11:13.420 +03:00 [DBG] Done attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest'.
+2024-08-31 12:11:13.424 +03:00 [DBG] Attempting to validate the bound parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest' ...
+2024-08-31 12:11:13.431 +03:00 [DBG] Done attempting to validate the bound parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Discount.DiscountCreateRequest'.
+2024-08-31 12:11:13.531 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:11:13.545 +03:00 [DBG] Compiling query expression: 
+'DbSet<Room>()
+    .Include(r => r.RoomClass)
+    .FirstOrDefault(r => r.RoomID == __id_0)'
+2024-08-31 12:11:13.575 +03:00 [DBG] Including navigation: 'Room.RoomClass'.
+2024-08-31 12:11:13.591 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<Room>(
+    asyncEnumerable: new SingleQueryingEnumerable<Room>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: Room.RoomID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: Room.AdultsCapacity (int) Required, 1], [Property: Room.ChildrenCapacity (int) Required, 2], [Property: Room.CreatedAtUtc (DateTime) Required, 3], [Property: Room.Number (string) Required MaxLength(50), 4], [Property: Room.PricePerNight (decimal) Required, 5], [Property: Room.RoomClassID (int) Required FK Index, 6] }
+                1 -> Dictionary<IProperty, int> { [Property: RoomClass.RoomClassID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 7], [Property: RoomClass.CreatedAtUtc (DateTime) Required, 8], [Property: RoomClass.Description (string) MaxLength(500), 9], [Property: RoomClass.HotelId (int) Required FK Index, 10], [Property: RoomClass.Name (string) Required, 11], [Property: RoomClass.RoomType (RoomType) Required, 12] }
+            SELECT TOP(1) r.RoomID, r.AdultsCapacity, r.ChildrenCapacity, r.CreatedAtUtc, r.Number, r.PricePerNight, r.RoomClassID, r0.RoomClassID, r0.CreatedAtUtc, r0.Description, r0.HotelId, r0.Name, r0.RoomType
+            FROM Rooms AS r
+            INNER JOIN RoomClasses AS r0 ON r.RoomClassID == r0.RoomClassID
+            WHERE r.RoomID == @__id_0), 
+        Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, Room>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:11:13.598 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:11:13.603 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (4ms).
+2024-08-31 12:11:13.606 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:13.609 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:13.611 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:11:13.639 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:11:13.687 +03:00 [DBG] Context 'AppDbContext' started tracking 'Room' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:11:13.807 +03:00 [DBG] Context 'AppDbContext' started tracking 'RoomClass' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:11:13.908 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:11:13.910 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:13.915 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:14.049 +03:00 [DBG] 'AppDbContext' generated a temporary value for the property 'DiscountID.Discount'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:11:14.108 +03:00 [DBG] Context 'AppDbContext' started tracking 'Discount' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:11:14.116 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:11:14.118 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:11:14.155 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:11:14.157 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:14.161 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:14.164 +03:00 [DBG] Beginning transaction with isolation level 'Unspecified'.
+2024-08-31 12:11:14.168 +03:00 [DBG] Began transaction with isolation level 'ReadCommitted'.
+2024-08-31 12:11:14.173 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:11:14.175 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:11:14.183 +03:00 [DBG] Executing DbCommand [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = Boolean), @p3='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (DbType = Int32), @p6='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Discounts] ([CreatedAtUtc], [EndDateUtc], [IsActive], [Percentage], [RoomClassID], [RoomID], [StartDateUtc])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT [DiscountID]
+FROM [Discounts]
+WHERE @@ROWCOUNT = 1 AND [DiscountID] = scope_identity();
+2024-08-31 12:11:14.201 +03:00 [INF] Executed DbCommand (19ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = DateTime2), @p2='?' (DbType = Boolean), @p3='?' (Precision = 5) (Scale = 2) (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (DbType = Int32), @p6='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Discounts] ([CreatedAtUtc], [EndDateUtc], [IsActive], [Percentage], [RoomClassID], [RoomID], [StartDateUtc])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT [DiscountID]
+FROM [Discounts]
+WHERE @@ROWCOUNT = 1 AND [DiscountID] = scope_identity();
+2024-08-31 12:11:14.206 +03:00 [DBG] The foreign key property 'Discount.DiscountID' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2024-08-31 12:11:14.209 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:11:14.211 +03:00 [DBG] Committing transaction.
+2024-08-31 12:11:14.214 +03:00 [DBG] Committed transaction.
+2024-08-31 12:11:14.216 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:14.218 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:11:14.220 +03:00 [DBG] Disposing transaction.
+2024-08-31 12:11:14.223 +03:00 [DBG] An entity of type 'Discount' tracked by 'AppDbContext' changed state from '"Added"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:11:14.228 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 1 entities written to the database.
+2024-08-31 12:11:14.232 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:11:14.233 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:11:14.234 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:11:14.235 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 0 entities written to the database.
+2024-08-31 12:11:14.258 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:11:14.266 +03:00 [DBG] Attempting to select an output formatter based on Accept header '["text/plain"]'.
+2024-08-31 12:11:14.270 +03:00 [DBG] Could not find an output formatter based on content negotiation. Accepted types were (["text/plain"])
+2024-08-31 12:11:14.273 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:11:14.276 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:11:14.277 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:11:14.280 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[HotelBookingPlatform.Domain.DTOs.Discount.DiscountDto, HotelBookingPlatform.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2024-08-31 12:11:14.288 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.DiscountController.AddDiscount (HotelBookingPlatform.API) in 1281.9065ms
+2024-08-31 12:11:14.290 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.DiscountController.AddDiscount (HotelBookingPlatform.API)'
+2024-08-31 12:11:14.296 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:11:14.298 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7054/api/Discount application/json 131 - 200 - application/json;+charset=utf-8 1545.7438ms
+2024-08-31 12:11:39.947 +03:00 [DBG] Connection id "0HN69JI8M0VMA" received FIN.
+2024-08-31 12:11:39.950 +03:00 [DBG] Connection id "0HN69JI8M0VMA" is closed. The last processed stream ID was 3.
+2024-08-31 12:11:39.956 +03:00 [DBG] Connection id "0HN69JI8M0VMA" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:11:39.962 +03:00 [DBG] Connection id "0HN69JI8M0VMA" stopped.
+2024-08-31 12:12:19.020 +03:00 [DBG] Connection id "0HN69JI8M0VMB" accepted.
+2024-08-31 12:12:19.049 +03:00 [DBG] Connection id "0HN69JI8M0VMB" started.
+2024-08-31 12:12:19.093 +03:00 [DBG] Connection 0HN69JI8M0VMB established using the following protocol: "Tls13"
+2024-08-31 12:12:19.124 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7054/api/auth/login application/json 78
+2024-08-31 12:12:19.165 +03:00 [DBG] 1 candidate(s) found for the request path '/api/auth/login'
+2024-08-31 12:12:19.168 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)' with route pattern 'api/auth/login' is valid for the request path '/api/auth/login'
+2024-08-31 12:12:19.172 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:12:19.174 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:12:19.179 +03:00 [INF] No CORS policy found for the specified request.
+2024-08-31 12:12:19.183 +03:00 [DBG] Successfully validated the token.
+2024-08-31 12:12:19.184 +03:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2024-08-31 12:12:19.186 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:12:19.189 +03:00 [INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] LoginAsync(HotelBookingPlatform.Domain.Helpers.LoginModel) on controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API).
+2024-08-31 12:12:19.191 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:12:19.193 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:12:19.195 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)"]
+2024-08-31 12:12:19.197 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:12:19.200 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:12:19.204 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API)
+2024-08-31 12:12:19.210 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.UserController (HotelBookingPlatform.API)
+2024-08-31 12:12:19.212 +03:00 [DBG] Attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' ...
+2024-08-31 12:12:19.214 +03:00 [DBG] Attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' using the name '' in request data ...
+2024-08-31 12:12:19.216 +03:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter' for content type 'application/json'.
+2024-08-31 12:12:19.219 +03:00 [DBG] Connection id "0HN69JI8M0VMB", Request id "0HN69JI8M0VMB:00000001": started reading request body.
+2024-08-31 12:12:19.222 +03:00 [DBG] Connection id "0HN69JI8M0VMB", Request id "0HN69JI8M0VMB:00000001": done reading request body.
+2024-08-31 12:12:19.225 +03:00 [DBG] JSON input formatter succeeded, deserializing to type 'HotelBookingPlatform.Domain.Helpers.LoginModel'
+2024-08-31 12:12:19.227 +03:00 [DBG] Done attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:12:19.229 +03:00 [DBG] Done attempting to bind parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:12:19.230 +03:00 [DBG] Attempting to validate the bound parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel' ...
+2024-08-31 12:12:19.235 +03:00 [DBG] Done attempting to validate the bound parameter 'model' of type 'HotelBookingPlatform.Domain.Helpers.LoginModel'.
+2024-08-31 12:12:19.261 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:12:19.272 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:12:19.275 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:12:19.279 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.282 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.284 +03:00 [DBG] Executing DbCommand [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:12:19.313 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:12:19.333 +03:00 [DBG] Context 'AppDbContext' started tracking 'LocalUser' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:12:19.339 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:12:19.344 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:12:19.349 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:12:19.355 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.359 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.377 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:12:19.380 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:12:19.382 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.385 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.388 +03:00 [DBG] Executing DbCommand [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+FROM [AspNetUserClaims] AS [a]
+WHERE [a].[UserId] = @__user_Id_0
+2024-08-31 12:12:19.394 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+FROM [AspNetUserClaims] AS [a]
+WHERE [a].[UserId] = @__user_Id_0
+2024-08-31 12:12:19.397 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:12:19.398 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.401 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.404 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:12:19.406 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:12:19.408 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.410 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.411 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:12:19.420 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:12:19.426 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:12:19.427 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.429 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.431 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:12:19.434 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:12:19.437 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.440 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.443 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:12:19.447 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2024-08-31 12:12:19.450 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:12:19.457 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.460 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:12:19.468 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:12:19.474 +03:00 [DBG] No information found on request to perform content negotiation.
+2024-08-31 12:12:19.476 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:12:19.477 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:12:19.478 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:12:19.480 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[HotelBookingPlatform.Domain.Helpers.AuthModel, HotelBookingPlatform.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2024-08-31 12:12:19.483 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API) in 278.9428ms
+2024-08-31 12:12:19.487 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.UserController.LoginAsync (HotelBookingPlatform.API)'
+2024-08-31 12:12:19.492 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:12:19.494 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7054/api/auth/login application/json 78 - 200 - application/json;+charset=utf-8 370.1380ms
+2024-08-31 12:12:19.966 +03:00 [DBG] Connection id "0HN69JI8M0VMB" received FIN.
+2024-08-31 12:12:19.970 +03:00 [DBG] Connection id "0HN69JI8M0VMB" is closed. The last processed stream ID was 1.
+2024-08-31 12:12:19.974 +03:00 [DBG] Connection id "0HN69JI8M0VMB" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:12:19.979 +03:00 [DBG] Connection id "0HN69JI8M0VMB" stopped.
+2024-08-31 12:13:19.245 +03:00 [DBG] Connection id "0HN69JI8M0VMC" accepted.
+2024-08-31 12:13:19.248 +03:00 [DBG] Connection id "0HN69JI8M0VMC" started.
+2024-08-31 12:13:19.258 +03:00 [DBG] Connection 0HN69JI8M0VMC established using the following protocol: "Tls13"
+2024-08-31 12:13:19.275 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7054/api/Booking/create application/json 165
+2024-08-31 12:13:19.304 +03:00 [DBG] 1 candidate(s) found for the request path '/api/Booking/create'
+2024-08-31 12:13:19.308 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.BookingController.CreateBooking (HotelBookingPlatform.API)' with route pattern 'api/Booking/create' is valid for the request path '/api/Booking/create'
+2024-08-31 12:13:19.314 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.BookingController.CreateBooking (HotelBookingPlatform.API)'
+2024-08-31 12:13:19.319 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:13:19.320 +03:00 [INF] No CORS policy found for the specified request.
+2024-08-31 12:13:19.322 +03:00 [DBG] Successfully validated the token.
+2024-08-31 12:13:19.323 +03:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2024-08-31 12:13:19.325 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.BookingController.CreateBooking (HotelBookingPlatform.API)'
+2024-08-31 12:13:19.341 +03:00 [INF] Route matched with {action = "CreateBooking", controller = "Booking"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateBooking(HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest) on controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API).
+2024-08-31 12:13:19.349 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:13:19.354 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:13:19.360 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)","Microsoft.AspNetCore.Mvc.Filters.ResponseCacheFilter"]
+2024-08-31 12:13:19.365 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:13:19.368 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:13:19.371 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:13:19.375 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:13:19.377 +03:00 [DBG] Attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest' ...
+2024-08-31 12:13:19.380 +03:00 [DBG] Attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest' using the name '' in request data ...
+2024-08-31 12:13:19.383 +03:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter' for content type 'application/json'.
+2024-08-31 12:13:19.394 +03:00 [DBG] Connection id "0HN69JI8M0VMC", Request id "0HN69JI8M0VMC:00000001": started reading request body.
+2024-08-31 12:13:19.398 +03:00 [DBG] Connection id "0HN69JI8M0VMC", Request id "0HN69JI8M0VMC:00000001": done reading request body.
+2024-08-31 12:13:19.409 +03:00 [DBG] JSON input formatter succeeded, deserializing to type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest'
+2024-08-31 12:13:19.411 +03:00 [DBG] Done attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest'.
+2024-08-31 12:13:19.416 +03:00 [DBG] Done attempting to bind parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest'.
+2024-08-31 12:13:19.420 +03:00 [DBG] Attempting to validate the bound parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest' ...
+2024-08-31 12:13:19.437 +03:00 [DBG] Done attempting to validate the bound parameter 'request' of type 'HotelBookingPlatform.Domain.DTOs.Booking.BookingCreateRequest'.
+2024-08-31 12:13:19.453 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:13:19.457 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:19.459 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:13:19.461 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.466 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.469 +03:00 [DBG] Executing DbCommand [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:13:19.489 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:13:19.498 +03:00 [DBG] Context 'AppDbContext' started tracking 'LocalUser' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.503 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.507 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.509 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:19.510 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.514 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.521 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:19.524 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:13:19.528 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.531 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.535 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:19.557 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:19.589 +03:00 [DBG] Context 'AppDbContext' started tracking 'Room' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.592 +03:00 [DBG] Context 'AppDbContext' started tracking 'RoomClass' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.596 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:19.599 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.603 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.611 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:19.615 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:13:19.618 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.621 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.625 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:19.639 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:19.645 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:19.647 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.650 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.667 +03:00 [DBG] Compiling query expression: 
+'DbSet<Discount>()
+    .Where(d => d.RoomID == __roomId_0 && d.StartDateUtc <= __checkOutDate_1 && d.EndDateUtc >= __checkInDate_2 && DateTime.UtcNow >= d.StartDateUtc && DateTime.UtcNow <= d.EndDateUtc)
+    .FirstOrDefault()'
+2024-08-31 12:13:19.696 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<Discount>(
+    asyncEnumerable: new SingleQueryingEnumerable<Discount>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Projection Mapping:
+                EmptyProjectionMember -> Dictionary<IProperty, int> { [Property: Discount.DiscountID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: Discount.CreatedAtUtc (DateTime) Required, 1], [Property: Discount.EndDateUtc (DateTime) Required, 2], [Property: Discount.IsActive (bool) Required, 3], [Property: Discount.Percentage (decimal) Required, 4], [Property: Discount.RoomClassID (no field, int?) Shadow FK Index, 5], [Property: Discount.RoomID (int) Required FK Index, 6], [Property: Discount.StartDateUtc (DateTime) Required, 7] }
+            SELECT TOP(1) d.DiscountID, d.CreatedAtUtc, d.EndDateUtc, d.IsActive, d.Percentage, d.RoomClassID, d.RoomID, d.StartDateUtc
+            FROM Discounts AS d
+            WHERE ((((d.RoomID == @__roomId_0) && (d.StartDateUtc <= @__checkOutDate_1)) && (d.EndDateUtc >= @__checkInDate_2)) && (GETUTCDATE() >= d.StartDateUtc)) && (GETUTCDATE() <= d.EndDateUtc)), 
+        Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, Discount>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:13:19.709 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:19.711 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:13:19.714 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.718 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.721 +03:00 [DBG] Executing DbCommand [Parameters=[@__roomId_0='?' (DbType = Int32), @__checkOutDate_1='?' (DbType = DateTime2), @__checkInDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[DiscountID], [d].[CreatedAtUtc], [d].[EndDateUtc], [d].[IsActive], [d].[Percentage], [d].[RoomClassID], [d].[RoomID], [d].[StartDateUtc]
+FROM [Discounts] AS [d]
+WHERE (((([d].[RoomID] = @__roomId_0) AND ([d].[StartDateUtc] <= @__checkOutDate_1)) AND ([d].[EndDateUtc] >= @__checkInDate_2)) AND (GETUTCDATE() >= [d].[StartDateUtc])) AND (GETUTCDATE() <= [d].[EndDateUtc])
+2024-08-31 12:13:19.744 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[@__roomId_0='?' (DbType = Int32), @__checkOutDate_1='?' (DbType = DateTime2), @__checkInDate_2='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[DiscountID], [d].[CreatedAtUtc], [d].[EndDateUtc], [d].[IsActive], [d].[Percentage], [d].[RoomClassID], [d].[RoomID], [d].[StartDateUtc]
+FROM [Discounts] AS [d]
+WHERE (((([d].[RoomID] = @__roomId_0) AND ([d].[StartDateUtc] <= @__checkOutDate_1)) AND ([d].[EndDateUtc] >= @__checkInDate_2)) AND (GETUTCDATE() >= [d].[StartDateUtc])) AND (GETUTCDATE() <= [d].[EndDateUtc])
+2024-08-31 12:13:19.753 +03:00 [DBG] Context 'AppDbContext' started tracking 'Discount' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:19.758 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:19.760 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.763 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.773 +03:00 [DBG] Compiling query expression: 
+'DbSet<Hotel>()
+    .Include(h => h.City)
+    .Include(h => h.Owner)
+    .Include(h => h.Reviews)
+    .AsSplitQuery()
+    .FirstOrDefault(h => h.HotelId == __id_0)'
+2024-08-31 12:13:19.781 +03:00 [DBG] Including navigation: 'Hotel.City'.
+2024-08-31 12:13:19.786 +03:00 [DBG] Including navigation: 'Hotel.Owner'.
+2024-08-31 12:13:19.790 +03:00 [DBG] Including navigation: 'Hotel.Reviews'.
+2024-08-31 12:13:19.873 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<Hotel>(
+    asyncEnumerable: new SplitQueryingEnumerable<Hotel>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: Hotel.HotelId (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: Hotel.CityID (int) Required FK Index, 1], [Property: Hotel.CreatedAtUtc (DateTime) Required, 2], [Property: Hotel.Description (string) MaxLength(500), 3], [Property: Hotel.Name (string) Required MaxLength(100), 4], [Property: Hotel.OwnerID (int) Required FK Index, 5], [Property: Hotel.PhoneNumber (string) Required MaxLength(15), 6], [Property: Hotel.StarRating (int) Required, 7] }
+                1 -> Dictionary<IProperty, int> { [Property: City.CityID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 8], [Property: City.Country (string) Required, 9], [Property: City.CreatedAtUtc (DateTime) Required, 10], [Property: City.Description (string) Required, 11], [Property: City.Name (string) Required, 12], [Property: City.PostOffice (string) Required, 13], [Property: City.VisitCount (int) Required, 14] }
+                2 -> Dictionary<IProperty, int> { [Property: Owner.OwnerID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 15], [Property: Owner.Email (string) Required, 16], [Property: Owner.FirstName (string) Required, 17], [Property: Owner.LastName (string) Required, 18], [Property: Owner.PhoneNumber (string) Required, 19] }
+                3 -> 0
+                4 -> 8
+                5 -> 15
+            SELECT TOP(1) h.HotelId, h.CityID, h.CreatedAtUtc, h.Description, h.Name, h.OwnerID, h.PhoneNumber, h.StarRating, c.CityID, c.Country, c.CreatedAtUtc, c.Description, c.Name, c.PostOffice, c.VisitCount, o.OwnerID, o.Email, o.FirstName, o.LastName, o.PhoneNumber
+            FROM Hotels AS h
+            INNER JOIN Cities AS c ON h.CityID == c.CityID
+            INNER JOIN owners AS o ON h.OwnerID == o.OwnerID
+            WHERE h.HotelId == @__id_0
+            ORDER BY h.HotelId ASC, c.CityID ASC, o.OwnerID ASC), 
+        Func<QueryContext, DbDataReader, ResultContext, SplitQueryResultCoordinator, Hotel>, 
+        null, 
+        Func<QueryContext, IExecutionStrategy, SplitQueryResultCoordinator, Task>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:13:19.893 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:19.895 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:13:19.897 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.901 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:19.903 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [c].[CityID], [c].[Country], [c].[CreatedAtUtc], [c].[Description], [c].[Name], [c].[PostOffice], [c].[VisitCount], [o].[OwnerID], [o].[Email], [o].[FirstName], [o].[LastName], [o].[PhoneNumber]
+FROM [Hotels] AS [h]
+INNER JOIN [Cities] AS [c] ON [h].[CityID] = [c].[CityID]
+INNER JOIN [owners] AS [o] ON [h].[OwnerID] = [o].[OwnerID]
+WHERE [h].[HotelId] = @__id_0
+ORDER BY [h].[HotelId], [c].[CityID], [o].[OwnerID]
+2024-08-31 12:13:19.940 +03:00 [INF] Executed DbCommand (36ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [c].[CityID], [c].[Country], [c].[CreatedAtUtc], [c].[Description], [c].[Name], [c].[PostOffice], [c].[VisitCount], [o].[OwnerID], [o].[Email], [o].[FirstName], [o].[LastName], [o].[PhoneNumber]
+FROM [Hotels] AS [h]
+INNER JOIN [Cities] AS [c] ON [h].[CityID] = [c].[CityID]
+INNER JOIN [owners] AS [o] ON [h].[OwnerID] = [o].[OwnerID]
+WHERE [h].[HotelId] = @__id_0
+ORDER BY [h].[HotelId], [c].[CityID], [o].[OwnerID]
+2024-08-31 12:13:20.025 +03:00 [DBG] Context 'AppDbContext' started tracking 'Hotel' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.058 +03:00 [DBG] Context 'AppDbContext' started tracking 'City' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.095 +03:00 [DBG] Context 'AppDbContext' started tracking 'Owner' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.151 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:20.154 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:13:20.158 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[ReviewID], [r].[Content], [r].[CreatedAtUtc], [r].[HotelId], [r].[ModifiedAtUtc], [r].[Rating], [r].[UserId], [t].[HotelId], [t].[CityID], [t].[OwnerID]
+FROM (
+    SELECT TOP(1) [h].[HotelId], [c].[CityID], [o].[OwnerID]
+    FROM [Hotels] AS [h]
+    INNER JOIN [Cities] AS [c] ON [h].[CityID] = [c].[CityID]
+    INNER JOIN [owners] AS [o] ON [h].[OwnerID] = [o].[OwnerID]
+    WHERE [h].[HotelId] = @__id_0
+) AS [t]
+INNER JOIN [Reviews] AS [r] ON [t].[HotelId] = [r].[HotelId]
+ORDER BY [t].[HotelId], [t].[CityID], [t].[OwnerID]
+2024-08-31 12:13:20.192 +03:00 [INF] Executed DbCommand (34ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[ReviewID], [r].[Content], [r].[CreatedAtUtc], [r].[HotelId], [r].[ModifiedAtUtc], [r].[Rating], [r].[UserId], [t].[HotelId], [t].[CityID], [t].[OwnerID]
+FROM (
+    SELECT TOP(1) [h].[HotelId], [c].[CityID], [o].[OwnerID]
+    FROM [Hotels] AS [h]
+    INNER JOIN [Cities] AS [c] ON [h].[CityID] = [c].[CityID]
+    INNER JOIN [owners] AS [o] ON [h].[OwnerID] = [o].[OwnerID]
+    WHERE [h].[HotelId] = @__id_0
+) AS [t]
+INNER JOIN [Reviews] AS [r] ON [t].[HotelId] = [r].[HotelId]
+ORDER BY [t].[HotelId], [t].[CityID], [t].[OwnerID]
+2024-08-31 12:13:20.215 +03:00 [DBG] Context 'AppDbContext' started tracking 'Review' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.250 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:20.253 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:20.255 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.258 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.262 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:20.265 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:13:20.267 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.269 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.271 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:20.282 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [r].[RoomID], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID], [r0].[RoomClassID], [r0].[CreatedAtUtc], [r0].[Description], [r0].[HotelId], [r0].[Name], [r0].[RoomType]
+FROM [Rooms] AS [r]
+INNER JOIN [RoomClasses] AS [r0] ON [r].[RoomClassID] = [r0].[RoomClassID]
+WHERE [r].[RoomID] = @__id_0
+2024-08-31 12:13:20.286 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:20.288 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.290 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.299 +03:00 [DBG] 'AppDbContext' generated a temporary value for the property 'BookingID.Booking'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.384 +03:00 [DBG] Context 'AppDbContext' started tracking 'Booking' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.412 +03:00 [DBG] Context 'AppDbContext' started tracking 'BookingRoom' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.415 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:13:20.417 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:13:20.473 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:13:20.476 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.479 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.482 +03:00 [DBG] Beginning transaction with isolation level 'Unspecified'.
+2024-08-31 12:13:20.485 +03:00 [DBG] Began transaction with isolation level 'ReadCommitted'.
+2024-08-31 12:13:20.493 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:20.495 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:13:20.502 +03:00 [DBG] Executing DbCommand [Parameters=[@p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Int32), @p8='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p9='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Bookings] ([AfterDiscountedPrice], [BookingDateUtc], [CheckInDateUtc], [CheckOutDateUtc], [ConfirmationNumber], [HotelId], [PaymentMethod], [Status], [TotalPrice], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT [BookingID]
+FROM [Bookings]
+WHERE @@ROWCOUNT = 1 AND [BookingID] = scope_identity();
+2024-08-31 12:13:20.524 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Int32), @p8='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p9='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Bookings] ([AfterDiscountedPrice], [BookingDateUtc], [CheckInDateUtc], [CheckOutDateUtc], [ConfirmationNumber], [HotelId], [PaymentMethod], [Status], [TotalPrice], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT [BookingID]
+FROM [Bookings]
+WHERE @@ROWCOUNT = 1 AND [BookingID] = scope_identity();
+2024-08-31 12:13:20.533 +03:00 [DBG] The foreign key property 'Booking.BookingID' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2024-08-31 12:13:20.540 +03:00 [DBG] The foreign key property 'BookingRoom.BookingID' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+2024-08-31 12:13:20.547 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:20.549 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:13:20.551 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:13:20.555 +03:00 [DBG] Executing DbCommand [Parameters=[@p10='?' (DbType = Int32), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [BookingRoom] ([BookingID], [RoomID])
+VALUES (@p10, @p11);
+2024-08-31 12:13:20.572 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@p10='?' (DbType = Int32), @p11='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [BookingRoom] ([BookingID], [RoomID])
+VALUES (@p10, @p11);
+2024-08-31 12:13:20.577 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:13:20.579 +03:00 [DBG] Committing transaction.
+2024-08-31 12:13:20.582 +03:00 [DBG] Committed transaction.
+2024-08-31 12:13:20.584 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.587 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:13:20.590 +03:00 [DBG] Disposing transaction.
+2024-08-31 12:13:20.596 +03:00 [DBG] An entity of type 'Booking' tracked by 'AppDbContext' changed state from '"Added"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.602 +03:00 [DBG] An entity of type 'BookingRoom' tracked by 'AppDbContext' changed state from '"Added"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:13:20.605 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 2 entities written to the database.
+2024-08-31 12:13:20.607 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:13:20.609 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:13:20.611 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:13:20.613 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 0 entities written to the database.
+2024-08-31 12:13:20.625 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:13:20.631 +03:00 [DBG] No information found on request to perform content negotiation.
+2024-08-31 12:13:20.633 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:13:20.634 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:13:20.636 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:13:20.638 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[HotelBookingPlatform.Domain.DTOs.Booking.BookingDto, HotelBookingPlatform.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2024-08-31 12:13:20.670 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.BookingController.CreateBooking (HotelBookingPlatform.API) in 1299.3825ms
+2024-08-31 12:13:20.673 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.BookingController.CreateBooking (HotelBookingPlatform.API)'
+2024-08-31 12:13:20.681 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:13:20.689 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7054/api/Booking/create application/json 165 - 200 - application/json;+charset=utf-8 1413.0849ms
+2024-08-31 12:13:29.973 +03:00 [DBG] Connection id "0HN69JI8M0VMC" received FIN.
+2024-08-31 12:13:29.975 +03:00 [DBG] Connection id "0HN69JI8M0VMC" is closed. The last processed stream ID was 1.
+2024-08-31 12:13:29.979 +03:00 [DBG] Connection id "0HN69JI8M0VMC" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:13:29.985 +03:00 [DBG] Connection id "0HN69JI8M0VMC" stopped.
+2024-08-31 12:16:01.955 +03:00 [DBG] Connection id "0HN69JI8M0VMD" accepted.
+2024-08-31 12:16:01.956 +03:00 [DBG] Connection id "0HN69JI8M0VMD" started.
+2024-08-31 12:16:01.972 +03:00 [DBG] Connection 0HN69JI8M0VMD established using the following protocol: "Tls13"
+2024-08-31 12:16:01.983 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/api/Booking/53 - -
+2024-08-31 12:16:02.008 +03:00 [DBG] 1 candidate(s) found for the request path '/api/Booking/53'
+2024-08-31 12:16:02.018 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.BookingController.GetBooking (HotelBookingPlatform.API)' with route pattern 'api/Booking/{id}' is valid for the request path '/api/Booking/53'
+2024-08-31 12:16:02.022 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.BookingController.GetBooking (HotelBookingPlatform.API)'
+2024-08-31 12:16:02.023 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:16:02.024 +03:00 [DBG] Successfully validated the token.
+2024-08-31 12:16:02.026 +03:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2024-08-31 12:16:02.030 +03:00 [DBG] Authorization was successful.
+2024-08-31 12:16:02.033 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.BookingController.GetBooking (HotelBookingPlatform.API)'
+2024-08-31 12:16:02.047 +03:00 [INF] Route matched with {action = "GetBooking", controller = "Booking"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetBooking(Int32) on controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API).
+2024-08-31 12:16:02.053 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:16:02.055 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:16:02.057 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)","Microsoft.AspNetCore.Mvc.Filters.ResponseCacheFilter"]
+2024-08-31 12:16:02.060 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:16:02.063 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:16:02.066 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:16:02.069 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:16:02.071 +03:00 [DBG] Attempting to bind parameter 'id' of type 'System.Int32' ...
+2024-08-31 12:16:02.074 +03:00 [DBG] Attempting to bind parameter 'id' of type 'System.Int32' using the name 'id' in request data ...
+2024-08-31 12:16:02.078 +03:00 [DBG] Done attempting to bind parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:02.079 +03:00 [DBG] Done attempting to bind parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:02.084 +03:00 [DBG] Attempting to validate the bound parameter 'id' of type 'System.Int32' ...
+2024-08-31 12:16:02.086 +03:00 [DBG] Done attempting to validate the bound parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:02.091 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:16:02.097 +03:00 [DBG] Compiling query expression: 
+'DbSet<Booking>()
+    .Include(b => b.Hotel)
+    .Include(b => b.Rooms)
+    .Include(b => b.User)
+    .AsSplitQuery()
+    .FirstOrDefault(b => b.BookingID == __id_0)'
+2024-08-31 12:16:02.106 +03:00 [DBG] Including navigation: 'Booking.Hotel'.
+2024-08-31 12:16:02.115 +03:00 [DBG] Including navigation: 'Booking.Rooms'.
+2024-08-31 12:16:02.125 +03:00 [DBG] Including navigation: 'Booking.User'.
+2024-08-31 12:16:02.129 +03:00 [DBG] Including navigation: 'LocalUser.RefreshTokens'.
+2024-08-31 12:16:02.199 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<Booking>(
+    asyncEnumerable: new SplitQueryingEnumerable<Booking>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: Booking.BookingID (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: Booking.AfterDiscountedPrice (decimal) Required, 1], [Property: Booking.BookingDateUtc (DateTime) Required, 2], [Property: Booking.CheckInDateUtc (DateTime) Required, 3], [Property: Booking.CheckOutDateUtc (DateTime) Required, 4], [Property: Booking.ConfirmationNumber (string) Required, 5], [Property: Booking.HotelId (int) Required FK Index, 6], [Property: Booking.PaymentMethod (PaymentMethod) Required, 7], [Property: Booking.Status (BookingStatus) Required, 8], [Property: Booking.TotalPrice (decimal) Required, 9], [Property: Booking.UserId (string) Required FK Index, 10] }
+                1 -> Dictionary<IProperty, int> { [Property: Hotel.HotelId (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 11], [Property: Hotel.CityID (int) Required FK Index, 12], [Property: Hotel.CreatedAtUtc (DateTime) Required, 13], [Property: Hotel.Description (string) MaxLength(500), 14], [Property: Hotel.Name (string) Required MaxLength(100), 15], [Property: Hotel.OwnerID (int) Required FK Index, 16], [Property: Hotel.PhoneNumber (string) Required MaxLength(15), 17], [Property: Hotel.StarRating (int) Required, 18] }
+                2 -> 0
+                3 -> 11
+                4 -> 19
+                5 -> Dictionary<IProperty, int> { [Property: LocalUser.Id (string) Required PK AfterSave:Throw, 19], [Property: LocalUser.AccessFailedCount (int) Required, 20], [Property: LocalUser.ConcurrencyStamp (string) Concurrency, 21], [Property: LocalUser.Email (string) MaxLength(256), 22], [Property: LocalUser.EmailConfirmed (bool) Required, 23], [Property: LocalUser.FirstName (string) Required, 24], [Property: LocalUser.LastName (string) Required, 25], [Property: LocalUser.LockoutEnabled (bool) Required, 26], [Property: LocalUser.LockoutEnd (DateTimeOffset?), 27], [Property: LocalUser.NormalizedEmail (string) Index MaxLength(256), 28], [Property: LocalUser.NormalizedUserName (string) Index MaxLength(256), 29], [Property: LocalUser.PasswordHash (string), 30], [Property: LocalUser.PhoneNumber (string), 31], [Property: LocalUser.PhoneNumberConfirmed (bool) Required, 32], [Property: LocalUser.SecurityStamp (string), 33], [Property: LocalUser.TwoFactorEnabled (bool) Required, 34], [Property: LocalUser.UserName (string) MaxLength(256), 35] }
+            SELECT TOP(1) b.BookingID, b.AfterDiscountedPrice, b.BookingDateUtc, b.CheckInDateUtc, b.CheckOutDateUtc, b.ConfirmationNumber, b.HotelId, b.PaymentMethod, b.Status, b.TotalPrice, b.UserId, h.HotelId, h.CityID, h.CreatedAtUtc, h.Description, h.Name, h.OwnerID, h.PhoneNumber, h.StarRating, a.Id, a.AccessFailedCount, a.ConcurrencyStamp, a.Email, a.EmailConfirmed, a.FirstName, a.LastName, a.LockoutEnabled, a.LockoutEnd, a.NormalizedEmail, a.NormalizedUserName, a.PasswordHash, a.PhoneNumber, a.PhoneNumberConfirmed, a.SecurityStamp, a.TwoFactorEnabled, a.UserName
+            FROM Bookings AS b
+            INNER JOIN Hotels AS h ON b.HotelId == h.HotelId
+            INNER JOIN AspNetUsers AS a ON b.UserId == a.Id
+            WHERE b.BookingID == @__id_0
+            ORDER BY b.BookingID ASC, h.HotelId ASC, a.Id ASC), 
+        Func<QueryContext, DbDataReader, ResultContext, SplitQueryResultCoordinator, Booking>, 
+        null, 
+        Func<QueryContext, IExecutionStrategy, SplitQueryResultCoordinator, Task>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:16:02.205 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:02.206 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:02.208 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.210 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.212 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:02.231 +03:00 [INF] Executed DbCommand (19ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:02.239 +03:00 [DBG] Context 'AppDbContext' started tracking 'Booking' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.240 +03:00 [DBG] Context 'AppDbContext' started tracking 'Hotel' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.243 +03:00 [DBG] Context 'AppDbContext' started tracking 'LocalUser' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.251 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:02.254 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:16:02.255 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:02.270 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:02.280 +03:00 [DBG] Context 'AppDbContext' started tracking 'BookingRoom' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.283 +03:00 [DBG] Context 'AppDbContext' started tracking 'Room' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.288 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:02.290 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:02.293 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:02.308 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:02.317 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.320 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:02.322 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:02.323 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:02.324 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:02.325 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.326 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.330 +03:00 [DBG] Compiling query expression: 
+'DbSet<LocalUser>()
+    .AsNoTracking()
+    .FirstOrDefault(user => user.Id == __userId_0)'
+2024-08-31 12:16:02.336 +03:00 [DBG] Including navigation: 'LocalUser.RefreshTokens'.
+2024-08-31 12:16:02.352 +03:00 [DBG] Generated query execution expression: 
+'queryContext => ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<LocalUser>(
+    asyncEnumerable: new SingleQueryingEnumerable<LocalUser>(
+        (RelationalQueryContext)queryContext, 
+        RelationalCommandCache.SelectExpression(
+            Client Projections:
+                0 -> Dictionary<IProperty, int> { [Property: LocalUser.Id (string) Required PK AfterSave:Throw, 0], [Property: LocalUser.AccessFailedCount (int) Required, 1], [Property: LocalUser.ConcurrencyStamp (string) Concurrency, 2], [Property: LocalUser.Email (string) MaxLength(256), 3], [Property: LocalUser.EmailConfirmed (bool) Required, 4], [Property: LocalUser.FirstName (string) Required, 5], [Property: LocalUser.LastName (string) Required, 6], [Property: LocalUser.LockoutEnabled (bool) Required, 7], [Property: LocalUser.LockoutEnd (DateTimeOffset?), 8], [Property: LocalUser.NormalizedEmail (string) Index MaxLength(256), 9], [Property: LocalUser.NormalizedUserName (string) Index MaxLength(256), 10], [Property: LocalUser.PasswordHash (string), 11], [Property: LocalUser.PhoneNumber (string), 12], [Property: LocalUser.PhoneNumberConfirmed (bool) Required, 13], [Property: LocalUser.SecurityStamp (string), 14], [Property: LocalUser.TwoFactorEnabled (bool) Required, 15], [Property: LocalUser.UserName (string) MaxLength(256), 16] }
+                1 -> 0
+                2 -> Dictionary<IProperty, int> { [Property: RefreshToken.LocalUserId (no field, string) Shadow Required PK FK AfterSave:Throw, 17], [Property: RefreshToken.Id (no field, int) Shadow Required PK AfterSave:Throw ValueGenerated.OnAdd, 18], [Property: RefreshToken.CreatedOn (DateTime) Required, 19], [Property: RefreshToken.ExpiresOn (DateTime) Required, 20], [Property: RefreshToken.RevokedOn (DateTime?), 21], [Property: RefreshToken.Token (string) Required, 22] }
+                3 -> 17
+                4 -> 18
+            SELECT t.Id, t.AccessFailedCount, t.ConcurrencyStamp, t.Email, t.EmailConfirmed, t.FirstName, t.LastName, t.LockoutEnabled, t.LockoutEnd, t.NormalizedEmail, t.NormalizedUserName, t.PasswordHash, t.PhoneNumber, t.PhoneNumberConfirmed, t.SecurityStamp, t.TwoFactorEnabled, t.UserName, r.LocalUserId, r.Id, r.CreatedOn, r.ExpiresOn, r.RevokedOn, r.Token
+            FROM 
+            (
+                SELECT TOP(1) a.Id, a.AccessFailedCount, a.ConcurrencyStamp, a.Email, a.EmailConfirmed, a.FirstName, a.LastName, a.LockoutEnabled, a.LockoutEnd, a.NormalizedEmail, a.NormalizedUserName, a.PasswordHash, a.PhoneNumber, a.PhoneNumberConfirmed, a.SecurityStamp, a.TwoFactorEnabled, a.UserName
+                FROM AspNetUsers AS a
+                WHERE a.Id == @__userId_0
+            ) AS t
+            LEFT JOIN RefreshToken AS r ON t.Id == r.LocalUserId
+            ORDER BY t.Id ASC, r.LocalUserId ASC), 
+        Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, LocalUser>, 
+        HotelBookingPlatform.Infrastructure.Data.AppDbContext, 
+        False, 
+        False, 
+        True
+    ), 
+    cancellationToken: queryContext.CancellationToken)'
+2024-08-31 12:16:02.357 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:02.358 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:02.359 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.361 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.363 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[Id] = @__userId_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:16:02.377 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[Id] = @__userId_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:16:02.389 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:02.392 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.394 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:02.407 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:16:02.412 +03:00 [DBG] No information found on request to perform content negotiation.
+2024-08-31 12:16:02.414 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:16:02.415 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:16:02.417 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:16:02.418 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[HotelBookingPlatform.Domain.DTOs.Booking.BookingDto, HotelBookingPlatform.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2024-08-31 12:16:02.421 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.BookingController.GetBooking (HotelBookingPlatform.API) in 354.7865ms
+2024-08-31 12:16:02.423 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.BookingController.GetBooking (HotelBookingPlatform.API)'
+2024-08-31 12:16:02.424 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:16:02.426 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/api/Booking/53 - - - 200 - application/json;+charset=utf-8 442.2918ms
+2024-08-31 12:16:05.021 +03:00 [DBG] Connection id "0HN69JI8M0VMD" received FIN.
+2024-08-31 12:16:05.025 +03:00 [DBG] Connection id "0HN69JI8M0VMD" is closed. The last processed stream ID was 1.
+2024-08-31 12:16:05.029 +03:00 [DBG] Connection id "0HN69JI8M0VMD" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-08-31 12:16:05.035 +03:00 [DBG] Connection id "0HN69JI8M0VMD" stopped.
+2024-08-31 12:16:25.376 +03:00 [DBG] Connection id "0HN69JI8M0VME" accepted.
+2024-08-31 12:16:25.378 +03:00 [DBG] Connection id "0HN69JI8M0VME" started.
+2024-08-31 12:16:25.385 +03:00 [DBG] Connection 0HN69JI8M0VME established using the following protocol: "Tls13"
+2024-08-31 12:16:25.393 +03:00 [INF] Request starting HTTP/2 PUT https://localhost:7054/api/Booking/53/Update_status application/json 1
+2024-08-31 12:16:25.499 +03:00 [DBG] 1 candidate(s) found for the request path '/api/Booking/53/Update_status'
+2024-08-31 12:16:25.532 +03:00 [DBG] Endpoint 'HotelBookingPlatform.API.Controllers.BookingController.UpdateBookingStatus (HotelBookingPlatform.API)' with route pattern 'api/Booking/{id}/Update_status' is valid for the request path '/api/Booking/53/Update_status'
+2024-08-31 12:16:25.551 +03:00 [DBG] Request matched endpoint 'HotelBookingPlatform.API.Controllers.BookingController.UpdateBookingStatus (HotelBookingPlatform.API)'
+2024-08-31 12:16:25.553 +03:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2024-08-31 12:16:25.555 +03:00 [INF] No CORS policy found for the specified request.
+2024-08-31 12:16:25.559 +03:00 [DBG] Successfully validated the token.
+2024-08-31 12:16:25.561 +03:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2024-08-31 12:16:25.565 +03:00 [DBG] Authorization was successful.
+2024-08-31 12:16:25.568 +03:00 [INF] Executing endpoint 'HotelBookingPlatform.API.Controllers.BookingController.UpdateBookingStatus (HotelBookingPlatform.API)'
+2024-08-31 12:16:25.583 +03:00 [INF] Route matched with {action = "UpdateBookingStatus", controller = "Booking"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] UpdateBookingStatus(Int32, HotelBookingPlatform.Domain.Enums.BookingStatus) on controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API).
+2024-08-31 12:16:25.592 +03:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2024-08-31 12:16:25.596 +03:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2024-08-31 12:16:25.598 +03:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)","Microsoft.AspNetCore.Mvc.Filters.ResponseCacheFilter"]
+2024-08-31 12:16:25.602 +03:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2024-08-31 12:16:25.605 +03:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2024-08-31 12:16:25.609 +03:00 [DBG] Executing controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:16:25.639 +03:00 [DBG] Executed controller factory for controller HotelBookingPlatform.API.Controllers.BookingController (HotelBookingPlatform.API)
+2024-08-31 12:16:25.642 +03:00 [DBG] Attempting to bind parameter 'id' of type 'System.Int32' ...
+2024-08-31 12:16:25.645 +03:00 [DBG] Attempting to bind parameter 'id' of type 'System.Int32' using the name 'id' in request data ...
+2024-08-31 12:16:25.647 +03:00 [DBG] Done attempting to bind parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:25.649 +03:00 [DBG] Done attempting to bind parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:25.650 +03:00 [DBG] Attempting to validate the bound parameter 'id' of type 'System.Int32' ...
+2024-08-31 12:16:25.660 +03:00 [DBG] Done attempting to validate the bound parameter 'id' of type 'System.Int32'.
+2024-08-31 12:16:25.662 +03:00 [DBG] Attempting to bind parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus' ...
+2024-08-31 12:16:25.667 +03:00 [DBG] Attempting to bind parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus' using the name '' in request data ...
+2024-08-31 12:16:25.671 +03:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter' for content type 'application/json'.
+2024-08-31 12:16:25.682 +03:00 [DBG] Connection id "0HN69JI8M0VME", Request id "0HN69JI8M0VME:00000001": started reading request body.
+2024-08-31 12:16:25.685 +03:00 [DBG] Connection id "0HN69JI8M0VME", Request id "0HN69JI8M0VME:00000001": done reading request body.
+2024-08-31 12:16:25.701 +03:00 [DBG] JSON input formatter succeeded, deserializing to type 'HotelBookingPlatform.Domain.Enums.BookingStatus'
+2024-08-31 12:16:25.706 +03:00 [DBG] Done attempting to bind parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus'.
+2024-08-31 12:16:25.710 +03:00 [DBG] Done attempting to bind parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus'.
+2024-08-31 12:16:25.712 +03:00 [DBG] Attempting to validate the bound parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus' ...
+2024-08-31 12:16:25.714 +03:00 [DBG] Done attempting to validate the bound parameter 'newStatus' of type 'HotelBookingPlatform.Domain.Enums.BookingStatus'.
+2024-08-31 12:16:25.726 +03:00 [INF] Entity Framework Core 6.0.32 initialized 'AppDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.32' with options: None
+2024-08-31 12:16:25.730 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.733 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:16:25.735 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.737 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.739 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:25.756 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:25.760 +03:00 [DBG] Context 'AppDbContext' started tracking 'Booking' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.762 +03:00 [DBG] Context 'AppDbContext' started tracking 'Hotel' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.764 +03:00 [DBG] Context 'AppDbContext' started tracking 'LocalUser' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.766 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.767 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:25.769 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.783 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.792 +03:00 [DBG] Context 'AppDbContext' started tracking 'BookingRoom' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.796 +03:00 [DBG] Context 'AppDbContext' started tracking 'Room' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.797 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.799 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:25.801 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.816 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.821 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.824 +03:00 [DBG] Context 'AppDbContext' started tracking 'RefreshToken' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.826 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.827 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.828 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.829 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.831 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.833 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.834 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:25.836 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.839 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.841 +03:00 [DBG] Executing DbCommand [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[Id] = @__userId_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:16:25.849 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[ConcurrencyStamp], [t].[Email], [t].[EmailConfirmed], [t].[FirstName], [t].[LastName], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[SecurityStamp], [t].[TwoFactorEnabled], [t].[UserName], [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[Id] = @__userId_0
+) AS [t]
+LEFT JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[Id], [r].[LocalUserId]
+2024-08-31 12:16:25.853 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.857 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.861 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.866 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.868 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:25.870 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.873 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.876 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:25.881 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[BookingID], [b].[AfterDiscountedPrice], [b].[BookingDateUtc], [b].[CheckInDateUtc], [b].[CheckOutDateUtc], [b].[ConfirmationNumber], [b].[HotelId], [b].[PaymentMethod], [b].[Status], [b].[TotalPrice], [b].[UserId], [h].[HotelId], [h].[CityID], [h].[CreatedAtUtc], [h].[Description], [h].[Name], [h].[OwnerID], [h].[PhoneNumber], [h].[StarRating], [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [Bookings] AS [b]
+INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+WHERE [b].[BookingID] = @__id_0
+ORDER BY [b].[BookingID], [h].[HotelId], [a].[Id]
+2024-08-31 12:16:25.884 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.887 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (2ms).
+2024-08-31 12:16:25.891 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.898 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t0].[BookingID], [t0].[RoomID], [t0].[RoomID0], [t0].[AdultsCapacity], [t0].[ChildrenCapacity], [t0].[CreatedAtUtc], [t0].[Number], [t0].[PricePerNight], [t0].[RoomClassID], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN (
+    SELECT [b0].[BookingID], [b0].[RoomID], [r].[RoomID] AS [RoomID0], [r].[AdultsCapacity], [r].[ChildrenCapacity], [r].[CreatedAtUtc], [r].[Number], [r].[PricePerNight], [r].[RoomClassID]
+    FROM [BookingRoom] AS [b0]
+    INNER JOIN [Rooms] AS [r] ON [b0].[RoomID] = [r].[RoomID]
+) AS [t0] ON [t].[BookingID] = [t0].[BookingID]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.906 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:25.909 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (3ms).
+2024-08-31 12:16:25.912 +03:00 [DBG] Executing DbCommand [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.917 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[LocalUserId], [r].[Id], [r].[CreatedOn], [r].[ExpiresOn], [r].[RevokedOn], [r].[Token], [t].[BookingID], [t].[HotelId], [t].[Id]
+FROM (
+    SELECT TOP(1) [b].[BookingID], [h].[HotelId], [a].[Id]
+    FROM [Bookings] AS [b]
+    INNER JOIN [Hotels] AS [h] ON [b].[HotelId] = [h].[HotelId]
+    INNER JOIN [AspNetUsers] AS [a] ON [b].[UserId] = [a].[Id]
+    WHERE [b].[BookingID] = @__id_0
+) AS [t]
+INNER JOIN [RefreshToken] AS [r] ON [t].[Id] = [r].[LocalUserId]
+ORDER BY [t].[BookingID], [t].[HotelId], [t].[Id]
+2024-08-31 12:16:25.929 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.932 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.934 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:25.938 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.942 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.979 +03:00 [DBG] An entity of type 'Booking' tracked by 'AppDbContext' changed state from '"Unchanged"' to '"Modified"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:25.984 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:16:25.988 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:16:25.991 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:16:25.993 +03:00 [DBG] Opening connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.996 +03:00 [DBG] Opened connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:25.998 +03:00 [DBG] Beginning transaction with isolation level 'Unspecified'.
+2024-08-31 12:16:25.999 +03:00 [DBG] Began transaction with isolation level 'ReadCommitted'.
+2024-08-31 12:16:26.011 +03:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-08-31 12:16:26.012 +03:00 [DBG] Created DbCommand for 'ExecuteReader' (1ms).
+2024-08-31 12:16:26.014 +03:00 [DBG] Executing DbCommand [Parameters=[@p10='?' (DbType = Int32), @p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Int32), @p8='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p9='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [Bookings] SET [AfterDiscountedPrice] = @p0, [BookingDateUtc] = @p1, [CheckInDateUtc] = @p2, [CheckOutDateUtc] = @p3, [ConfirmationNumber] = @p4, [HotelId] = @p5, [PaymentMethod] = @p6, [Status] = @p7, [TotalPrice] = @p8, [UserId] = @p9
+WHERE [BookingID] = @p10;
+SELECT @@ROWCOUNT;
+2024-08-31 12:16:26.042 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[@p10='?' (DbType = Int32), @p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Int32), @p8='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p9='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+UPDATE [Bookings] SET [AfterDiscountedPrice] = @p0, [BookingDateUtc] = @p1, [CheckInDateUtc] = @p2, [CheckOutDateUtc] = @p3, [ConfirmationNumber] = @p4, [HotelId] = @p5, [PaymentMethod] = @p6, [Status] = @p7, [TotalPrice] = @p8, [UserId] = @p9
+WHERE [BookingID] = @p10;
+SELECT @@ROWCOUNT;
+2024-08-31 12:16:26.046 +03:00 [DBG] A data reader was disposed.
+2024-08-31 12:16:26.048 +03:00 [DBG] Committing transaction.
+2024-08-31 12:16:26.050 +03:00 [DBG] Committed transaction.
+2024-08-31 12:16:26.051 +03:00 [DBG] Closing connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:26.056 +03:00 [DBG] Closed connection to database 'HotelBookingPlatform' on server '.'.
+2024-08-31 12:16:26.059 +03:00 [DBG] Disposing transaction.
+2024-08-31 12:16:26.060 +03:00 [DBG] An entity of type 'Booking' tracked by 'AppDbContext' changed state from '"Modified"' to '"Unchanged"'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+2024-08-31 12:16:26.062 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 1 entities written to the database.
+2024-08-31 12:16:26.064 +03:00 [DBG] SaveChanges starting for 'AppDbContext'.
+2024-08-31 12:16:26.065 +03:00 [DBG] DetectChanges starting for 'AppDbContext'.
+2024-08-31 12:16:26.067 +03:00 [DBG] DetectChanges completed for 'AppDbContext'.
+2024-08-31 12:16:26.068 +03:00 [DBG] SaveChanges completed for 'AppDbContext' with 0 entities written to the database.
+2024-08-31 12:16:26.071 +03:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter"]
+2024-08-31 12:16:26.074 +03:00 [DBG] No information found on request to perform content negotiation.
+2024-08-31 12:16:26.075 +03:00 [DBG] Attempting to select an output formatter without using a content type as no explicit content types were specified for the response.
+2024-08-31 12:16:26.076 +03:00 [DBG] Attempting to select the first formatter in the output formatters list which can write the result.
+2024-08-31 12:16:26.077 +03:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter' and content type 'application/json' to write the response.
+2024-08-31 12:16:26.080 +03:00 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`4[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Object, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2024-08-31 12:16:26.084 +03:00 [INF] Executed action HotelBookingPlatform.API.Controllers.BookingController.UpdateBookingStatus (HotelBookingPlatform.API) in 475.0773ms
+2024-08-31 12:16:26.089 +03:00 [INF] Executed endpoint 'HotelBookingPlatform.API.Controllers.BookingController.UpdateBookingStatus (HotelBookingPlatform.API)'
+2024-08-31 12:16:26.092 +03:00 [DBG] 'AppDbContext' disposed.
+2024-08-31 12:16:26.094 +03:00 [INF] Request finished HTTP/2 PUT https://localhost:7054/api/Booking/53/Update_status application/json 1 - 200 - application/json;+charset=utf-8 701.2800ms

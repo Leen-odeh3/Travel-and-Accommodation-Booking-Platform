@@ -1,6 +1,8 @@
 ﻿using HotelBookingPlatform.Application.Core.Abstracts.HotelManagementService;
+using HotelBookingPlatform.Application.Core.Abstracts.IBookingManagementService;
 using HotelBookingPlatform.Application.Core.Abstracts.IHotelManagementService;
 using HotelBookingPlatform.Application.Core.Abstracts.RoomClassManagementService;
+using HotelBookingPlatform.Application.Core.Implementations.BookingManagementService;
 using HotelBookingPlatform.Application.Core.Implementations.HotelManagementService;
 using HotelBookingPlatform.Application.Core.Implementations.RoomClassManagementService;
 
@@ -17,6 +19,8 @@ public static class ModuleApplicationDependencies
             fv.RegisterValidatorsFromAssemblyContaining<RegisterUserValidator>();
         });
 
+        services.AddScoped<IPriceCalculationService, PriceCalculationService>();
+        services.AddScoped<IConfirmationNumberGeneratorService, ConfirmationNumberGeneratorService>();
         services.AddScoped<ICityHotelService, CityHotelService>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IRoomService, RoomService>();

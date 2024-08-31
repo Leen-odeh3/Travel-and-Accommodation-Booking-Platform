@@ -1,9 +1,19 @@
-﻿namespace HotelBookingPlatform.Application.Core.Implementations;
+﻿using HotelBookingPlatform.Application.Core.Abstracts.IBookingManagementService;
+namespace HotelBookingPlatform.Application.Core.Implementations.BookingManagementService;
 public class BookingService : BaseService<Booking>, IBookingService
 {
-    public BookingService(IUnitOfWork<Booking> unitOfWork, IMapper mapper)
-        : base(unitOfWork, mapper) { }
-
+    private readonly IConfirmationNumberGeneratorService _confirmationNumberGeneratorService;
+    private readonly IPriceCalculationService _priceCalculationService;
+    public BookingService(
+        IUnitOfWork<Booking> unitOfWork,
+        IMapper mapper,
+        IConfirmationNumberGeneratorService confirmationNumberGeneratorService,
+        IPriceCalculationService priceCalculationService)
+        : base(unitOfWork, mapper)
+    {
+        _confirmationNumberGeneratorService = confirmationNumberGeneratorService;
+        _priceCalculationService = priceCalculationService;
+    }
     public async Task<BookingDto> GetBookingAsync(int id)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(id);
@@ -26,17 +36,14 @@ public class BookingService : BaseService<Booking>, IBookingService
         if (request.CheckInDateUtc >= request.CheckOutDateUtc)
             throw new BadRequestException("Check-out date must be greater than check-in date.");
 
-        // حساب السعر الإجمالي
-        var totalPrice = await CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
-
-        // حساب السعر بعد تطبيق الخصم
-        var discountedTotalPrice = await CalculateDiscountedPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
+        var totalPrice = await _priceCalculationService.CalculateTotalPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
+        var discountedTotalPrice = await _priceCalculationService.CalculateDiscountedPriceAsync(request.RoomIds.ToList(), request.CheckInDateUtc, request.CheckOutDateUtc);
 
         var booking = new Booking
         {
             UserId = user.Id,
             User = user,
-            confirmationNumber = GenerateConfirmationNumber(),
+            ConfirmationNumber = _confirmationNumberGeneratorService.GenerateConfirmationNumber(),
             TotalPrice = totalPrice,
             AfterDiscountedPrice = discountedTotalPrice,
             BookingDateUtc = DateTime.UtcNow,
@@ -60,7 +67,6 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         return _mapper.Map<BookingDto>(booking);
     }
-
     public async Task UpdateBookingStatusAsync(int bookingId, BookingStatus newStatus)
     {
         var booking = await _unitOfWork.BookingRepository.GetByIdAsync(bookingId);
@@ -73,55 +79,6 @@ public class BookingService : BaseService<Booking>, IBookingService
 
         await _unitOfWork.BookingRepository.UpdateBookingStatusAsync(bookingId, newStatus);
         await _unitOfWork.SaveChangesAsync();
-    }
-    private async Task<decimal> CalculateTotalPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
-    {
-        decimal totalPrice = 0m;
-        int numberOfNights = (checkOutDate - checkInDate).Days;
-
-        foreach (var roomId in roomIds)
-        {
-            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-
-            if (room is not null)
-            {
-                decimal roomPrice = room.PricePerNight * numberOfNights;
-                totalPrice += roomPrice;
-            }
-        }
-
-        return totalPrice;
-    }
-
-    private async Task<decimal> CalculateDiscountedPriceAsync(List<int> roomIds, DateTime checkInDate, DateTime checkOutDate)
-    {
-        decimal discountedTotalPrice = 0;
-        var numberOfNights = (checkOutDate - checkInDate).Days;
-
-        foreach (var roomId in roomIds)
-        {
-            var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            if (room != null)
-            {
-                var activeDiscount = await _unitOfWork.DiscountRepository.GetActiveDiscountForRoomAsync(roomId, checkInDate, checkOutDate);
-                if (activeDiscount != null && activeDiscount.IsActive)
-                {
-                    var discountPrice = room.PricePerNight * (1 - (activeDiscount.Percentage / 100.0m));
-                    discountedTotalPrice += discountPrice * numberOfNights;
-                }
-                else
-                {
-                    discountedTotalPrice += room.PricePerNight * numberOfNights;
-                }
-            }
-        }
-
-        return discountedTotalPrice;
-    }
-
-    public static string GenerateConfirmationNumber()
-    {
-        return Guid.NewGuid().ToString();
     }
 }
 

@@ -31,7 +31,7 @@ public class HotelSearchServiceTest
         var hotels = _fixture.CreateMany<Hotel>().ToList();
         var hotelDtos = _fixture.CreateMany<HotelResponseDto>().ToList();
 
-        _unitOfWorkMock.Setup(u => u.HotelRepository.GetAllAsyncPagenation(It.IsAny<Expression<Func<Hotel, bool>>>(), pageSize, pageNumber))
+        _unitOfWorkMock.Setup(u => u.HotelRepository.GetAsyncPagenation(It.IsAny<Expression<Func<Hotel, bool>>>(), pageSize, pageNumber))
                        .ReturnsAsync(hotels);
         _mapperMock.Setup(m => m.Map<IEnumerable<HotelResponseDto>>(hotels))
                    .Returns(hotelDtos);
@@ -53,7 +53,7 @@ public class HotelSearchServiceTest
         var pageSize = 10;
         var pageNumber = 1;
 
-        _unitOfWorkMock.Setup(u => u.HotelRepository.GetAllAsyncPagenation(It.IsAny<Expression<Func<Hotel, bool>>>(), pageSize, pageNumber))
+        _unitOfWorkMock.Setup(u => u.HotelRepository.GetAsyncPagenation(It.IsAny<Expression<Func<Hotel, bool>>>(), pageSize, pageNumber))
                        .ReturnsAsync(new List<Hotel>());
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(() => _service.GetHotels(hotelName, description, pageSize, pageNumber));

@@ -1,5 +1,5 @@
 ﻿namespace HotelBookingPlatform.Infrastructure.Implementation;
-public class BookingRepository :GenericRepository<Booking>, IBookingRepository
+public class BookingRepository : GenericRepository<Booking>, IBookingRepository
 {
     public BookingRepository(AppDbContext context)
         : base(context) { }
@@ -11,7 +11,7 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
             throw new KeyNotFoundException("Booking not found.");
 
         if (booking.Status == BookingStatus.Completed && newStatus != BookingStatus.Completed)
-            throw new InvalidOperationException("Cannot change the status of a completed booking.");
+            throw new InvalidOperationException("Cannot change the status of a completed booking. Once a booking is marked as completed, its status is locked to ensure data integrity.");
 
         if (newStatus == BookingStatus.Cancelled)
         {
@@ -29,14 +29,14 @@ public class BookingRepository :GenericRepository<Booking>, IBookingRepository
     public async Task<Booking> GetByIdAsync(int id)
     {
         return await _appDbContext.Bookings
-            .Include(b => b.Hotel) 
+            .Include(b => b.Hotel)
             .Include(b => b.Rooms)
             .Include(b => b.User).AsSplitQuery()
             .FirstOrDefaultAsync(b => b.BookingID == id);
     }
     public async Task<Booking> GetBookingByUserAndHotelAsync(string userId, int hotelId)
     {
-        return await _appDbContext.Bookings
+        return await _appDbContext.Bookings.AsNoTracking()
             .Where(b => b.UserId == userId && b.HotelId == hotelId)
             .FirstOrDefaultAsync();
     }
