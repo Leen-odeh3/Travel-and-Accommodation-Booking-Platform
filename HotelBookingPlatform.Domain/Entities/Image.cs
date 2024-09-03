@@ -7,4 +7,8 @@ public class Image
     public string Type { get; set; }
     public int EntityId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int? HotelId { get; set; }
+    public int? RoomClassId { get; set; }
+    public int? RoomId { get; set; }
+    public int? CityId { get; set; }
 }

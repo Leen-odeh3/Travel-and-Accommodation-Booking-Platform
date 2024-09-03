@@ -1,5 +1,4 @@
 ﻿using HotelBookingPlatform.Domain;
-namespace HotelBookingPlatform.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class ImageController : ControllerBase
@@ -16,7 +15,6 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost("{entityType}/{entityId}/upload-image")]
-    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Upload an image for a specific entity.")]
     public async Task<IActionResult> UploadImage(string entityType, int entityId, IFormFile file)
     {
@@ -24,7 +22,6 @@ public class ImageController : ControllerBase
         var result = new
         {
             Url = uploadResult.SecureUri.ToString(),
-            PublicId = uploadResult.PublicId
         };
 
         return _responseHandler.Success(result, "Image uploaded successfully.");
@@ -41,27 +38,23 @@ public class ImageController : ControllerBase
 
         return _responseHandler.Success(images, "Done Get all images");
     }
-
-    [HttpDelete("delete-image/{publicId}")]
-    //[Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Delete an image by its PublicId.")]
-    public async Task<IActionResult> DeleteImage(string publicId)
+    [HttpDelete("delete-image/{uniqueId}")]
+    [SwaggerOperation(Summary = "Delete an image by its UniqueId.")]
+    public async Task<IActionResult> DeleteImage(string uniqueId)
     {
-        var imageRecord = await _unitOfWork.ImageRepository.GetByPublicIdAsync(publicId);
 
-        if (imageRecord is null)
-            return _responseHandler.NotFound("Image not found.");
-
-        await _imageService.DeleteImageAsync(publicId);
+        await _imageService.DeleteImageAsync(uniqueId);
         return _responseHandler.Success("Image deleted successfully.");
     }
 
-
-    [HttpGet("details/{publicId}")]
-    [SwaggerOperation(Summary = "Get image details by its PublicId.")]
-    public async Task<IActionResult> GetImageDetails(string publicId)
+    [HttpGet("details/{uniqueId}")]
+    [SwaggerOperation(Summary = "Get image details by its UniqueId.")]
+    public async Task<IActionResult> GetImageDetails(string uniqueId)
     {
-        var imageDetails = await _imageService.GetImageDetailsAsync(publicId);
+        var imageDetails = await _imageService.GetImageByUniqueIdAsync(uniqueId);
+        if (imageDetails is null)
+            return _responseHandler.NotFound("Image not found.");
+
         return _responseHandler.Success(imageDetails);
     }
 }

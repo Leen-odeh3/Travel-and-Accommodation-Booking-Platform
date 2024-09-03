@@ -20,7 +20,7 @@ public class ImageServiceTest
         var file = new Mock<IFormFile>();
         file.Setup(f => f.Length).Returns(0);
 
-        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object,"entityType", 1);
+        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object, "entityType", 1);
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("No file provided.");
     }
 
@@ -31,7 +31,7 @@ public class ImageServiceTest
         file.Setup(f => f.Length).Returns(1);
         file.Setup(f => f.FileName).Returns("file.txt");
 
-        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object,"entityType", 1);
+        Func<Task> act = async () => await _imageService.UploadImageAsync(file.Object, "entityType", 1);
 
         await act.Should().ThrowAsync<ArgumentException>().WithMessage("Unsupported file format.");
     }
@@ -53,25 +53,52 @@ public class ImageServiceTest
         var result = await _imageService.GetImagesByTypeAsync(type);
         result.Should().BeEquivalentTo(expectedImages);
     }
-
     [Fact]
-    public async Task GetImageDetailsAsync_WhenPublicIdIsNullOrEmpty_ShouldThrowBadRequestException()
+    public async Task GetImageByUniqueIdAsync_WhenIdIsValid_ShouldReturnImage()
     {
-        string invalidPublicId = string.Empty;
-        Func<Task> act = async () => await _imageService.GetImageDetailsAsync(invalidPublicId);
+        // Arrange
+        var uniqueId = "valid-id";
+        var expectedImage = _fixture.Create<Image>();
+
+        var mockImageRepository = new Mock<IImageRepository>();
+        mockImageRepository
+            .Setup(repo => repo.GetByUniqueIdAsync(uniqueId))
+            .ReturnsAsync(expectedImage);
+
+        _mockUnitOfWork.Setup(uow => uow.ImageRepository).Returns(mockImageRepository.Object);
+
+        var result = await _imageService.GetImageByUniqueIdAsync(uniqueId);
 
         // Assert
-        await act.Should().ThrowAsync<BadRequestException>().WithMessage("Public ID cannot be null or empty.");
+        result.Should().BeEquivalentTo(expectedImage);
+    }
+
+
+    [Fact]
+    public async Task GetImageByUniqueIdAsync_WhenIdIsNull_ShouldThrowBadRequestException()
+    {
+        // Arrange
+        var uniqueId = (string)null;
+
+        // Act
+        Func<Task> act = async () => await _imageService.GetImageByUniqueIdAsync(uniqueId);
+
+        // Assert
+        await act.Should().ThrowAsync<BadRequestException>()
+            .WithMessage("Unique ID cannot be null or empty.");
     }
 
     [Fact]
-    public async Task DeleteImageAsync_WhenPublicIdIsNullOrEmpty_ShouldThrowBadRequestException()
+    public async Task GetImageByUniqueIdAsync_WhenIdIsEmpty_ShouldThrowBadRequestException()
     {
-        var invalidPublicId = string.Empty;
-        Func<Task> act = async () => await _imageService.DeleteImageAsync(invalidPublicId);
+        // Arrange
+        var uniqueId = string.Empty;
 
+        Func<Task> act = async () => await _imageService.GetImageByUniqueIdAsync(uniqueId);
+
+        // Assert
         await act.Should().ThrowAsync<BadRequestException>()
-            .WithMessage("Public ID cannot be null or empty.");
+            .WithMessage("Unique ID cannot be null or empty.");
     }
-
 }
+

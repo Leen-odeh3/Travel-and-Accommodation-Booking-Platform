@@ -16,6 +16,18 @@ public class HotelReviewService : IHotelReviewService
         _hotelValidator = new EntityValidator<Hotel>(_hotelUnitOfWork.HotelRepository);
     }
 
+    public async Task<IEnumerable<string>> GetHotelCommentsAsync(int hotelId)
+    {
+        if (hotelId <= 0)
+            throw new ArgumentException("ID must be greater than zero.", nameof(hotelId));
+
+        var reviews = await _unitOfWork.ReviewRepository.GetReviewsByHotelIdAsync(hotelId);
+
+        if (!reviews.Any())
+            throw new NotFoundException("No reviews found for the specified hotel.");
+
+        return reviews.Select(r => r.Content).ToList();
+    }
     public async Task<ReviewRatingDto> GetHotelReviewRatingAsync(int hotelId)
     {
         if (hotelId <= 0)

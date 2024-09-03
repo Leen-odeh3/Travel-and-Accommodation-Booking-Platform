@@ -6,19 +6,20 @@ public class ImageService : IImageService
     private readonly Cloudinary _cloudinary;
     private readonly IUnitOfWork<Image> _unitOfWork;
 
-    public ImageService(Cloudinary cloudinary,IUnitOfWork<Image> unitOfWork)
+    public ImageService(Cloudinary cloudinary, IUnitOfWork<Image> unitOfWork)
     {
         _cloudinary = cloudinary;
         _unitOfWork = unitOfWork;
     }
+
     public async Task<ImageUploadResult> UploadImageAsync(IFormFile file, string entityType, int entityId)
     {
         var allowedFormats = new[]
         {
-        SupportedImageFormats.Jpg,
-        SupportedImageFormats.Jpeg,
-        SupportedImageFormats.Png
-    };
+            SupportedImageFormats.Jpg,
+            SupportedImageFormats.Jpeg,
+            SupportedImageFormats.Png
+        };
 
         if (file.Length == 0)
             throw new ArgumentException("No file provided.");
@@ -39,7 +40,7 @@ public class ImageService : IImageService
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    PublicId = publicId 
+                    PublicId = publicId
                 };
 
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
@@ -47,7 +48,7 @@ public class ImageService : IImageService
                 var imageRecord = new Image
                 {
                     Url = uploadResult.SecureUri.ToString(),
-                    PublicId = uploadResult.PublicId,
+                    PublicId = publicId,
                     Type = entityType,
                     EntityId = entityId
                 };
@@ -64,42 +65,35 @@ public class ImageService : IImageService
         }
     }
 
-    public async Task<DeletionResult> DeleteImageAsync(string publicId)
+    public async Task<DeletionResult> DeleteImageAsync(string uniqueId)
     {
-        if (string.IsNullOrEmpty(publicId))
-            throw new BadRequestException("Public ID cannot be null or empty.");
+        if (string.IsNullOrEmpty(uniqueId))
+            throw new BadRequestException("Unique ID cannot be null or empty.");
 
-        var deleteParams = new DeletionParams(publicId);
+        var imageRecord = await _unitOfWork.ImageRepository.GetByUniqueIdAsync(uniqueId);
+        if (imageRecord is null)
+            throw new NotFoundException("Image not found.");
 
-        try
-        {
-            var result = await _cloudinary.DestroyAsync(deleteParams);
-            if (result.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ApplicationException($"Error deleting image: {result.Error?.Message}");
-            }
+        var deleteParams = new DeletionParams(imageRecord.PublicId);
 
-            return result;
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("An error occurred while deleting the image.", ex);
-        }
-    }
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+        if (result.StatusCode != HttpStatusCode.OK)
+            throw new ApplicationException($"Error deleting image: {result.Error?.Message}");
 
-
-    public async Task<GetResourceResult> GetImageDetailsAsync(string publicId)
-    {
-        if (string.IsNullOrEmpty(publicId))
-            throw new BadRequestException("Public ID cannot be null or empty.");
-
-        var result = await _cloudinary.GetResourceAsync(publicId);
+        await _unitOfWork.ImageRepository.DeleteByUniqueIdAsync(uniqueId);
         return result;
     }
+
+    public async Task<Image> GetImageByUniqueIdAsync(string uniqueId)
+    {
+        if (string.IsNullOrEmpty(uniqueId))
+            throw new BadRequestException("Unique ID cannot be null or empty.");
+
+        return await _unitOfWork.ImageRepository.GetByUniqueIdAsync(uniqueId);
+    }
+
     public async Task<IEnumerable<Image>> GetImagesByTypeAsync(string type)
     {
         return await _unitOfWork.ImageRepository.GetImagesByTypeAsync(type);
     }
-
 }
-
