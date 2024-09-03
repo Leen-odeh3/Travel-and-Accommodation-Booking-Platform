@@ -6,6 +6,10 @@
 This project is a comprehensive hotel booking platform designed to provide users with a seamless experience in searching for hotels, viewing detailed information, and making secure bookings. The platform features an advanced search capability, personalized recommendations, and a secure checkout process. For administrators, there is a dedicated interface for managing cities, hotels, and rooms, with functionalities for creating, updating, and deleting entries. User authentication is handled securely through JWT, ensuring robust role-based access control and a maintainable system architecture.
 
 <a href="https://whimsical.com/function-PgTQUTGPFg5SWjqSueYh7x@GjdVyJ6vu7AX2orrZkLYPgQZBb99MoadQxTwLgPFdA24">Functional Requirements And Non-Functional Requirements</a>
+
+## 🗂 Database Schema Design
+<img width="935" alt="DataBaseDigram" src="https://github.com/user-attachments/assets/a79cfc43-dfc4-47ec-9f01-68f9a92606ac">
+
 ## Key Features 🌟
 ### 1.🔒 User Authentication
 - Secure login page with JWT-based authentication.
@@ -324,7 +328,7 @@ cd Travel-and-Accommodation-Booking-Platform
 }
 ```
 ## 🛟 Contact and Support
-If you have any questions or comments about the project, please feel free to contact me at `leenodeh287@gmail.com` .
+If you have any questions or comments about the project, please feel free to contact me at `leenodeh287@gmail.com`.
 
 ## 🏅 Acknowledgements
 I extend my sincere gratitude to <a href="https://www.foothillsolutions.com/">Foothill Technology Solutions </a> for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
