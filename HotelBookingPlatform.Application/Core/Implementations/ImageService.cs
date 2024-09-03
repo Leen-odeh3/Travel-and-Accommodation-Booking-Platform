@@ -84,7 +84,6 @@ public class ImageService : IImageService
         return result;
     }
 
-
     public async Task<Image> GetImageByUniqueIdAsync(string uniqueId)
     {
         if (string.IsNullOrEmpty(uniqueId))

@@ -63,4 +63,46 @@ public class HotelReviewServiceTest
         Assert.Equal("ID must be greater than zero. (Parameter 'hotelId')", exception.Message);
     }
 
+    [Fact]
+    public async Task GetHotelCommentsAsync_ShouldReturnComments_WhenReviewsExist()
+    {
+        // Arrange
+        var hotelId = _fixture.Create<int>();
+        var reviews = _fixture.CreateMany<Review>().ToList();
+        _unitOfWorkMock.Setup(u => u.ReviewRepository.GetReviewsByHotelIdAsync(hotelId))
+                       .ReturnsAsync(reviews);
+
+        var expectedComments = reviews.Select(r => r.Content).ToList();
+        var result = await _service.GetHotelCommentsAsync(hotelId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedComments, result);
+    }
+
+    [Fact]
+    public async Task GetHotelCommentsAsync_ShouldThrowNotFoundException_WhenNoReviewsExist()
+    {
+        // Arrange
+        var hotelId = _fixture.Create<int>();
+
+        _unitOfWorkMock.Setup(u => u.ReviewRepository.GetReviewsByHotelIdAsync(hotelId))
+                       .ReturnsAsync(new List<Review>());
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _service.GetHotelCommentsAsync(hotelId));
+        Assert.Equal("No reviews found for the specified hotel.", exception.Message);
+    }
+
+    [Fact]
+    public async Task GetHotelCommentsAsync_ShouldThrowArgumentException_WhenHotelIdIsInvalid()
+    {
+        // Arrange
+        var invalidHotelId = -1;
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.GetHotelCommentsAsync(invalidHotelId));
+        Assert.Equal("ID must be greater than zero. (Parameter 'hotelId')", exception.Message);
+    }
+
 }

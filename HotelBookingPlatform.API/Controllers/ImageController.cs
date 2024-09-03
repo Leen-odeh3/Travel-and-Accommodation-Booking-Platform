@@ -22,7 +22,6 @@ public class ImageController : ControllerBase
         var result = new
         {
             Url = uploadResult.SecureUri.ToString(),
-            PublicId = uploadResult.PublicId
         };
 
         return _responseHandler.Success(result, "Image uploaded successfully.");

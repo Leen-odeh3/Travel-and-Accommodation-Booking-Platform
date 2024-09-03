@@ -62,6 +62,15 @@ public class HotelController : ControllerBase
         return _responseHandler.Success("Hotel deleted successfully.");
     }
 
+    [HttpGet("{hotelId}/reviews")]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
+    [SwaggerOperation(Summary = "Get all reviews for a specific hotel.")]
+    public async Task<IActionResult> GetHotelReviews(int hotelId)
+    {
+        var comments = await _hotelReviewService.GetHotelCommentsAsync(hotelId);
+        return _responseHandler.Success(comments, "Reviews retrieved successfully.");
+    }
+
     // GET: api/Hotel/search
     [HttpGet("search")]
     [ResponseCache(CacheProfileName = "DefaultCache")]
@@ -95,6 +104,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpGet("{hotelId}/amenities")]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
     [SwaggerOperation(Summary = "Get all amenities associated with a specific hotel.")]
     public async Task<IActionResult> GetAmenitiesByHotelId(int hotelId)
     {
@@ -114,6 +124,7 @@ public class HotelController : ControllerBase
     }
 
     [HttpGet("{id}/rating")]
+    [ResponseCache(CacheProfileName = "DefaultCache")]
     [SwaggerOperation(Summary = "Get the review rating of a specific hotel.")]
     public async Task<IActionResult> GetHotelReviewRating(int id)
     {
@@ -137,7 +148,6 @@ public class HotelController : ControllerBase
         var response = new
         {
             Url = uploadResult.SecureUri.ToString(),
-            PublicId = uploadResult.PublicId
         };
 
         return _responseHandler.Success(response, "Image uploaded successfully for the hotel.");
