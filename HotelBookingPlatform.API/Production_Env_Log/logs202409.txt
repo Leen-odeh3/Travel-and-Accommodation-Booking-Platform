@@ -1825,3 +1825,95 @@ ORDER BY [t].[HotelId], [r].[RoomClassID]
 2024-09-03 20:51:42.936 +03:00 [DBG] Connection id "0HN6C83KIAO5G" is closed. The last processed stream ID was 1.
 2024-09-03 20:51:42.940 +03:00 [DBG] Connection id "0HN6C83KIAO5G" sending FIN because: "The Socket transport's send loop completed gracefully."
 2024-09-03 20:51:42.946 +03:00 [DBG] Connection id "0HN6C83KIAO5G" stopped.
+2024-09-14 19:43:41.028 +03:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2024-09-14 19:43:41.310 +03:00 [DBG] Hosting starting
+2024-09-14 19:43:41.651 +03:00 [INF] User profile is available. Using 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2024-09-14 19:43:41.658 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-5dc8f8a8-2ffa-4a04-9c24-99574df10981.xml'.
+2024-09-14 19:43:41.736 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-7f2c3628-443f-404a-ae0c-68b85bc9411a.xml'.
+2024-09-14 19:43:41.763 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-8b924b12-ddc6-487f-b83a-45744266a460.xml'.
+2024-09-14 19:43:41.789 +03:00 [DBG] Reading data from file 'C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-e554efbd-c8ad-408b-86ee-59e78d255d63.xml'.
+2024-09-14 19:43:41.834 +03:00 [DBG] Found key {5dc8f8a8-2ffa-4a04-9c24-99574df10981}.
+2024-09-14 19:43:41.857 +03:00 [DBG] Found key {7f2c3628-443f-404a-ae0c-68b85bc9411a}.
+2024-09-14 19:43:41.862 +03:00 [DBG] Found key {8b924b12-ddc6-487f-b83a-45744266a460}.
+2024-09-14 19:43:41.864 +03:00 [DBG] Found key {e554efbd-c8ad-408b-86ee-59e78d255d63}.
+2024-09-14 19:43:41.881 +03:00 [DBG] Considering key {8b924b12-ddc6-487f-b83a-45744266a460} with expiration date 2024-11-21 11:47:39Z as default key.
+2024-09-14 19:43:41.893 +03:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2024-09-14 19:43:41.906 +03:00 [DBG] Decrypting secret element using Windows DPAPI.
+2024-09-14 19:43:41.913 +03:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2024-09-14 19:43:41.936 +03:00 [DBG] Opening CNG algorithm 'AES' from provider 'null' with chaining mode CBC.
+2024-09-14 19:43:41.958 +03:00 [DBG] Opening CNG algorithm 'SHA256' from provider 'null' with HMAC.
+2024-09-14 19:43:41.979 +03:00 [DBG] Using key {8b924b12-ddc6-487f-b83a-45744266a460} as the default key.
+2024-09-14 19:43:41.987 +03:00 [DBG] Key ring with default key {8b924b12-ddc6-487f-b83a-45744266a460} was loaded during application startup.
+2024-09-14 19:43:42.856 +03:00 [DBG] Using development certificate: CN=localhost (Thumbprint: 11B01FF3F2247D8CCE18AD0B376E737147DB39EC)
+2024-09-14 19:43:43.004 +03:00 [INF] Now listening on: https://localhost:7054
+2024-09-14 19:43:43.008 +03:00 [INF] Now listening on: http://localhost:5248
+2024-09-14 19:43:43.013 +03:00 [DBG] Loaded hosting startup assembly HotelBookingPlatform.API
+2024-09-14 19:43:43.017 +03:00 [DBG] Loaded hosting startup assembly Microsoft.AspNetCore.Watch.BrowserRefresh
+2024-09-14 19:43:43.022 +03:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.BrowserLink.Net
+2024-09-14 19:43:43.027 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-09-14 19:43:43.030 +03:00 [INF] Hosting environment: Development
+2024-09-14 19:43:43.032 +03:00 [INF] Content root path: C:\Users\hp\Desktop\C#\HotelBookingPlatform.API\
+2024-09-14 19:43:43.035 +03:00 [DBG] Hosting started
+2024-09-14 19:43:43.100 +03:00 [DBG] Connection id "0HN6KRHIEQGHM" accepted.
+2024-09-14 19:43:43.106 +03:00 [DBG] Connection id "0HN6KRHIEQGHM" started.
+2024-09-14 19:43:43.348 +03:00 [DBG] Connection id "0HN6KRHIEQGHN" accepted.
+2024-09-14 19:43:43.359 +03:00 [DBG] Connection id "0HN6KRHIEQGHN" started.
+2024-09-14 19:43:44.533 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" accepted.
+2024-09-14 19:43:44.607 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" started.
+2024-09-14 19:43:44.624 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" accepted.
+2024-09-14 19:43:44.630 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" started.
+2024-09-14 19:43:44.780 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" received FIN.
+2024-09-14 19:43:44.851 +03:00 [DBG] Connection 0HN6KRHIEQGHO established using the following protocol: "Tls13"
+2024-09-14 19:43:44.851 +03:00 [DBG] Connection 0HN6KRHIEQGHP established using the following protocol: "Tls13"
+2024-09-14 19:43:44.902 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" is closed. The last processed stream ID was 0.
+2024-09-14 19:43:44.910 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-09-14 19:43:44.934 +03:00 [DBG] Connection id "0HN6KRHIEQGHO" stopped.
+2024-09-14 19:43:45.057 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger - -
+2024-09-14 19:43:45.699 +03:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2024-09-14 19:43:45.834 +03:00 [DBG] No candidates found for the request path '/swagger'
+2024-09-14 19:43:45.838 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:45.974 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger - - - 301 0 - 934.0817ms
+2024-09-14 19:43:45.974 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/index.html - -
+2024-09-14 19:43:45.985 +03:00 [DBG] No candidates found for the request path '/swagger/index.html'
+2024-09-14 19:43:45.987 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:46.467 +03:00 [DBG] Response markup is scheduled to include browser refresh script injection.
+2024-09-14 19:43:46.521 +03:00 [DBG] Response markup was updated to include browser refresh script injection.
+2024-09-14 19:43:46.524 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/index.html - - - 200 - text/html;charset=utf-8 549.4463ms
+2024-09-14 19:43:46.540 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui.css - -
+2024-09-14 19:43:46.541 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui-standalone-preset.js - -
+2024-09-14 19:43:46.540 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/swagger-ui-bundle.js - -
+2024-09-14 19:43:46.541 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/_framework/aspnetcore-browser-refresh.js - -
+2024-09-14 19:43:46.543 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui.css'
+2024-09-14 19:43:46.545 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-standalone-preset.js'
+2024-09-14 19:43:46.547 +03:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-bundle.js'
+2024-09-14 19:43:46.555 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:46.559 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:46.562 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:46.562 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/_framework/aspnetcore-browser-refresh.js - - - 200 12380 application/javascript;+charset=utf-8 21.5038ms
+2024-09-14 19:43:46.577 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/_vs/browserLink - -
+2024-09-14 19:43:46.641 +03:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2024-09-14 19:43:46.668 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui.css - - - 200 144929 text/css 128.2580ms
+2024-09-14 19:43:46.690 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2024-09-14 19:43:46.720 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui-standalone-preset.js - - - 200 312163 application/javascript 179.6723ms
+2024-09-14 19:43:46.739 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2024-09-14 19:43:46.743 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/swagger-ui-bundle.js - - - 200 1061536 application/javascript 202.9053ms
+2024-09-14 19:43:46.832 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 254.7758ms
+2024-09-14 19:43:49.379 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/v1/swagger.json - -
+2024-09-14 19:43:49.382 +03:00 [DBG] No candidates found for the request path '/swagger/v1/swagger.json'
+2024-09-14 19:43:49.385 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:49.462 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7054/swagger/favicon-32x32.png - -
+2024-09-14 19:43:49.465 +03:00 [DBG] No candidates found for the request path '/swagger/favicon-32x32.png'
+2024-09-14 19:43:49.474 +03:00 [DBG] Request did not match any endpoints
+2024-09-14 19:43:49.476 +03:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2024-09-14 19:43:49.524 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/favicon-32x32.png - - - 200 628 image/png 61.7869ms
+2024-09-14 19:43:50.090 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7054/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 711.2175ms
+2024-09-14 19:43:53.182 +03:00 [DBG] Authentication of the HTTPS connection timed out.
+2024-09-14 19:43:53.186 +03:00 [DBG] Connection id "0HN6KRHIEQGHM" stopped.
+2024-09-14 19:43:53.194 +03:00 [DBG] Connection id "0HN6KRHIEQGHM" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-09-14 19:43:53.385 +03:00 [DBG] Authentication of the HTTPS connection timed out.
+2024-09-14 19:43:53.389 +03:00 [DBG] Connection id "0HN6KRHIEQGHN" stopped.
+2024-09-14 19:43:53.394 +03:00 [DBG] Connection id "0HN6KRHIEQGHN" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-09-14 19:43:55.747 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" received FIN.
+2024-09-14 19:43:55.751 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" is closed. The last processed stream ID was 17.
+2024-09-14 19:43:55.757 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-09-14 19:43:55.778 +03:00 [DBG] Connection id "0HN6KRHIEQGHP" stopped.
