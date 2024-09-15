@@ -6,5 +6,4 @@ public enum PaymentMethod
     PayPal,
     BankTransfer,
     CashOnDelivery
-
 }
